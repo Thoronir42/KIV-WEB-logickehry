@@ -1,0 +1,13 @@
+body{
+    background-color: snow;
+}
+
+#top_infoBar{
+    height: 10%;
+    border: #ffd800 2px solid;
+    border-top-width: 0px;
+}
+
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover{
+    background-color:yellowgreen;
+}
