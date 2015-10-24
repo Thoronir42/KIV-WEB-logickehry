@@ -8,7 +8,13 @@ namespace clh;
  */
 class Dispatcher {
     
-    public static function getControler($controlerName = "Home"){
+    
+    
+    public function __construct($params) {
+        
+    }
+    
+    public function getControler($controlerName = "Home"){
         switch($controlerName){
             default: 
                 return new ErrorControler();
@@ -18,8 +24,12 @@ class Dispatcher {
                 return new LoginControler();
         }
     }
-    
-    public static function doControlerAction($controler, $action){
-        
+    /**
+     * 
+     * @param Controler $controler
+     * @param type $action
+     */
+    public function doControlerAction($controler, $action){
+        $controler = new ReflectionClass($controler);
     }
 }
