@@ -10,7 +10,8 @@ class XMLgenerator{
     
     public function fetchWeek($week){
         $this->game_type = $this->fetchGameTypes($week);
-        
+        $this->game_box = $this->fetchGameTypes($week);
+        $this->reservation = $this->fetchGameTypes($week);
     }
     
     private function fetchGameTypes($week){
