@@ -1,5 +1,5 @@
 <?php
-namespace clh;
+namespace controllers;
 
 
 /**
@@ -7,7 +7,7 @@ namespace clh;
  *
  * @author Stepan
  */
-class LoginControler extends Controler{
+class LoginController extends Controller{
     
     var $apiLogin;
     

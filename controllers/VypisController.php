@@ -1,12 +1,12 @@
 <?php
-namespace clh;
+namespace controllers;
 
 /**
  * Description of HomeControler
  *
  * @author Stepan
  */
-class HomeControler extends Controler{
+class VypisController extends Controller{
     
     public function renderDefault(){
         

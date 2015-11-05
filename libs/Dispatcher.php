@@ -1,5 +1,4 @@
 <?php
-namespace clh;
 
 /**
  * Description of Dispatcher
@@ -8,20 +7,20 @@ namespace clh;
  */
 class Dispatcher {
     
-    
-    
     public function __construct($params) {
         
     }
     
-    public function getControler($controlerName = "Home"){
+    public static function getControler($controlerName = "Rezervace"){
         switch($controlerName){
             default: 
-                return new ErrorControler();
-            case "Home":
-                return new HomeControler();
-            case "Login":
-                return new LoginControler();
+                return new controllers\ErrorController();
+			case "vypis":
+				return new controllers\VypisController();
+            case "rezervace":
+                return new controllers\HomeController();
+            case "login":
+                return new controllers\LoginController();
         }
     }
     /**
@@ -30,6 +29,6 @@ class Dispatcher {
      * @param type $action
      */
     public function doControlerAction($controler, $action){
-        $controler = new ReflectionClass($controler);
+        $controllerClass = new ReflectionClass($controler);
     }
 }

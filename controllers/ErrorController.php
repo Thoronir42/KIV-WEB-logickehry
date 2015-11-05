@@ -1,11 +1,11 @@
 <?php
-namespace clh;
+namespace controllers;
 
 /**
  * Description of HomeControler
  *
  * @author Stepan
  */
-class ErrorControler extends Controler{
+class ErrorController extends Controller{
     
 }
