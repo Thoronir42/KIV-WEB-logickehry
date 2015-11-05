@@ -7,13 +7,13 @@
 
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-        <link href="http://<?= $_SERVER['SERVER_NAME'] ?>/css/default.css" rel="stylesheet">
+        <link href="{{ css }}" rel="stylesheet">
         
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>  
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         
-        <title><?= $title ?></title>
+        <title>{{ title }}</title>
     </head>
     <body>
         <div class="row">
@@ -25,19 +25,14 @@
         <div class="row">
             <div class="menuBox col-lg-offset-2 col-md-offset-1 col-xs-offset-0 col-sm-3 col-md-3 col-lg-3" >
                 <ul class="nav nav-pills nav-stacked">
-                    <?php foreach($menu as $link) { ?>
-                    <li role="presentation" <?= isset($link['active']) ? "class=\"active\"" : "" ?>> <a href="<?= $link['url'] ?>"><?= $link['label'] ?></a></li>
-                    <?php } ?>
+                    {% for nav in menu %}
+                    <li role="presentation" {% if nav['active'] %} class="active" {% endif %}> <a href="{{ nav['url'] }}">{{ nav['label'] }}</a></li>
+                    {% endfor %}
                 </ul>
             </div>
             <div class="bodyContainer col-xs-offset-1 col-lg-5 col-md-6 col-sm-7">
                 
             </div>
         </div>
-        
-        
-        <?php
-        
-        ?>
     </body>
 </html>
