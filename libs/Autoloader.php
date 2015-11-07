@@ -39,7 +39,6 @@ class Autoloader{
 	
     public static function ModelLoader($class){
         $path = __DIR__."/../model/";
-		echo "model: ".$class."<br/>";
         if(self::tryInclude($path.$class)){ return true; }
 		
 		$path.="database/";

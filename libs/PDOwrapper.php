@@ -1,4 +1,7 @@
 <?php
+namespace libs;
+
+use PDO;
 use model\database\views as Views;
 use model\database\tables as Tables;
 
@@ -29,6 +32,12 @@ class PDOwrapper{
 	public function getGamesWithScores(){
 		$result = $this->connection->query("SELECT * FROM `game_type_w_score`")
 				->fetchAll(PDO::FETCH_CLASS, Views\GameTypeWithScore::class);
+		return $result;
+	}
+	
+	public function getReservationsAndAll(){
+		$result = $this->connection->query("SELECT * FROM `reservation_and_all`")
+				->fetchAll(PDO::FETCH_CLASS, Views\ReservationAndAll::class);
 		return $result;
 	}
 	
