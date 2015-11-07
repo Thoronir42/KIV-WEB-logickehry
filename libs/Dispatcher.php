@@ -30,62 +30,61 @@ class Dispatcher {
 	public function getControler($controlerName = "Rezervace"){
         switch($controlerName){
             default: 
-                return new controllers\ErrorController($this->urlGen);
+                return new controllers\ErrorController();
 			case "vypis":
-				return new controllers\VypisController($this->urlGen);
+				return new controllers\VypisController();
             case "rezervace":
-                return new controllers\HomeController($this->urlGen);
+                return new controllers\HomeController();
             case "login":
-                return new controllers\LoginController($this->urlGen);
+                return new controllers\LoginController();
         }
     }
 	
-	public function dispatch($contName, $params = null){
+	public function dispatch($contName, $action = null, $params = null){
 		$cont = self::getControler($contName);
-		$action = isset($params['action']) ? $params['action'] : null;
+		$cont->urlGen = $this->urlGen;
+		$cont->pdoWrapper = $this->pdoWrapper;
+		
 		$cont->setActiveMenuItem($contName, $action);
 		
-		$contResponse = $this->getControllerResponse($cont, $action);
+		$prepAction = $this->prepareActionName($action);
+		$contResponse = $this->getControllerResponse($cont, $prepAction);
+		
+		$contResponse["startup"]->invoke($cont);
+		
 		if(empty($contResponse)){
-			
+			echo "Action $prepAction was could not be executed nor rendered.";
+			return;
 		}
 		if(isset($contResponse['do'])){
 			$contResponse['do']->invoke($cont, $params);
 		}
-		if(isset($contResponse['render']) && $layout = $this->getLayoutPath($contName, $action)){
+		if(isset($contResponse['render'])){
+			$layoutBody = $this->getLayoutPath($contName, $action);
+			
 			$contResponse['render']->invoke($cont, $params);
+			$twigVars = $cont->template;
+			$twigVars['layout'] = $this->twig->loadTemplate($cont->layout);
 			
-			$vars = $this->prepareRenderLayoutVars($cont->template);
-			
-			echo $this->twig->render($layout, $vars);
+			echo $this->twig->render($layoutBody, $twigVars);
 		} else {
-			echo "No render or redirect on $contName/$action";
+			echo "No render or redirect on $cont/$action";
 		}
 		
-	}
-	
-	private function prepareRenderLayoutVars($vars){
-		$vars['title'] = "CLH";
-		$vars['css'] = $this->urlGen->getCss("default.css");
-		$vars["hry"] = $this->pdoWrapper->getGamesWithScores();
-		$vars['layout'] = $this->twig->loadTemplate('layout.tpl');
-		return $vars;
-
 	}
 	
     /**
      * 
      * @param Controler $cont
-     * @param type $action
+     * @param string $action
      */
-    public function getControllerResponse($cont, $action){
+    private function getControllerResponse($cont, $action){
         $contClass = new ReflectionClass($cont);
 		$methodTypes = ["do", "render"];
-		$prepAction = $this->prepareActionName($action);
 		
-		$return = [];
+		$return = ["startup" => $contClass->getMethod("startUp")];
 		foreach($methodTypes as $mt){
-			$method = $mt.$prepAction;
+			$method = $mt.$action;
 			if ( $contClass->hasMethod($method) ){
 				$m = $contClass->getMethod($method);
 				$return[$mt] = $m;
@@ -103,16 +102,17 @@ class Dispatcher {
 	
 	
 	private function prepareActionName($action){
+		if($action == null){
+			return "Default";
+		}
 		$return = strtoupper(substr($action, 0, 1)).strtolower(substr($action, 1));
 		return $return;
 	}
 	
-	private function getLayoutPath($controller, $action = null){
+	private function getLayoutPath($controller, $action){
 		$dir = __DIR__."/../templates";
-		$realAction = ($action != null && file_exists("$dir/$controller/$action.tpl")) ?
-				$action : "default";
-		if(file_exists("$dir/$controller/$realAction.tpl")){
-			$return = "$controller/$realAction.tpl";
+		if(file_exists("$dir/$controller/$action.twig")){
+			$return = "$controller/$action.twig";
 			return $return;
 		}
 		return false;

@@ -7,7 +7,10 @@
 
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-        <link href="{{ css }}" rel="stylesheet">
+        
+        {% for style in css %}
+        <link href="{{ style }}" rel="stylesheet">
+        {% endfor %}
         
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>  
@@ -30,6 +33,8 @@
                     {% endfor %}
                 </ul>
             </div>
+        </div>
+                <div class="row">
             <div class="bodyContainer col-xs-offset-1 col-lg-5 col-md-6 col-sm-7">
                 {{ block('bodyContent') }}
             </div>

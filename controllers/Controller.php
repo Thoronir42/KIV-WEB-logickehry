@@ -1,7 +1,8 @@
 <?php
 namespace controllers;
 
-use libs\URLgen;
+use libs\URLgen,
+	libs\PDOwrapper;
 
 /**
  * Description of Controler
@@ -13,11 +14,16 @@ abstract class Controller{
 	/** @var URLgen */
     var $urlGen;
 	
+	/** @var PDOwrapper */
+	var $pdoWrapper;
+	
     /** @var array */
     var $template;
     
-    public function __construct($urlGen) {
-		$this->urlGen = $urlGen;
+	/** @var string */
+	var $layout;
+	
+    public function __construct() {
 		$this->template = [];
 		
         $menu = [
@@ -34,7 +40,18 @@ abstract class Controller{
 				"label" => "(XML)"
 			],
 		];
-		$this->template['menu'] = $this->buildUrls($menu);
+		$this->template['menu'] = $menu;
+	}
+	
+	public function __toString() {
+		return explode("\\", get_class($this))[1];
+	}
+	
+	
+	public function startUp(){
+		$this->template['menu'] = $this->buildUrls($this->template['menu']);
+		$this->template['css'] = [];
+		$this->template['script'] = [];
 	}
 	
 	private function buildUrls($menu){
