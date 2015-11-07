@@ -24,14 +24,14 @@
         
         <div class="row">
             <div class="menuBox col-lg-offset-2 col-md-offset-1 col-xs-offset-0 col-sm-3 col-md-3 col-lg-3" >
-                <ul class="nav nav-pills nav-stacked">
+                <ul class="nav nav-pills nav">
                     {% for nav in menu %}
                     <li role="presentation" {% if nav['active'] %} class="active" {% endif %}> <a href="{{ nav['url'] }}">{{ nav['label'] }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
             <div class="bodyContainer col-xs-offset-1 col-lg-5 col-md-6 col-sm-7">
-                
+                {{ block('bodyContent') }}
             </div>
         </div>
     </body>

@@ -2,8 +2,8 @@
 include __DIR__.'/Twig/Autoloader.php';
 Twig_Autoloader::register(true);
 
-spl_autoload_register('Autoloader::LibsLoader');
 spl_autoload_register('Autoloader::NamespaceLoader');
+spl_autoload_register('Autoloader::LibsLoader');
 
 spl_autoload_register('Autoloader::ModelLoader');
 
