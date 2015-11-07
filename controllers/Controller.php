@@ -8,18 +8,18 @@ use libs\URLgen;
  *
  * @author Stepan
  */
-class Controller{
+abstract class Controller{
 	
 	/** @var URLgen */
-    var $urlgen;
+    var $urlGen;
 	
-	public $menu;
-	
-    /** @var \TemplateContainer */
-    protected $template;
+    /** @var array */
+    var $template;
     
-    public function __construct() {
-		$this->urlgen = new URLgen();
+    public function __construct($urlGen) {
+		$this->urlGen = $urlGen;
+		$this->template = [];
+		
         $menu = [
 			["urlParams" => ["controller" => "vypis", "action"=>"vse"],
 				"label" => "Výpis týdne"
@@ -34,33 +34,34 @@ class Controller{
 				"label" => "(XML)"
 			],
 		];
-		$this->menu = self::buildUrls($menu);
+		$this->template['menu'] = $this->buildUrls($menu);
 	}
 	
 	private function buildUrls($menu){
 		
 		foreach($menu as $key => $item){
-			$menu[$key]["url"] = $this->urlgen->getUrl($item['urlParams']);
+			$menu[$key]["url"] = $this->urlGen->getUrl($item['urlParams']);
 		}
 		return $menu;
 	}
     
 	public function setActiveMenuItem($controller = null, $action = null){
-		foreach($this->menu as $key => $val){
+		$menu = $this->template['menu'];
+		foreach($menu as $key => $val){
 			if($val['urlParams']['controller'] == $controller){
-				$this->menu[$key]['active'] = true;
+				$menu[$key]['active'] = true;
 			}
 		}
-		
+		$this->template['menu'] = $menu;
 	}
 	
-    public function showDefault(){
+    public function renderDefault(){
         
     }
     
     public function redirect($location){
         \header("Location: /$location");
-	\header("Connection: close");
+		\header("Connection: close");
     }
 
 }

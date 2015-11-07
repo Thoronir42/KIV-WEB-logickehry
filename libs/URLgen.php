@@ -6,10 +6,8 @@ class URLgen{
 	
 	var $urlPrefix;
 	
-	public function __construct(){
-		$protocol = (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']))
-        ? "https" : "http";
-		$this->urlPrefix =  $protocol."://$_SERVER[SERVER_NAME]/"; 
+	public function __construct($prefix){
+		$this->urlPrefix =  $prefix;
 	}
 	
 	public function getUrl($params){

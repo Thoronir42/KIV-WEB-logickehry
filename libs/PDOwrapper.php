@@ -1,22 +1,35 @@
 <?php
 use model\database\views as Views;
+use model\database\tables as Tables;
 
 
 class PDOwrapper{
     /** @var PDO */
-    static private $connection;
+    private $connection;
     
-    public static function connect($db){
-        $db['password'] = isset($db['password']) ? $db['password'] : null;
-        self::$connection = new PDO("mysql:host=$db[host];dbname=$db[db_name]", $db['user'], $db['password']);
+	/**
+	 * 
+	 * @param array $cfg
+	 * @return \PDOwrapper
+	 */
+    public static function getConnection($cfg){
+        $cfg['password'] = isset($cfg['password']) ? $cfg['password'] : null;
+        $pdo = new PDO("mysql:host=$cfg[host];dbname=$cfg[db_name]", $cfg['user'], $cfg['password']);
+		return new PDOwrapper($pdo);
     }
 	
-	public static function getGamesWithScores(){
-		$gtws = new Views\GameTypeWithScore();
-		$sql = self::$connection->query("SELECT * FROM `game_type_w_score`");
-		
-		
-		return $sql->fetchAll(PDO::FETCH_ASSOC);
+	/**
+	 * 
+	 * @param PDO $pdo
+	 */
+	private function __construct($pdo) {
+		$this->connection = $pdo;
+	}
+	
+	public function getGamesWithScores(){
+		$result = $this->connection->query("SELECT * FROM `game_type_w_score`")
+				->fetchAll(PDO::FETCH_CLASS, Views\GameTypeWithScore::class);
+		return $result;
 	}
 	
 }
