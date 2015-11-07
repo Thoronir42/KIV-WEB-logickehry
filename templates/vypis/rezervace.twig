@@ -1,0 +1,19 @@
+{% extends layout %}
+
+{% block bodyContent %}
+
+{% for r in rezervace %}
+    <div class="reservation">
+        <div class="res-head row">
+            <span>Rezervace #{{ "%04d"|format(r.reservation_id) }} - {{ r.game_name }}</span>
+            <span>Hráčů: {{ r.signed_players}}</span>
+            <span> z {{ "%d-%d"|format(r.min_players, r.max_players) }}</span>
+        </div>
+        <div class="res-body row">
+            <span></span>
+        </div>
+        
+    </div>
+{% endfor %}
+
+{% endblock %}
