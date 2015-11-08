@@ -32,7 +32,7 @@ class ErrorController extends Controller{
 	public function renderNoTemplate($c, $a){
 		$this->template['nadpis'] = "Nebyla nalezena šablona";
 		$this->template['zprava'] = "Kontroler $c obsahuje akci $a ale pro danou" 
-			."akci neexistuje šablona.";
+			." akci neexistuje šablona.";
 	}
 	
 	public function renderNoRenderFound($c, $a){

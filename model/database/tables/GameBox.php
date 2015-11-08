@@ -6,14 +6,14 @@ namespace model\database\tables;
  *
  * @author Stepan
  */
-class User {
+class GameBox {
 	
-	var $user_id;
+	var $game_box_id;
 	
-	var $orion_login;
+	var $game_type_id;
 	
-	var $name;
+	var $tracking_code;
 	
-	var $surname;
+	var $add_note;
 	
 }

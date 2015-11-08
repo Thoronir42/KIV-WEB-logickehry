@@ -41,4 +41,17 @@ class PDOwrapper{
 		return $result;
 	}
 	
+	public function getGameTypes(){
+		$result = $this->connection->query("SELECT * FROM game_type")
+				->fetchAll(PDO::FETCH_CLASS, Tables\GameType::class);
+		return $result;
+	}
+	
+	public function getGameBoxes(){
+		$result = $this->connection->query("SELECT * FROM game_box")
+				->fetchAll(PDO::FETCH_CLASS, Tables\GameBox::class);
+		return $result;
+	}
+	
+	
 }

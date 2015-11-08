@@ -40,30 +40,48 @@ class Dispatcher {
                 $cont = new controllers\HomeController(); break;
             case "login":
                 $cont = new controllers\LoginController(); break;
+			case "xml":
+				$cont = new controllers\XMLgenerator(); break;
         }
-		$cont->urlGen = $this->urlGen;
+		if($controlerName != "xml"){ $cont->urlGen = $this->urlGen; }
 		$cont->pdoWrapper = $this->pdoWrapper;
 		return $cont;
     }
 	
 	public function dispatch($contName, $action = null, $params = null){
 		$cont = self::getControler($contName);
+		$isXML = $cont instanceof \controllers\XMLgenerator;
 		
 		if($cont instanceof \controllers\ErrorController){
 			$this->error(DISP_NO_CONTROLLER, $contName);
 			return;
 		}
 		
-		$cont->setActiveMenuItem($contName, $action);
-		
 		$prepAction = $this->prepareActionName($action);
-		$contResponse = $this->getControllerResponse($cont, $prepAction);
+		$contResponse = $this->getControllerResponse($cont, $prepAction, $isXML);
 		
-		$contResponse["startup"]->invoke($cont);
-		unset($contResponse["startup"]);
+		if(!$isXML){
+			$cont->setActiveMenuItem($contName, $action);
+			$contResponse["startup"]->invoke($cont);
+			unset($contResponse["startup"]);
+		}
 		
+		$this->invokeResponse($contResponse, $cont, $contName, $action, $params);
+		
+	}
+	
+	/**
+	 * 
+	 * @param array $contResponse
+	 * @param controllers\Controller $cont
+	 * @param string $contName
+	 * @param string $action
+	 * @param array $params
+	 * @return type
+	 */
+	private function invokeResponse($contResponse, $cont, $contName, $action, $params){
 		if(empty($contResponse)){
-			$this->error(DISP_NO_ACTION, $contName, $action);
+			$this->error(DISP_NO_ACTION, "$cont", $action);
 			return;
 		}
 		if(isset($contResponse['do'])){
@@ -72,15 +90,14 @@ class Dispatcher {
 		if(isset($contResponse['render'])){
 			$layoutBody = $this->getLayoutPath($contName, $action);
 			if(!$layoutBody){
-				$this->error(DISP_NO_TEMPLATE, $contName, $action);
+				$this->error(DISP_NO_TEMPLATE, "$cont", $action);
 				return;
 			}
 			$contResponse['render']->invoke($cont, $params);
 			echo $this->render($layoutBody, $cont->template, $cont->layout);
 		} else {
-			$this->error(DISP_NO_RENDER_OR_REDIRECT, $contName, $action);
+			$this->error(DISP_NO_RENDER_OR_REDIRECT, "$cont", $action);
 		}
-		
 	}
 	
 	private function render($template, $vars, $layout){
@@ -114,10 +131,13 @@ class Dispatcher {
      * @param Controler $cont
      * @param string $action
      */
-    private function getControllerResponse($cont, $action){
+    private function getControllerResponse($cont, $action, $xml = false){
         $contClass = new ReflectionClass($cont);
 		$methodTypes = ["do", "render"];
-		$return = ["startup" => $contClass->getMethod("startUp")];
+		$return = [];
+		if(!$xml){
+			$return["startup"] = $contClass->getMethod("startUp");
+		}
 		foreach($methodTypes as $mt){
 			$methodName = $mt.$action;
 			if ( $contClass->hasMethod($methodName) ){
@@ -140,6 +160,7 @@ class Dispatcher {
 	
 	private function getLayoutPath($controller, $action){
 		$dir = __DIR__."/../templates";
+		//echo "$dir/$controller/$action.twig";
 		if(file_exists("$dir/$controller/$action.twig")){
 			$return = "$controller/$action.twig";
 			return $return;

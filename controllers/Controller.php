@@ -38,7 +38,7 @@ abstract class Controller{
 			["urlParams" => ["controller" => "letiste", "action"=>"rezervace"],
 				"label" => "(Letiště)"
 			],
-			["urlParams" => ["controller" => "xml", "action"=>"week"],
+			["urlParams" => ["controller" => "xml", "action"=>"inventory"],
 				"label" => "(XML)"
 			],
 		];
