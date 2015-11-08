@@ -1,5 +1,8 @@
 <?php
-
+define('DISP_NO_CONTROLLER', 1);
+define('DISP_NO_ACTION', 2);
+define('DISP_NO_TEMPLATE', 3);
+define('DISP_NO_RENDER_OR_REDIRECT', 4);
 /**
  * Description of Dispatcher
  *
@@ -30,20 +33,26 @@ class Dispatcher {
 	public function getControler($controlerName){
         switch($controlerName){
             default:
-                return new controllers\ErrorController();
+                $cont = new controllers\ErrorController(); break;
 			case "vypis":
-				return new controllers\VypisController();
+				$cont = new controllers\VypisController(); break;
             case "rezervace":
-                return new controllers\HomeController();
+                $cont = new controllers\HomeController(); break;
             case "login":
-                return new controllers\LoginController();
+                $cont = new controllers\LoginController(); break;
         }
+		$cont->urlGen = $this->urlGen;
+		$cont->pdoWrapper = $this->pdoWrapper;
+		return $cont;
     }
 	
 	public function dispatch($contName, $action = null, $params = null){
 		$cont = self::getControler($contName);
-		$cont->urlGen = $this->urlGen;
-		$cont->pdoWrapper = $this->pdoWrapper;
+		
+		if($cont instanceof \controllers\ErrorController){
+			$this->error(DISP_NO_CONTROLLER, $contName);
+			return;
+		}
 		
 		$cont->setActiveMenuItem($contName, $action);
 		
@@ -51,13 +60,10 @@ class Dispatcher {
 		$contResponse = $this->getControllerResponse($cont, $prepAction);
 		
 		$contResponse["startup"]->invoke($cont);
-		
-		if($cont instanceof \controllers\ErrorController){
-			
-		}
+		unset($contResponse["startup"]);
 		
 		if(empty($contResponse)){
-			echo "Action $prepAction was could not be executed nor rendered.";
+			$this->error(DISP_NO_ACTION, $contName, $action);
 			return;
 		}
 		if(isset($contResponse['do'])){
@@ -66,17 +72,40 @@ class Dispatcher {
 		if(isset($contResponse['render'])){
 			$layoutBody = $this->getLayoutPath($contName, $action);
 			if(!$layoutBody){
-				echo "No render template found for $prepAction.";
+				$this->error(DISP_NO_TEMPLATE, $contName, $action);
 				return;
 			}
 			$contResponse['render']->invoke($cont, $params);
-			$twigVars = $cont->template;
-			$twigVars['layout'] = $this->twig->loadTemplate($cont->layout);
-			
-			echo $this->twig->render($layoutBody, $twigVars);
+			echo $this->render($layoutBody, $cont->template, $cont->layout);
 		} else {
-			echo "No render or redirect on $cont/$action";
+			$this->error(DISP_NO_RENDER_OR_REDIRECT, $contName, $action);
 		}
+		
+	}
+	
+	private function render($template, $vars, $layout){
+		$vars['layout'] = $this->twig->loadTemplate($layout);
+		echo $this->twig->render($template, $vars);
+	}
+	
+	private function error($type, $contName, $action = null){
+		$errCont = $this->getControler(null);
+		$errCont->startUp();
+		switch($type){
+			case DISP_NO_CONTROLLER:
+				$errCont->renderNoControllerFound($contName);
+				break;
+			case DISP_NO_ACTION:
+				$errCont->renderNotRecognizedAction($contName, $action);
+				break;
+			case DISP_NO_TEMPLATE:
+				$errCont->renderNoTemplate($contName, $action);
+				break;
+			case DISP_NO_RENDER_OR_REDIRECT:
+				$errCont->renderNoRenderFound($contName, $action);
+				break;
+		}
+		$this->render("error/default.twig", $errCont->template, $errCont->layout);
 		
 	}
 	
@@ -88,19 +117,12 @@ class Dispatcher {
     private function getControllerResponse($cont, $action){
         $contClass = new ReflectionClass($cont);
 		$methodTypes = ["do", "render"];
-		
 		$return = ["startup" => $contClass->getMethod("startUp")];
 		foreach($methodTypes as $mt){
-			$method = $mt.$action;
-			if ( $contClass->hasMethod($method) ){
-				$m = $contClass->getMethod($method);
-				$return[$mt] = $m;
-			}
-		}
-		
-		if(!isset($return['render'])){
-			if($contClass->hasMethod("renderDefault")){
-				$return['render'] = $contClass->getMethod("renderDefault");
+			$methodName = $mt.$action;
+			if ( $contClass->hasMethod($methodName) ){
+				$method = $contClass->getMethod($methodName);
+				$return[$mt] = $method;
 			}
 		}
 		

@@ -17,7 +17,7 @@ class VypisController extends Controller{
 		
 	}
 	
-    public function renderDefault(){
+    public function renderVse(){
         $this->template['hry'] = $this->pdoWrapper->getGamesWithScores();
     }
     
