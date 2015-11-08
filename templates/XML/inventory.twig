@@ -1,0 +1,29 @@
+{% block xmlBody %}
+<logickehry>
+	<game_types>
+	{% for gt in game_type  %}
+		<game_type {{ 'id="%d" subscribees="%d"'|format(gt.game_type_id, gt.subscribed_users) }}>
+            <name>{{ gt.game_name }}</name>
+            <average_playtime>{{ gt.avg_game_time }}</average_playtime>
+            <players>
+                <min>{{gt.min_players }}</min>
+                <max>{{ gt.max_players }}</max>
+            </players>
+            <rating>
+				<average>{{ gt.average_score }}</average>
+				<count>{{ gt.rating_count }}</count>
+			</rating>
+        </game_type>
+        {% endfor %}
+    </game_types>
+    <game_boxes>
+        {% for gb in game_box %}
+        <gamebox id="{{ gb.game_box-id }}">
+            <game_type>{{ gb.game_box_id }}</game_type>
+            <track_code>{{ gb.tracking_code }}</track_code>
+            <note>{{ gb.additional_note }}</note>
+        </gamebox>
+        {% endfor %}
+    </game_boxes>
+</logickehry>
+{% endblock %}
