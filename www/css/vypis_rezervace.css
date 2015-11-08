@@ -1,0 +1,12 @@
+/* 
+    Created on : 8.11.2015, 0:12:29
+    Author     : Stepan
+*/
+
+.reservation{
+    background-color: #2b542c;
+}
+.reservation .res-head{
+    background-color: #31b0d5;
+    margin: 2px;
+} 

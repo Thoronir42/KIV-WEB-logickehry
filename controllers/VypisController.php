@@ -11,12 +11,9 @@ class VypisController extends Controller{
 	
 	public function startUp(){
 		parent::startUp();
-		$this->layout = 'layout.tpl';
+		$this->layout = 'layout.twig';
 		
 		$this->template['title'] = "CLH";
-		$this->template['css'][] = $this->urlGen->getCss("default.css");
-		
-		;
 		
 	}
 	
@@ -25,6 +22,7 @@ class VypisController extends Controller{
     }
     
 	public function renderRezervace(){
+		$this->addCss("vypis_rezervace.css");
 		$this->template['rezervace'] = $this->pdoWrapper->getReservationsAndAll();
 		var_dump($this->template['rezervace'][0]);
 	}

@@ -24,9 +24,11 @@ abstract class Controller{
 	var $layout;
 	
     public function __construct() {
-		$this->template = [];
-		
-        $menu = [
+		$this->template = [
+			'css' => [],
+			'script' => [],
+		];
+		$menu = [
 			["urlParams" => ["controller" => "vypis", "action"=>"vse"],
 				"label" => "Výpis týdne"
 			],
@@ -43,15 +45,9 @@ abstract class Controller{
 		$this->template['menu'] = $menu;
 	}
 	
-	public function __toString() {
-		return explode("\\", get_class($this))[1];
-	}
-	
-	
 	public function startUp(){
 		$this->template['menu'] = $this->buildUrls($this->template['menu']);
-		$this->template['css'] = [];
-		$this->template['script'] = [];
+		$this->addCss("default.css");
 	}
 	
 	private function buildUrls($menu){
@@ -75,10 +71,18 @@ abstract class Controller{
     public function renderDefault(){
         
     }
+	
+	protected function addCss($css){
+		$this->template['css'][] = $this->urlGen->getCss($css);
+	}
     
     public function redirect($location){
         \header("Location: /$location");
 		\header("Connection: close");
     }
-
+	
+	public function __toString() {
+		return explode("\\", get_class($this))[1];
+	}
+	
 }

@@ -27,9 +27,9 @@ class Dispatcher {
 		$this->urlGen = $urlGen;
     }
     
-	public function getControler($controlerName = "Rezervace"){
+	public function getControler($controlerName){
         switch($controlerName){
-            default: 
+            default:
                 return new controllers\ErrorController();
 			case "vypis":
 				return new controllers\VypisController();
@@ -52,6 +52,10 @@ class Dispatcher {
 		
 		$contResponse["startup"]->invoke($cont);
 		
+		if($cont instanceof \controllers\ErrorController){
+			
+		}
+		
 		if(empty($contResponse)){
 			echo "Action $prepAction was could not be executed nor rendered.";
 			return;
@@ -61,7 +65,10 @@ class Dispatcher {
 		}
 		if(isset($contResponse['render'])){
 			$layoutBody = $this->getLayoutPath($contName, $action);
-			
+			if(!$layoutBody){
+				echo "No render template found for $prepAction.";
+				return;
+			}
 			$contResponse['render']->invoke($cont, $params);
 			$twigVars = $cont->template;
 			$twigVars['layout'] = $this->twig->loadTemplate($cont->layout);

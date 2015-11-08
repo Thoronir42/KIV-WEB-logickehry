@@ -8,6 +8,7 @@
             <span>Rezervace #{{ "%04d"|format(r.reservation_id) }} - {{ r.game_name }}</span>
             <span>Hráčů: {{ r.signed_players}}</span>
             <span> z {{ "%d-%d"|format(r.min_players, r.max_players) }}</span>
+            <span>{{ "%s - %s"|format(r.time_from, r.time_to) }}</span>
         </div>
         <div class="res-body row">
             <span></span>
