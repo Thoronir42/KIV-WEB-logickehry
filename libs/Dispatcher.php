@@ -1,8 +1,7 @@
 <?php
-define('DISP_NO_CONTROLLER', 1);
-define('DISP_NO_ACTION', 2);
-define('DISP_NO_TEMPLATE', 3);
-define('DISP_NO_RENDER_OR_REDIRECT', 4);
+
+use controllers\ErrorController;
+
 /**
  * Description of Dispatcher
  *
@@ -33,29 +32,33 @@ class Dispatcher {
 	public function getControler($controlerName){
         switch($controlerName){
             default:
-                $cont = new controllers\ErrorController(); break;
+                return null;
 			case "vypis":
 				$cont = new controllers\VypisController(); break;
             case "rezervace":
                 $cont = new controllers\HomeController(); break;
+			case "letiste":
+				$noURL = true;
+				$cont = new controllers\LetisteController(); break;
             case "login":
                 $cont = new controllers\LoginController(); break;
 			case "xml":
+				$noURL = true;
 				$cont = new controllers\XMLgenerator(); break;
         }
-		if($controlerName != "xml"){ $cont->urlGen = $this->urlGen; }
+		if(!isset($noURL)){ $cont->urlGen = $this->urlGen; }
 		$cont->pdoWrapper = $this->pdoWrapper;
 		return $cont;
     }
 	
 	public function dispatch($contName, $action = null, $params = null){
 		$cont = self::getControler($contName);
-		$isXML = $cont instanceof \controllers\XMLgenerator;
-		
-		if($cont instanceof \controllers\ErrorController){
-			$this->error(DISP_NO_CONTROLLER, $contName);
+		if($cont == null){
+			$this->error(ErrorController::NO_CONTROLLER_FOUND, $contName);
 			return;
 		}
+		
+		$isXML = $cont instanceof \controllers\XMLgenerator;
 		
 		$prepAction = $this->prepareActionName($action);
 		$contResponse = $this->getControllerResponse($cont, $prepAction, $isXML);
@@ -81,7 +84,7 @@ class Dispatcher {
 	 */
 	private function invokeResponse($contResponse, $cont, $contName, $action, $params){
 		if(empty($contResponse)){
-			$this->error(DISP_NO_ACTION, "$cont", $action);
+			$this->error(ErrorController::NOT_RECOGNISED_ACTION, $contName, $action);
 			return;
 		}
 		if(isset($contResponse['do'])){
@@ -90,13 +93,13 @@ class Dispatcher {
 		if(isset($contResponse['render'])){
 			$layoutBody = $this->getLayoutPath($contName, $action);
 			if(!$layoutBody){
-				$this->error(DISP_NO_TEMPLATE, "$cont", $action);
+				$this->error(ErrorController::NO_TEMPLATE, $contName, $action);
 				return;
 			}
 			$contResponse['render']->invoke($cont, $params);
 			echo $this->render($layoutBody, $cont->template, $cont->layout);
 		} else {
-			$this->error(DISP_NO_RENDER_OR_REDIRECT, "$cont", $action);
+			$this->error(ErrorController::NO_RENDER_OR_REDIRECT, "$cont", $action);
 		}
 	}
 	
@@ -105,23 +108,11 @@ class Dispatcher {
 		echo $this->twig->render($template, $vars);
 	}
 	
-	private function error($type, $contName, $action = null){
-		$errCont = $this->getControler(null);
+	private function error($errType, $contName, $action = null){
+		$errCont = new ErrorController();
+		$errCont->urlGen = $this->urlGen;
 		$errCont->startUp();
-		switch($type){
-			case DISP_NO_CONTROLLER:
-				$errCont->renderNoControllerFound($contName);
-				break;
-			case DISP_NO_ACTION:
-				$errCont->renderNotRecognizedAction($contName, $action);
-				break;
-			case DISP_NO_TEMPLATE:
-				$errCont->renderNoTemplate($contName, $action);
-				break;
-			case DISP_NO_RENDER_OR_REDIRECT:
-				$errCont->renderNoRenderFound($contName, $action);
-				break;
-		}
+		$errCont->renderError($errType, $contName, $action);
 		$this->render("error/default.twig", $errCont->template, $errCont->layout);
 		
 	}
