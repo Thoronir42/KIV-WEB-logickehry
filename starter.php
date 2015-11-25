@@ -22,6 +22,6 @@ $urlGen = new libs\URLgen($prefix);
 $dispatcher = new Dispatcher($pdow, $twig, $urlGen);
 
 $controller = filter_input(INPUT_GET, 'controller') ?: "vypis";
-$action = filter_input(INPUT_GET, 'action') ?: "vse";
+$action = filter_input(INPUT_GET, 'action') ?: "hry";
 
 $dispatcher->dispatch($controller, $action, []);

@@ -28,9 +28,14 @@ abstract class Controller{
 			'css' => [],
 			'script' => [],
 		];
+		
+		$this->template['menu'] = $this->buildMenu();
+		$this->template['submenu'] = $this->buildSubmenu();
+	}
+	private function buildMenu(){
 		$menu = [
-			["urlParams" => ["controller" => "vypis", "action"=>"vse"],
-				"label" => "Výpis týdne"
+			["urlParams" => ["controller" => "vypis", "action"=>"hry"],
+				"label" => "Seznamy"
 			],
 			["urlParams" => ["controller" => "sprava", "action"=>"hry"],
 				"label" => "Správa her"
@@ -42,9 +47,11 @@ abstract class Controller{
 				"label" => "(XML)"
 			],
 		];
-		$this->template['menu'] = $menu;
+		return $menu;
 	}
-	
+	protected function buildSubmenu(){ return false; }
+
+
 	public function startUp(){
 		$this->template['menu'] = $this->buildUrls($this->template['menu']);
 		$this->addCss("default.css");

@@ -1,0 +1,20 @@
+{# Twig template for element game #}
+
+<div class="game">
+	<div class="row">
+		<div class="image-frame col-xs4">
+			<img src="{{ g.picture_path }}">
+		</div>
+		<div class="col-xs8">
+			<div class="row">
+				<div class="col-xs6">{{ g.game_name }}</div>
+				<div class="col-xs6">Hodnocení:{{ '%d (%d)'|format(g.average_score, g.rating_count) }}</div>
+			</div>
+			<div class="row">
+				<div class="col-xs4">Hráčů:{{ "%d - %d"|format(g.min_players, g.max_players) }}</div>
+				<div class="col-xs5">Prům. Doba Hry: {{ g.avg_game_time }}</div>
+				<div class="col-xs3">({{ g.subscribed_users }})</div>
+			</div>
+		</div>
+	</div>
+</div>

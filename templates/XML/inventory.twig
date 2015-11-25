@@ -1,4 +1,6 @@
+{% extends layout %}
 {% block xmlBody %}
+{% autoescape false %}
 <logickehry>
 	<game_types>
 	{% for gt in game_type  %}
@@ -18,12 +20,13 @@
     </game_types>
     <game_boxes>
         {% for gb in game_box %}
-        <gamebox id="{{ gb.game_box-id }}">
-            <game_type>{{ gb.game_box_id }}</game_type>
+        <gamebox id="{{ gb.game_box_id }}">
+            <game_type>{{ gb.game_type_id }}</game_type>
             <track_code>{{ gb.tracking_code }}</track_code>
             <note>{{ gb.additional_note }}</note>
         </gamebox>
         {% endfor %}
     </game_boxes>
 </logickehry>
+{% endautoescape %}
 {% endblock %}

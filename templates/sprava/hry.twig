@@ -1,0 +1,11 @@
+{# sprava/hry #}
+
+{% extends layout %}
+
+{% block bodyContent %}
+	Sprava her
+	
+	{% for g in games %}
+		{% include 'mini/hra.twig' with { 'g': g} %}
+	{% endfor %}
+{% endblock %}

@@ -1,5 +1,4 @@
 <?php
-
 use controllers\ErrorController;
 
 /**
@@ -35,6 +34,8 @@ class Dispatcher {
                 return null;
 			case "vypis":
 				$cont = new controllers\VypisController(); break;
+			case "sprava":
+				$cont = new controllers\SpravaController(); break;
             case "rezervace":
                 $cont = new controllers\HomeController(); break;
 			case "letiste":
@@ -65,10 +66,9 @@ class Dispatcher {
 		
 		if(!$isXML){
 			$cont->setActiveMenuItem($contName, $action);
-			$contResponse["startup"]->invoke($cont);
-			unset($contResponse["startup"]);
 		}
-		
+		$contResponse["startup"]->invoke($cont);
+		unset($contResponse["startup"]);
 		$this->invokeResponse($contResponse, $cont, $contName, $action, $params);
 		
 	}
@@ -122,13 +122,11 @@ class Dispatcher {
      * @param Controler $cont
      * @param string $action
      */
-    private function getControllerResponse($cont, $action, $xml = false){
+    private function getControllerResponse($cont, $action){
         $contClass = new ReflectionClass($cont);
 		$methodTypes = ["do", "render"];
 		$return = [];
-		if(!$xml){
-			$return["startup"] = $contClass->getMethod("startUp");
-		}
+		$return["startup"] = $contClass->getMethod("startUp");
 		foreach($methodTypes as $mt){
 			$methodName = $mt.$action;
 			if ( $contClass->hasMethod($methodName) ){

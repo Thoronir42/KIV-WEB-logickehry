@@ -1,0 +1,12 @@
+{# vypis/hry #}
+
+{% extends layout %}
+
+{% block bodyContent %}
+	<div> 	
+{% for hra in hry %}
+	{% include 'mini/hra.twig' with { 'g': hra} %}
+	<hr/>
+{% endfor %}
+	</div>
+{% endblock %}

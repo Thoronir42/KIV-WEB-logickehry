@@ -17,14 +17,16 @@ class VypisController extends Controller{
 		
 	}
 	
-    public function renderVse(){
+    public function renderHry(){
         $this->template['hry'] = $this->pdoWrapper->getGamesWithScores();
     }
     
 	public function renderRezervace(){
 		$this->addCss("vypis_rezervace.css");
 		$this->template['rezervace'] = $this->pdoWrapper->getReservationsAndAll();
-		var_dump($this->template['rezervace'][0]);
+		foreach ($this->template['rezervace'][0] as $key => $var){
+			echo "$key => $var<br/>";
+		}
 	}
 	
 }

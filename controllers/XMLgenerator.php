@@ -35,7 +35,6 @@ class XMLgenerator{
 	}
 	
 	public function renderInventory(){
-		//$this->startUp();
 		$this->template["game_type"] = $this->pdoWrapper->getGameTypes();
 		$this->template["game_box"] = $this->pdoWrapper->getGameBoxes();
 	}
