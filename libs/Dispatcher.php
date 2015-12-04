@@ -37,7 +37,7 @@ class Dispatcher {
 			case "sprava":
 				$cont = new controllers\SpravaController(); break;
             case "rezervace":
-                $cont = new controllers\HomeController(); break;
+                $cont = new controllers\RezervaceController(); break;
 			case "letiste":
 				$noURL = true;
 				$cont = new controllers\LetisteController(); break;
