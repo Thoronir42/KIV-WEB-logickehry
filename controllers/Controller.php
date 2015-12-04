@@ -54,11 +54,14 @@ abstract class Controller{
 
 	public function startUp(){
 		$this->template['menu'] = $this->buildUrls($this->template['menu']);
+		$this->template['submenu'] = $this->buildUrls($this->template['submenu']);
 		$this->addCss("default.css");
 	}
 	
 	private function buildUrls($menu){
-		
+		if(!$menu){
+			return false;
+		}
 		foreach($menu as $key => $item){
 			$menu[$key]["url"] = $this->urlGen->getUrl($item['urlParams']);
 		}
@@ -73,6 +76,15 @@ abstract class Controller{
 			}
 		}
 		$this->template['menu'] = $menu;
+		
+		$submenu	= $this->template['submenu'];
+		foreach($submenu as $key => $val){
+			if($val['urlParams']['action'] == $action){
+				$submenu[$key]['active'] = true;
+			}
+		}
+		
+		$this->template['submenu'] = $submenu;
 	}
 	
     public function renderDefault(){
