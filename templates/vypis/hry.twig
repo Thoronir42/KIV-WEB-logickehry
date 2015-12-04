@@ -3,7 +3,7 @@
 {% extends layout %}
 
 {% block bodyContent %}
-	<div> 	
+	<div>
 {% for hra in hry %}
 	{% include 'mini/hra.twig' with { 'g': hra} %}
 	<hr/>
