@@ -31,7 +31,7 @@ class PDOwrapper{
 	
 	public function getGamesWithScores(){
 		$result = $this->connection->query("SELECT * FROM `game_type_w_score`")
-				->fetchAll(PDO::FETCH_CLASS, Views\GameTypeWithScore::class);
+				->fetchAll(PDO::FETCH_CLASS, Views\GameTypeExtended::class);
 		return $result;
 	}
 	
@@ -64,5 +64,16 @@ class PDOwrapper{
 		return $result;
 	}
 
-	
+	/**
+	 * @return Tables\GameType Typ hry id
+	 */
+	public function fetchGame($id) {
+		if(!is_numeric($id)){ return null; }
+		$statement = $this->connection->prepare("SELECT * FROM game_type"
+				. "WHERE game_type_id == :game_type_id");
+		$result = $statement->fetchObject(\Tables\GameType::class,
+				[ "game_type_id" => $id ]);
+		return $result;
+	}
+
 }
