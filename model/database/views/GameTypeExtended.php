@@ -8,7 +8,7 @@ use \model\database\tables\GameType;
  *
  * @author Stepan
  */
-class GameTypeWithScore extends GameType{
+class GameTypeExtended extends GameType{
 	
 	var $average_score;
 	
@@ -16,7 +16,5 @@ class GameTypeWithScore extends GameType{
 	
 	var $subsribed_users;
 	
-	public function __construct() {
-		;
-	}
+	var $box_count;
 }
