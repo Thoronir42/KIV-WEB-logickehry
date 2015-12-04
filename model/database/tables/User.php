@@ -8,6 +8,8 @@ namespace model\database\tables;
  */
 class User {
 	
+	static $roles;
+	
 	var $user_id;
 	
 	var $orion_login;
@@ -15,5 +17,15 @@ class User {
 	var $name;
 	
 	var $surname;
+	
+	var $role;
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function isSupervisor(){
+		return true;
+	}
 	
 }

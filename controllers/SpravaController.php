@@ -34,7 +34,8 @@ class SpravaController extends Controller{
 	}
 	
 	public function renderUzivatele(){
-		$this->template['pageTitle'] = "Správa registrovaných přihlášených uživatelů";
+		$this->template['pageTitle'] = "Správa registrovaných uživatelů";
+		$this->template['users'] = $this->pdoWrapper->getUsers();
 	}
 	
 	public function renderInventar(){

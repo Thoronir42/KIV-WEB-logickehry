@@ -41,6 +41,11 @@ class PDOwrapper{
 		return $result;
 	}
 	
+	public function getUsers(){
+		$result = $this->connection->query("SELECT * FROM user")
+				->fetchAll(PDO::FETCH_CLASS, Tables\User::class);
+		return $result;
+	}
 	public function getGameTypes(){
 		$result = $this->connection->query("SELECT * FROM game_type")
 				->fetchAll(PDO::FETCH_CLASS, Tables\GameType::class);
@@ -53,5 +58,11 @@ class PDOwrapper{
 		return $result;
 	}
 	
+	public function getDesks(){
+		$result = $this->connection->query("SELECT * FROM desk")
+				->fetchAll(PDO::FETCH_CLASS, Tables\GameBox::class);
+		return $result;
+	}
+
 	
 }
