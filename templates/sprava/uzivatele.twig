@@ -1,0 +1,11 @@
+{# sprava/hry.twig #}
+
+{% extends layout %}
+
+{% block bodyContent %}
+	<ul>
+	{% for u in users %}
+		<li>{{ '%s %s'|format(u.name, u.surname)}}</li>
+	{% endfor %}
+	</ul>
+{% endblock %}
