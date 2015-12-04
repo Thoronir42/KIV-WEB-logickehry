@@ -3,6 +3,7 @@ namespace controllers;
 
 use libs\URLgen,
 	libs\PDOwrapper;
+use model\database\tables\User;
 
 /**
  * Description of Controler
@@ -23,37 +24,43 @@ abstract class Controller{
 	/** @var string */
 	var $layout;
 	
+	/** @var User */
+	var $user;
+	
     public function __construct() {
+		$this->layout = "layout.twig";
 		$this->template = [
 			'css' => [],
 			'script' => [],
+			'title' => "Centrum Logických Her",
 		];
+		
+		$this->user = new User();
 		
 		$this->template['menu'] = $this->buildMenu();
 		$this->template['submenu'] = $this->buildSubmenu();
 	}
 	private function buildMenu(){
-		$menu = [
-			["urlParams" => ["controller" => "vypis", "action"=>"hry"],
-				"label" => "Seznamy"
-			],
-			["urlParams" => ["controller" => "sprava", "action"=>"hry"],
-				"label" => "Správa her"
-			],
-			["urlParams" => ["controller" => "letiste", "action"=>"rezervace"],
-				"label" => "(Letiště)"
-			],
-			["urlParams" => ["controller" => "xml", "action"=>"inventory"],
-				"label" => "(XML)"
-			],
-		];
+		$menu = [];
+		$menu[] = ["urlParams" => ["controller" => "vypis", "action"=>"hry"],
+				"label" => "Seznamy"];
+		$menu[] = ["urlParams" => ["controller" => "rezervace", "action"=>"vypis"],
+				"label" => "Rezervace"];
+		if($this->user->isSupervisor()){
+			$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"hry"],
+					"label" => "Správa"];
+		}
+		$menu[] = ["urlParams" => ["controller" => "letiste", "action"=>"rezervace"],
+				"label" => "(Letiště)"];
+		$menu[] = ["urlParams" => ["controller" => "xml", "action"=>"inventory"],
+				"label" => "(XML)"];
 		return $menu;
 	}
 	protected function buildSubmenu(){ return false; }
 
 
 	public function startUp(){
-		$this->template['menu'] = $this->buildUrls($this->template['menu']);
+		$this->template['menu']    = $this->buildUrls($this->template['menu']);
 		$this->template['submenu'] = $this->buildUrls($this->template['submenu']);
 		$this->addCss("default.css");
 	}
@@ -69,7 +76,7 @@ abstract class Controller{
 	}
     
 	public function setActiveMenuItem($controller = null, $action = null){
-		$menu = $this->template['menu'];
+		$menu		= $this->template['menu'];
 		foreach($menu as $key => $val){
 			if($val['urlParams']['controller'] == $controller){
 				$menu[$key]['active'] = true;
@@ -90,6 +97,19 @@ abstract class Controller{
     public function renderDefault(){
         
     }
+	
+	protected function getUser(){
+		
+	}
+	
+	protected function getParam($name, $method = INPUT_GET){
+		switch($method){
+			default: return null;
+			case INPUT_GET: case INPUT_POST:
+				$field = filter_input($method, $name);
+				return $field;
+		}
+	}
 	
 	protected function addCss($css){
 		$this->template['css'][] = $this->urlGen->getCss($css);
