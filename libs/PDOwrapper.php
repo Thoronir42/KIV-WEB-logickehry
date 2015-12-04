@@ -17,7 +17,7 @@ class PDOwrapper{
 	 */
     public static function getConnection($cfg){
         $cfg['password'] = isset($cfg['password']) ? $cfg['password'] : null;
-        $pdo = new PDO("mysql:host=$cfg[host];dbname=$cfg[db_name]", $cfg['user'], $cfg['password']);
+        $pdo = new PDO("mysql:host=$cfg[host];dbname=$cfg[db_name];charset=utf8", $cfg['user'], $cfg['password']);
 		return new PDOwrapper($pdo);
     }
 	
