@@ -1,0 +1,27 @@
+{# sprava/pridatPolozku.twig  #}
+
+{% extends layout %}
+
+{% block bodyContent %}
+	<form>
+		<input type="hidden" name="game_type_id" value="{{ gt.game_type_id }}">
+		<table>
+			<tr>
+				<td><label for="game_name">Jméno hry</label></td>
+				<td><input type="text" value="{{ gt.game_name }}"></td>
+			</tr>
+			<tr>
+				<td><label for="game_name">Evidenční číslo</label></td>
+				<td><input type="text"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="submit" name="submit" value="Přidat položku">
+				</td>
+			</tr>
+		</table>	
+		
+	</form>
+	
+	
+{% endblock %}

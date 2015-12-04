@@ -18,7 +18,6 @@ class SpravaController extends Controller{
 		];
 		return $menu;
 	}
-
 	
 	public function startUp(){
 		parent::startUp();
@@ -26,16 +25,41 @@ class SpravaController extends Controller{
 	}
 	
 	public function renderHry(){
+		$this->addCss("hra.css");
+		
+		$this->template['pageTitle'] = "Správa her";
+		
 		$games = $this->pdoWrapper->getGamesWithScores();
-		foreach($games as $game){
-			var_dump($game);
-			echo '<hr/>';
-		}
+		$this->template['games'] = $games;
+	}
+	
+	public function renderUzivatele(){
+		$this->template['pageTitle'] = "Správa registrovaných přihlášených uživatelů";
+	}
+	
+	public function renderInventar(){
+		$this->template['pageTitle'] = "Správa evidovaných herních krabic";
+		$games = $this->pdoWrapper->getGameBoxes();
 		$this->template['games'] = $games;
 	}
 	
 	public function renderPridatHru(){
-		
+		$this->template['pageTitle'] = "Zavést novou hru";
+	}
+	
+	public function renderPridatPolozku(){
+		$id = $this->getParam("game_type_id");
+		$game = $this->pdoWrapper->fetchGame($id);
+		if(is_null($game)){
+			$this->renderNotFound("Hra s id $id nebyla nalezena");
+			return;
+		}
+		$this->template['pageTitle'] = "Přidat exemplář hry $game->game_name";
+	}
+	
+	private function renderNotFound($message){
+		echo $message;
+		die;
 	}
 	
 }
