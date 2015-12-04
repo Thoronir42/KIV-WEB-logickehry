@@ -1,0 +1,19 @@
+/* 
+    Created on : 2.12.2015, 17:01:05
+    Author     : Stepan
+*/
+
+.game{
+	border: black 1px solid;
+}
+
+.game div div div{
+	background: bisque;
+}
+
+
+.image-frame{
+	background: darkgray;
+	width: 80px;
+	height: 80px;
+}
