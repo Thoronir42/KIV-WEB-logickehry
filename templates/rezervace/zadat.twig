@@ -1,0 +1,46 @@
+{# rezervace/zadat.twig #}
+{% extends layout %}
+
+{% block bodyContent %}
+	<form>
+		<table>
+			<tr>
+				<td>
+					<label for="game_type_id">Hra</label>
+				</td>
+				<td>
+					<select name="game_type_id">
+						{% for g in games %}
+							<option value="{{ g.game_type_id }}">{{ g.game_name }}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td><label for="reservation_date">Datum rezervace</label></td>
+				<td><input type="date" name="reservation_date"></td>
+			</tr>
+			<tr>
+				<td><label for="time_from">Čas rezervace</label>	</td>
+				<td><input type="time" name="time_from"><input type="time" name="time_to"></td>
+			</tr>
+			<tr>
+				<td>
+					<label for="desk_id">Stůl</label>
+				</td>
+				<td>
+					<select name="desk_id">
+						{% for d in desks %}
+							<option value="{{ d.desk_id}}">{{ 'Stůl číslo %02d (míst: %d)'|format(d.desk_id, d.capacity) }}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="submit" name="submit" value="Zarezervovat">
+				</td>
+			</tr>
+		</table>
+	</form>
+{% endblock %}
