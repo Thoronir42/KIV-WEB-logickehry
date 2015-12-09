@@ -30,15 +30,15 @@ class ErrorController extends Controller{
 				$this->template['zprava'] = "V aplikaci nastala chyba, která nebyla rozpoznána.";
 			case self::NO_CONTROLLER_FOUND:
 				$this->template['nadpis'] = "Nebyl nalezen kontroler";
-				$this->template['zprava'] = "V systému není žádný kontroler jména $c";
+				$this->template['zprava'] = "V systému není žádný kontroler jména <b>$c</b>";
 				break;
 			case self::NOT_RECOGNISED_ACTION:
 				$this->template['nadpis'] = "Nebyla rozpoznána akce";
-				$this->template['zprava'] = "Kontroler $c byl nalezen ale neobsahuje akci $a";
+				$this->template['zprava'] = "Kontroler <b>$c</b> byl nalezen ale neobsahuje akci <b>$a</b>";
 				break;
 			case self::NO_TEMPLATE:
 				$this->template['nadpis'] = "Nebyla nalezena šablona";
-				$this->template['zprava'] = "Kontroler $c obsahuje akci $a ale pro danou akci neexistuje šablona.";
+				$this->template['zprava'] = "Kontroler <b>$c</b> obsahuje akci <b>$a</b> ale pro danou akci neexistuje šablona.";
 				break;
 			case self::NO_RENDER_OR_REDIRECT:
 				$this->template['nadpis'] = "Akce nemohla být zobrazena";
