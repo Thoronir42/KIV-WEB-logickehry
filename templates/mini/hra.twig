@@ -1,20 +1,18 @@
 {# Twig template mini/hra.twig #}
 
-<div class="game">
-	<div class="row">
-		<div class="image-frame col-md4">
-			<img src="{{ g.picture_path }}">
+<div class="game row">
+	<div class="image-frame col-md-4">
+		<img src="{{ g.picture_path }}">
+	</div>
+	<div class="col-md-8">
+		<div class="row" style="border: 1px black solid">
+			<div class="col-md-6">{{ g.game_name }}</div>
+			<div class="col-md-6">Hodnocení:{{ '%d (%d)'|format(g.average_score, g.rating_count) }}</div>
 		</div>
-		<div class="col-md8">
-			<div class="row">
-				<div class="col-md6">{{ g.game_name }}</div>
-				<div class="col-md6">Hodnocení:{{ '%d (%d)'|format(g.average_score, g.rating_count) }}</div>
-			</div>
-			<div class="row">
-				<div class="col-md4">Hráčů:{{ "%d - %d"|format(g.min_players, g.max_players) }}</div>
-				<div class="col-md5">Prům. Doba Hry: {{ g.avg_game_time }}</div>
-				<div class="col-md3">({{ g.subscribed_users }})</div>
-			</div>
+		<div class="row"  style="border: 1px blue solid">
+			<div class="col-md-4" style=" border: 1px lime solid">Hráčů:{{ "%d - %d"|format(g.min_players, g.max_players) }}</div>
+			<div class="col-md-5">Prům. Doba Hry: {{ g.avg_game_time }}</div>
+			<div class="col-md-3">({{ g.subscribed_users }})</div>
 		</div>
 	</div>
 </div>
