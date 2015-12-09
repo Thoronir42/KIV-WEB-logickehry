@@ -17,17 +17,17 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
 		{% for nav in navbar['menu'] %}
-			{% if nav['active'] %}
-				<li class="dropdown active">
+			{% if nav['dropdown'] %}
+				<li class="dropdown{% if nav['active'] %} active{% endif %}">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ nav['label']}}<span class="caret"></span></a>
 				<ul class="dropdown-menu">
-				{% for subnav in navbar['submenu'] %}
-					<li><a href="{{ subnav['url'] }}">{{ subnav['label'] }}</a></li>
+				{% for subnav in nav['dropdown'] %}
+					<li{% if nav['active'] %} class="active"{% endif %}><a href="{{ subnav['url'] }}">{{ subnav['label'] }}</a></li>
 				{% endfor %}
 				</ul>
 			  </li>
 			{% else %}
-				<li><a href="{{ nav['url'] }}">{{ nav['label'] }}<span class="sr-only">(current)</span></a></li>
+				<li{% if nav['active'] %} class="active"{% endif %}><a href="{{ nav['url'] }}">{{ nav['label'] }}<span class="sr-only">(current)</span></a></li>
 			{% endif %}
 		{% endfor %}
 		<li><a href="#">Link</a></li>
@@ -49,12 +49,3 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-
-
-{% block navActive %}
-	
-{% endblock %}
-
-{% block navDefault %}
-	<li><a href="{{ nav['url'] }}">{{ nav['label'] }}<span class="sr-only">(current)</span></a></li>
-{% endblock %}
