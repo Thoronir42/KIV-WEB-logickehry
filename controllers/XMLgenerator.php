@@ -6,6 +6,9 @@ use \libs\PDOwrapper;
 
 class XMLgenerator{
 	
+	/** @var boolean */
+	var $blockSauce = true;
+	
 	/** @var PDOwrapper */
 	var $pdoWrapper;
 	
@@ -22,6 +25,10 @@ class XMLgenerator{
 	/** @var array */
 	var $template;
     
+	public function buildSubmenu(){
+		return false;
+	}
+	
 	public function __construct() {
 		$this->template = [];
 		$this->layout = "layoutXML.twig";

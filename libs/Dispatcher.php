@@ -28,45 +28,42 @@ class Dispatcher {
 		$this->urlGen = $urlGen;
     }
     
-	public function getControler($controlerName){
-        switch($controlerName){
+	/**
+	 * 
+	 * @param String $controllerName
+	 * @return \controllers\Controller
+	 */
+	public static function getControler($controllerName){
+        switch($controllerName){
             default:
                 return null;
-			case "vypis":
-				$cont = new controllers\VypisController(); break;
-			case "sprava":
-				$cont = new controllers\SpravaController(); break;
-            case "rezervace":
-                $cont = new controllers\RezervaceController(); break;
-			case "letiste":
-				$noURL = true;
-				$cont = new controllers\LetisteController(); break;
-            case "login":
-                $cont = new controllers\LoginController(); break;
-			case "xml":
-				$noURL = true;
-				$cont = new controllers\XMLgenerator(); break;
+			case "vypis":	return  new controllers\VypisController();
+			case "sprava":	return  new controllers\SpravaController();
+			case "rezervace":return new controllers\RezervaceController();
+			case "letiste":	return  new controllers\LetisteController();
+			case "login":	return  new controllers\LoginController();
+			case "xml":		return  new controllers\XMLgenerator();
         }
-		if(!isset($noURL)){ $cont->urlGen = $this->urlGen; }
+	}
+	private function getControllerInstance($controllerName){
+		$cont = self::getControler($controllerName);
+		if(!isset($cont->blockSauce)){ $cont->urlGen = $this->urlGen; }
 		$cont->pdoWrapper = $this->pdoWrapper;
 		return $cont;
     }
 	
 	public function dispatch($contName, $action = null, $params = null){
-		$cont = self::getControler($contName);
+		$cont = self::getControllerInstance($contName);
 		if($cont == null){
 			$this->error(ErrorController::NO_CONTROLLER_FOUND, $contName);
 			return;
 		}
-		
-		$isXML = $cont instanceof \controllers\XMLgenerator;
+		$noSauce = isset($cont->blockSauce);
+		if(!$noSauce){ $cont->setActiveMenuItem($contName, $action); }
 		
 		$prepAction = $this->prepareActionName($action);
-		$contResponse = $this->getControllerResponse($cont, $prepAction, $isXML);
+		$contResponse = $this->getControllerResponse($cont, $prepAction, $noSauce);
 		
-		if(!$isXML){
-			$cont->setActiveMenuItem($contName, $action);
-		}
 		$contResponse["startup"]->invoke($cont);
 		unset($contResponse["startup"]);
 		$this->invokeResponse($contResponse, $cont, $contName, $action, $params);
@@ -99,7 +96,7 @@ class Dispatcher {
 			$contResponse['render']->invoke($cont, $params);
 			echo $this->render($layoutBody, $cont->template, $cont->layout);
 		} else {
-			$this->error(ErrorController::NO_RENDER_OR_REDIRECT, "$cont", $action);
+			$this->error(ErrorController::NO_RENDER_OR_REDIRECT, $contName, $action);
 		}
 	}
 	
