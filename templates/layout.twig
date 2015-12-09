@@ -21,37 +21,13 @@
         <title>{{ title }}</title>
     </head>
     <body>
-        <div class="row">
-          <div id="top_infoBar" class="col-lg-10 col-lg-offset-1">
-              <div id="page_title">Sample Text</div>
-          </div>
-        </div>
-        
-        <div class="row">
-            <div class="menuBox col-lg-offset-2 col-md-offset-1 col-xs-offset-0 col-sm-3 col-md-3 col-lg-3" >
-                <ul class="nav nav-pills nav">
-					{% for nav in menu %}
-					<li role="presentation" {% if nav['active'] %} class="active" {% endif %}> <a href="{{ nav['url'] }}">{{ nav['label'] }}</a></li>
-					{% endfor %}
-                </ul>
-            </div>
-        </div>
-		{% if submenu %}
-        <div class="row">
-            <div class="submenuBox col-lg-offset-2 col-md-offset-1 col-xs-offset-0 col-sm-3 col-md-3 col-lg-3" >
-                <ul class="nav nav-pills nav">
-                    {% for nav in submenu %}
-                    <li role="presentation" {% if nav['active'] %} class="active" {% endif %}> <a href="{{ nav['url'] }}">{{ nav['label'] }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-		{% endif %}
+        {% include 'mini/top-navbar.twig' with {'navbar': navbar} %}
 		<div class="row">
-            <div class="bodyContainer col-xs-offset-1 col-lg-5 col-md-6 col-sm-7">
+            <div class="bodyContainer col-xs-offset-2 col-sm-8">
 				<h1>{{ pageTitle }}</h1>
                 {{ block('bodyContent') }}
             </div>
+			
         </div>
     </body>
 </html>

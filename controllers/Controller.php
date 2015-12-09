@@ -27,18 +27,27 @@ abstract class Controller{
 	/** @var User */
 	var $user;
 	
+	/** @var array */
+	var $navbar;
+	
+	/** @var String */
+	var $action, $controller;
+	
+	
+	
+	
     public function __construct() {
+		$this->navbar = ['app-name' => "Centrum Logických Her"];
+		
+		
 		$this->layout = "layout.twig";
 		$this->template = [
 			'css' => [],
 			'script' => [],
-			'title' => "Centrum Logických Her",
 		];
 		
 		$this->user = new User();
 		
-		$this->template['menu'] = $this->buildMenu();
-		$this->template['submenu'] = $this->buildSubmenu();
 	}
 	private function buildMenu(){
 		$menu = [];
@@ -49,20 +58,33 @@ abstract class Controller{
 		if($this->user->isSupervisor()){
 			$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"hry"],
 					"label" => "Správa"];
-		}
-		$menu[] = ["urlParams" => ["controller" => "letiste", "action"=>"rezervace"],
+			$menu[] = ["urlParams" => ["controller" => "letiste", "action"=>"rezervace"],
 				"label" => "(Letiště)"];
-		$menu[] = ["urlParams" => ["controller" => "xml", "action"=>"inventory"],
-				"label" => "(XML)"];
+			$menu[] = ["urlParams" => ["controller" => "xml", "action"=>"inventory"],
+					"label" => "(XML)"];
+		}
+		
+		foreach($menu as $k => $v){
+			$cont = \Dispatcher::getControler($v['urlParams']['controller']);
+			if($cont == null){ continue; }
+			$menu[$k]["dropdown"] = $cont->buildSubmenu();
+			
+			unset($cont);
+		}
+		
 		return $menu;
 	}
 	protected function buildSubmenu(){ return false; }
 
 
 	public function startUp(){
-		$this->template['menu']    = $this->buildUrls($this->template['menu']);
-		$this->template['submenu'] = $this->buildUrls($this->template['submenu']);
+		$this->navbar['menu'] = $this->buildUrls($this->buildMenu());
+		$this->navbar['menu'] = $this->activeMenuParse($this->navbar['menu'],
+				'controller', $this->controller, $this->action);
+		$this->template['navbar'] = $this->navbar;
+		
 		$this->addCss("default.css");
+		
 	}
 	
 	private function buildUrls($menu){
@@ -76,22 +98,20 @@ abstract class Controller{
 	}
     
 	public function setActiveMenuItem($controller = null, $action = null){
-		$menu		= $this->template['menu'];
+		$this->controller = $controller;
+		$this->action = $action; 
+	}
+	private function activeMenuParse($menu, $checkKey, $checkVal, $action = null){
+		if(!$menu) return $menu;
 		foreach($menu as $key => $val){
-			if($val['urlParams']['controller'] == $controller){
+			if($val['urlParams'][$checkKey] == $checkVal){
 				$menu[$key]['active'] = true;
+				if($checkKey == "controller"){
+					//$this->activeMenuParse($menu['dropdown'], "action", $action);
+				}
 			}
 		}
-		$this->template['menu'] = $menu;
-		
-		$submenu	= $this->template['submenu'];
-		foreach($submenu as $key => $val){
-			if($val['urlParams']['action'] == $action){
-				$submenu[$key]['active'] = true;
-			}
-		}
-		
-		$this->template['submenu'] = $submenu;
+		return $menu;
 	}
 	
     public function renderDefault(){
