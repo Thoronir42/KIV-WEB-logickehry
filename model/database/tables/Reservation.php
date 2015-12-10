@@ -6,7 +6,7 @@ namespace model\database\tables;
  *
  * @author Stepan
  */
-class Reservation {
+class Reservation extends \model\database\DB_Entity{
 	
 	var $reservation_id;
 	

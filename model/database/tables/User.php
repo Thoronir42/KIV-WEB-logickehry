@@ -6,7 +6,7 @@ namespace model\database\tables;
  *
  * @author Stepan
  */
-class User {
+class User extends \model\database\DB_Entity{
 	
 	static $roles;
 	

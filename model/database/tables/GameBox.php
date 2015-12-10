@@ -6,7 +6,7 @@ namespace model\database\tables;
  *
  * @author Stepan
  */
-class GameBox {
+class GameBox extends \model\database\DB_Entity{
 	
 	var $game_box_id;
 	

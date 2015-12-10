@@ -6,7 +6,7 @@ namespace model\database\tables;
  *
  * @author Stepan
  */
-class GameType {
+class GameType extends \model\database\DB_Entity{
 	
 	var $game_type_id;
 	

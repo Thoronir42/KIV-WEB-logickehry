@@ -53,14 +53,14 @@ class PDOwrapper{
 	}
 	
 	public function getGameBoxes(){
-		$result = $this->connection->query("SELECT * FROM game_box")
-				->fetchAll(PDO::FETCH_CLASS, Tables\GameBox::class);
+		$result = $this->connection->query("SELECT * FROM game_box_extended")
+				->fetchAll(PDO::FETCH_CLASS, Views\GameBoxExtended::class);
 		return $result;
 	}
 	
 	public function getDesks(){
 		$result = $this->connection->query("SELECT * FROM desk")
-				->fetchAll(PDO::FETCH_CLASS, Tables\GameBox::class);
+				->fetchAll(PDO::FETCH_CLASS, Tables\Desk::class);
 		return $result;
 	}
 

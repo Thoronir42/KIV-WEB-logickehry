@@ -6,7 +6,7 @@ namespace model\database\tables;
  *
  * @author Stepan
  */
-class Desk {
+class Desk extends \model\database\DB_Entity{
 	
 	var $desk_id;
 	

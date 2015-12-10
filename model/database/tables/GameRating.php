@@ -6,7 +6,7 @@ namespace model\database\tables;
  *
  * @author Stepan
  */
-class GameRating{
+class GameRating extends \model\database\DB_Entity{
 	
 	var $game_rating_id;
 	
