@@ -11,9 +11,11 @@
 	background: bisque;
 }
 
-
-.image-frame{
-	background: darkgray;
-	width: 80px;
+.game .panel-heading{
+	font-size: 2.2em;
 	height: 80px;
+}
+
+.game .image-frame img{
+	max-height: 64px;
 }

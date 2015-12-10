@@ -1,6 +1,8 @@
 <?php
 namespace controllers;
 
+use model\ImageManager;
+
 /**
  * Description of HomeControler
  *
@@ -16,8 +18,6 @@ class VypisController extends Controller{
 				"label" => "Herní krabice"];
 		$menu[] = ["urlParams" => ["controller" => "vypis", "action"=>"rezervace"],
 				"label" => "Uživatelé"];
-		$menu[] = ["urlParams" => ["controller" => "vypis", "action"=>"inventory"],
-				"label" => "(XML)"];
 		return $menu;
 	}
 	
@@ -31,7 +31,12 @@ class VypisController extends Controller{
     public function renderHry(){
 		$this->addCss("hra.css");
 		$this->template['pageTitle'] = "Výpis her";
-        $this->template['hry'] = $this->pdoWrapper->getGamesWithScores();
+		$games = $this->pdoWrapper->getGamesWithScores();
+		foreach($games as $key => $g){
+			$path = $this->urlGen->getImg(ImageManager::get(sprintf("game_%03d.png", $g->game_type_id)));
+			$games[$key]->picture_path = $path;
+		}
+        $this->template['hry'] = $games;
     }
 	
 	public function renderRezervace(){

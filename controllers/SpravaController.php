@@ -1,21 +1,20 @@
 <?php
 namespace controllers;
 
+use \model\ImageManager;
 
 class SpravaController extends Controller{
 	
 	protected function buildSubmenu() {
-		$menu = [
-			["urlParams" => ["controller" => "sprava", "action"=>"hry"],
-				"label" => "Hry"
-			],
-			["urlParams" => ["controller" => "sprava", "action"=>"rezervace"],
-				"label" => "Rezervace"
-			],
-			["urlParams" => ["controller" => "sprava", "action"=>"uzivatele"],
-				"label" => "Uživatelé"
-			],
-		];
+		$menu = [];
+		$menu[]= ["urlParams" => ["controller" => "sprava", "action"=>"hry"],
+				"label" => "Hry"];
+		$menu[]= ["urlParams" => ["controller" => "sprava", "action"=>"inventar"],
+				"label" => "Inventář"];
+		$menu[]= ["urlParams" => ["controller" => "sprava", "action"=>"rezervace"],
+				"label" => "Rezervace"];
+		$menu[]= ["urlParams" => ["controller" => "sprava", "action"=>"uzivatele"],
+				"label" => "Uživatelé"];
 		return $menu;
 	}
 	
@@ -30,6 +29,10 @@ class SpravaController extends Controller{
 		$this->template['pageTitle'] = "Správa her";
 		
 		$games = $this->pdoWrapper->getGamesWithScores();
+		foreach($games as $key => $g){
+			$path = $this->urlGen->getImg(ImageManager::get(sprintf("game_%03d.png", $g->game_type_id)));
+			$games[$key]->picture_path = $path;
+		}
 		$this->template['games'] = $games;
 	}
 	
@@ -40,8 +43,17 @@ class SpravaController extends Controller{
 	
 	public function renderInventar(){
 		$this->template['pageTitle'] = "Správa evidovaných herních krabic";
+		$this->addCss("sprava_inventar.css");
 		$games = $this->pdoWrapper->getGameBoxes();
-		$this->template['games'] = $games;
+		$gamesSrt = [];
+		foreach($games as $g){
+			if(!isset($gamesSrt[$g->game_type_id])){
+				$path = $this->urlGen->getImg(ImageManager::get(sprintf("game_%03d.png", $g->game_type_id)));
+				$gamesSrt[$g->game_type_id] = ["game_name"=>$g->game_name,"picture_path" => $path, "tracking_codes" => []];
+			}
+			$gamesSrt[$g->game_type_id]["tracking_codes"][] = $g->tracking_code;
+		}
+		$this->template['games'] = $gamesSrt;
 	}
 	
 	public function renderPridatHru(){

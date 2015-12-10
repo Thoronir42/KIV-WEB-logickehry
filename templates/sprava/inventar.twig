@@ -1,0 +1,46 @@
+{# sprava/inventar.twig #}
+
+{% extends layout %}
+
+{% block bodyContent %}
+	
+	Výpis inventářových entit seskupené podle herních druhů.
+	
+	{% for g in games %}
+		<div class="game panel panel-default">
+			<div class="panel-heading">
+				<span class="game-title pull-left">
+					{{ g.game_name }}
+				</span>
+				<span class="image-frame pull-right">
+					<img src="{{ g.picture_path }}" class="img-rounded img-responsive">
+				</span>
+			</div>
+			<div class="panel-body">
+				{% for code in g.tracking_codes%}
+					{% if loop.index % 3 == 1 %}
+						<div class="row">
+							{% set open_row = true %}
+					{% endif %}
+					
+					<div class="col-lg-4">
+						<div class="input-group">
+							<input type="text" class="form-control" value="{{ code }}">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button">Vyřadit</button>
+							</span>
+						</div><!-- /input-group -->
+					</div><!-- /.col-lg-6 -->
+					{% if loop.index % 3 == 0 %}
+						</div>
+						{% set open_row = false %}
+					{% endif %}
+				{% endfor %}
+				{% if open_row %}
+					</div>
+				{% endif %}
+			</div>
+			
+		</div>
+	{% endfor %}
+{% endblock %}
