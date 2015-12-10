@@ -78,21 +78,22 @@ abstract class Controller{
 
 
 	public function startUp(){
-		$this->navbar['menu'] = $this->buildUrls($this->buildMenu());
-		$this->navbar['menu'] = $this->activeMenuParse($this->navbar['menu'],
-				'controller', $this->controller, $this->action);
+		$menu = $this->buildUrls($this->buildMenu(), true);
+		$this->navbar['menu'] = $this->activeMenuParse($menu, 'controller', $this->controller, true);
 		$this->template['navbar'] = $this->navbar;
-		
 		$this->addCss("default.css");
 		
 	}
 	
-	private function buildUrls($menu){
+	private function buildUrls($menu, $recursion = false){
 		if(!$menu){
 			return false;
 		}
 		foreach($menu as $key => $item){
 			$menu[$key]["url"] = $this->urlGen->getUrl($item['urlParams']);
+			if($recursion){
+				$menu[$key]['dropdown'] = $this->buildUrls($item['dropdown']);
+			}
 		}
 		return $menu;
 	}
@@ -101,15 +102,18 @@ abstract class Controller{
 		$this->controller = $controller;
 		$this->action = $action; 
 	}
-	private function activeMenuParse($menu, $checkKey, $checkVal, $action = null){
-		if(!$menu) return $menu;
+	private function activeMenuParse($menu, $checkKey, $checkVal, $continue = false){
+		if(!$menu){ return $menu; }
 		foreach($menu as $key => $val){
 			if($val['urlParams'][$checkKey] == $checkVal){
 				$menu[$key]['active'] = true;
-				if($checkKey == "controller"){
-					//$this->activeMenuParse($menu['dropdown'], "action", $action);
-				}
+				$activeKey = $key;
+				//echo "Found active $checkKey : $val[label]<br>";
+				break;
 			}
+		}
+		if(isset($activeKey) && $continue){
+			$menu[$activeKey]['dropdown'] =  $this->activeMenuParse($menu[$activeKey]['dropdown'], "action", $this->action);
 		}
 		return $menu;
 	}
