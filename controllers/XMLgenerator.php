@@ -26,7 +26,13 @@ class XMLgenerator{
 	var $template;
     
 	public function buildSubmenu(){
-		return false;
+		$menu = [];
+		$menu[] = ["urlParams" => ["controller" => "xml", "action"=>"games"],
+				"label" => "Katalog Her"];
+		$menu[] = ["urlParams" => ["controller" => "xml", "action"=>"inventory"],
+				"label" => "Inventář"];
+		
+		return $menu;
 	}
 	
 	public function __construct() {

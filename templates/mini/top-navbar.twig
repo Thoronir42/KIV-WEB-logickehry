@@ -1,6 +1,6 @@
 {# mini/top-navbar.twig #}
 
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-static-top">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -22,7 +22,7 @@
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ nav['label']}}<span class="caret"></span></a>
 				<ul class="dropdown-menu">
 				{% for subnav in nav['dropdown'] %}
-					<li{% if nav['active'] %} class="active"{% endif %}><a href="{{ subnav['url'] }}">{{ subnav['label'] }}</a></li>
+					<li{% if subnav['active'] %} class="active"{% endif %}><a href="{{ subnav['url'] }}">{{ subnav['label'] }}</a></li>
 				{% endfor %}
 				</ul>
 			  </li>
