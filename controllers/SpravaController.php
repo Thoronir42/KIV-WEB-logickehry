@@ -56,23 +56,18 @@ class SpravaController extends Controller{
 		$this->template['games'] = $gamesSrt;
 	}
 	
-	public function renderPridatHru(){
-		$this->template['pageTitle'] = "Zavést novou hru";
-	}
-	
-	public function renderPridatPolozku(){
+	public function renderVlozitHru(){
 		$id = $this->getParam("game_type_id");
+		if($id != null){
 		$game = $this->pdoWrapper->fetchGame($id);
 		if(is_null($game)){
 			$this->renderNotFound("Hra s id $id nebyla nalezena");
 			return;
 		}
-		$this->template['pageTitle'] = "Přidat exemplář hry $game->game_name";
+		} else {
+			$game = \model\database\tables\GameType::fromPOST();
 	}
 	
-	private function renderNotFound($message){
-		echo $message;
-		die;
+		$this->template['pageTitle'] = "Zavést novou hru";
 	}
-	
 }
