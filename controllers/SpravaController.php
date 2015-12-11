@@ -30,7 +30,7 @@ class SpravaController extends Controller{
 		
 		$games = $this->pdoWrapper->getGamesWithScores();
 		foreach($games as $key => $g){
-			$path = $this->urlGen->getImg(ImageManager::get(sprintf("game_%03d.png", $g->game_type_id)));
+			$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d.png", $g->game_type_id)));
 			$games[$key]->picture_path = $path;
 		}
 		$this->template['games'] = $games;
@@ -50,7 +50,7 @@ class SpravaController extends Controller{
 		$gamesSrt = [];
 		foreach($games as $g){
 			if(!isset($gamesSrt[$g->game_type_id])){
-				$path = $this->urlGen->getImg(ImageManager::get(sprintf("game_%03d.png", $g->game_type_id)));
+				$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d.png", $g->game_type_id)));
 				$gamesSrt[$g->game_type_id] = ["game_name"=>$g->game_name, 
 					"game_type_id"=>$g->game_type_id, "picture_path" => $path,
 					"tracking_codes" => []];

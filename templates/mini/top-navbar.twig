@@ -22,7 +22,7 @@
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ nav['label']}}<span class="caret"></span></a>
 				<ul class="dropdown-menu">
 				{% for subnav in nav['dropdown'] %}
-					<li{% if subnav['active'] %} class="active"{% endif %}><a href="{{ subnav['url'] }}">{{ subnav['label'] }}</a></li>
+					<li{% if subnav['active'] %} class="active"{% endif %}><a href="{{ urlgen.url(subnav['urlParams']) }}">{{ subnav['label'] }}</a></li>
 				{% endfor %}
 				</ul>
 			  </li>

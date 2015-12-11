@@ -13,7 +13,7 @@
 		<link href="css/bootstrap.css" rel="stylesheet">
 		
         {% for style in css %}
-        <link href="{{ style }}" rel="stylesheet">
+        <link href="{{ urlgen.css(style) }}" rel="stylesheet">
         {% endfor %}
 		
         <!-- Javascript includes -->
@@ -21,7 +21,7 @@
         <script src="js/bootstrap.js"></script>
 		
         {% for script in js %}
-        <script src="{{ script }}" rel="stylesheet"></script>
+        <script src="{{ urlgen.js(script) }}" rel="stylesheet"></script>
         {% endfor %}
 		
         <title>{{ title }}</title>

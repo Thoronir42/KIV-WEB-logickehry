@@ -10,7 +10,7 @@ class URLgen{
 		$this->urlPrefix =  $prefix;
 	}
 	
-	public function getUrl($params){
+	public function url($params){
 		$return = $this->urlPrefix;
 		$first = true;
 		foreach($params as $parKey => $parVal){
@@ -20,13 +20,13 @@ class URLgen{
 		return $return;
 	}
 	
-	public function getCss($file){
+	public function css($file){
 		return $this->urlPrefix."css/".$file;
 	}
-	public function getJs($file){
+	public function js($file){
 		return $this->urlPrefix."js/".$file;
 	}
-	public function getImg($file){
+	public function img($file){
 		return $this->urlPrefix."images/".$file;
 	}
 }

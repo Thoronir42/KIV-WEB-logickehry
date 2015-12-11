@@ -43,7 +43,7 @@ abstract class Controller{
 		$this->layout = "layout.twig";
 		$this->template = [
 			'css' => [],
-			'script' => [],
+			'js' => [],
 		];
 		
 		$this->user = new User();
@@ -90,7 +90,7 @@ abstract class Controller{
 			return false;
 		}
 		foreach($menu as $key => $item){
-			$menu[$key]["url"] = $this->urlGen->getUrl($item['urlParams']);
+			$menu[$key]["url"] = $this->urlGen->url($item['urlParams']);
 			if($recursion){
 				$menu[$key]['dropdown'] = $this->buildUrls($item['dropdown']);
 			}
@@ -136,16 +136,13 @@ abstract class Controller{
 	}
 	
 	protected function addCss($css){
-		$this->template['css'][] = $this->urlGen->getCss($css);
+		$this->template['css'][] = $css;
 	}
 	protected function addJs($js){
-		$jsu = $this->urlGen->getJs($js);
-		if(isset($this->template['js'])){
 			foreach($this->template['js'] as $scr){
-				if ($scr === $jsu){ return; }
+			if ($scr === $js){ return; }
 			}
-		}
-		$this->template['js'][] = $jsu;
+		$this->template['js'][] = $js;
 	}
     
     public function redirect($location){
