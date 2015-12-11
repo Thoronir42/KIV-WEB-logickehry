@@ -42,14 +42,18 @@ class SpravaController extends Controller{
 	}
 	
 	public function renderInventar(){
-		$this->template['pageTitle'] = "Správa evidovaných herních krabic";
 		$this->addCss("sprava_inventar.css");
+		$this->addJs("sprava_inventar.js");
+		$this->template['pageTitle'] = "Správa evidovaných herních krabic";
+		
 		$games = $this->pdoWrapper->getGameBoxes();
 		$gamesSrt = [];
 		foreach($games as $g){
 			if(!isset($gamesSrt[$g->game_type_id])){
 				$path = $this->urlGen->getImg(ImageManager::get(sprintf("game_%03d.png", $g->game_type_id)));
-				$gamesSrt[$g->game_type_id] = ["game_name"=>$g->game_name,"picture_path" => $path, "tracking_codes" => []];
+				$gamesSrt[$g->game_type_id] = ["game_name"=>$g->game_name, 
+					"game_type_id"=>$g->game_type_id, "picture_path" => $path,
+					"tracking_codes" => []];
 			}
 			$gamesSrt[$g->game_type_id]["tracking_codes"][] = $g->tracking_code;
 		}
@@ -59,15 +63,15 @@ class SpravaController extends Controller{
 	public function renderVlozitHru(){
 		$id = $this->getParam("game_type_id");
 		if($id != null){
-		$game = $this->pdoWrapper->fetchGame($id);
-		if(is_null($game)){
-			$this->renderNotFound("Hra s id $id nebyla nalezena");
-			return;
-		}
+			$game = $this->pdoWrapper->fetchGame($id);
+			if(is_null($game)){
+				$this->renderNotFound("Hra s id $id nebyla nalezena");
+				return;
+			}
 		} else {
 			$game = \model\database\tables\GameType::fromPOST();
-	}
-	
+		}
+		
 		$this->template['pageTitle'] = "Zavést novou hru";
 	}
 }

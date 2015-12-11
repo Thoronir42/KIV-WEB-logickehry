@@ -24,4 +24,10 @@ class AjaxController extends Controller{
 		$id=$this->getParam("id");
 		$this->template['response'] = $id;
 	}
+	
+	public function doRetireBox(){
+		$code = $this->getParam("code");
+		$box = $this->pdoWrapper->fetchBox($code);
+		$this->template['response'] = $box ? $code : 'false';
+	}
 }

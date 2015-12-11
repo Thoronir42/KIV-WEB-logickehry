@@ -138,6 +138,15 @@ abstract class Controller{
 	protected function addCss($css){
 		$this->template['css'][] = $this->urlGen->getCss($css);
 	}
+	protected function addJs($js){
+		$jsu = $this->urlGen->getJs($js);
+		if(isset($this->template['js'])){
+			foreach($this->template['js'] as $scr){
+				if ($scr === $jsu){ return; }
+			}
+		}
+		$this->template['js'][] = $jsu;
+	}
     
     public function redirect($location){
         \header("Location: /$location");

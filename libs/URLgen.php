@@ -23,7 +23,7 @@ class URLgen{
 	public function getCss($file){
 		return $this->urlPrefix."css/".$file;
 	}
-	public function getScript($file){
+	public function getJs($file){
 		return $this->urlPrefix."js/".$file;
 	}
 	public function getImg($file){

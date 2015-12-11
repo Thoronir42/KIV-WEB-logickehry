@@ -4,7 +4,7 @@
 
 {% block bodyContent %}
 	
-	Výpis inventářových entit seskupené podle herních druhů.
+	<p>Výpis inventářových entit seskupené podle herních druhů.</p>
 	
 	{% for g in games %}
 		<div class="game panel panel-default">
@@ -17,28 +17,37 @@
 				</span>
 			</div>
 			<div class="panel-body">
+				{% set open_row = false %}
 				{% for code in g.tracking_codes%}
-					{% if loop.index % 3 == 1 %}
-						<div class="row">
-							{% set open_row = true %}
+					{% if loop.index0 % 3 == 0 %}
+						<div class="row"> {% set open_row = true %}
 					{% endif %}
 					
-					<div class="col-lg-4">
+					<div class="col-md-4" id="ig_{{ code }}">
 						<div class="input-group">
-							<input type="text" class="form-control" value="{{ code }}">
+							<input type="text" class="form-control" value="{{ code }}" readonly>
 							<span class="input-group-btn">
-								<button class="btn btn-default" type="button">Vyřadit</button>
+								<button class="btn btn-default retire" type="button">Vyřadit</button>
 							</span>
 						</div><!-- /input-group -->
 					</div><!-- /.col-lg-6 -->
-					{% if loop.index % 3 == 0 %}
-						</div>
-						{% set open_row = false %}
+					{% if loop.index0 % 3 == 2 %}
+						</div> {% set open_row = false %}
 					{% endif %}
 				{% endfor %}
 				{% if open_row %}
-					</div>
+				</div>
 				{% endif %}
+				<hr>
+				<div class="row">
+					<div class="col-md-offset-3 col-md-6 input-group">
+						<label class="input-group-addon" for="addcode{{g.game_type_id}}">Evidovat krabici</label>
+						<input type="text" class="form-control" name="addcode{{g.game_type_id}}" placeholder="G00001">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button">OK</button>
+						</span>
+					</div>
+				</div>
 			</div>
 			
 		</div>
