@@ -71,9 +71,24 @@ class PDOwrapper{
 		if(!is_numeric($id)){ return null; }
 		$statement = $this->connection->prepare("SELECT * FROM game_type"
 				. "WHERE game_type_id == :game_type_id");
-		$result = $statement->fetchObject(\Tables\GameType::class,
-				[ "game_type_id" => $id ]);
-		return $result;
+		if($statement->execute(["game_type_id" => $id])){
+			return $statement->fetchObject(Tables\GameType::class);
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param \Tables\GameBox $code
+	 * @return type
+	 */
+	public function fetchBox($code){
+		$statement = $this->connection->prepare("SELECT * FROM game_box
+			WHERE tracking_code = :code");
+		if($statement->execute(['code' => $code])){
+			return $statement->fetchObject(Tables\GameBox::class);
+		}
+		return null;
 	}
 
 }
