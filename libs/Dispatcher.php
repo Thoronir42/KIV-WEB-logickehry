@@ -44,6 +44,7 @@ class Dispatcher {
 			case "login":	return	new controllers\LoginController();
 			case "xml":		return	new controllers\XMLgenerator();
 			case "ajax":	return	new controllers\AjaxController();
+			case "uzivatel":return new controllers\UzivatelController();
         }
 	}
 	private function getControllerInstance($controllerName){

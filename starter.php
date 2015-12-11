@@ -20,6 +20,9 @@ $protocol = (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']))
 $prefix =  $protocol."://$_SERVER[SERVER_NAME]/"; 
 $urlGen = new libs\URLgen($prefix);
 
+// Prepare session
+session_start();
+
 // Prepare dispatcher
 $dispatcher = new Dispatcher($pdow, $twig, $urlGen);
 

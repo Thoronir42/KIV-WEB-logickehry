@@ -91,4 +91,19 @@ class PDOwrapper{
 		return null;
 	}
 
+	public function fetchUser($orion_login) {
+		$statement = $this->connection->prepare("SELECT * FROM user_extended
+			WHERE orion_login = :ol");
+		if($statement->execute(['ol' => $orion_login])){
+			return $statement->fetchObject(Views\UserExtended::class);
+		}
+		return null;
+	}
+
+	public function insertUser($orion_login) {
+		$statement = $this->connection->prepare(
+			"INSERT INTO `web_logickehry_db`.`user` (``orion_login`) VALUES (':ol);");
+		return ($statement->execute(['ol' => $orion_login]));
+	}
+
 }

@@ -20,6 +20,10 @@ class URLgen{
 		return $return;
 	}
 	
+	public function loginUrl(){
+		return $this->urlPrefix."webauth/";
+	}
+	
 	public function css($file){
 		return $this->urlPrefix."css/".$file;
 	}

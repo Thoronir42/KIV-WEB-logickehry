@@ -29,12 +29,16 @@ class User extends \model\database\DB_Entity{
 	
 	var $role;
 	
-	/**
-	 * 
-	 * @return boolean
-	 */
+	
 	public function isSupervisor(){
 		return true;
 	}
 	
+	public function isReady(){
+		$arr = (array)$this;
+		foreach($arr as $prop){
+			if(empty($prop)){ return false; }
+		}
+		return true;
+	}
 }

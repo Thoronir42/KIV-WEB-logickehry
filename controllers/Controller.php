@@ -3,7 +3,7 @@ namespace controllers;
 
 use libs\URLgen,
 	libs\PDOwrapper;
-use model\database\tables\User;
+use model\database\tables\UserExtended;
 
 /**
  * Description of Controler
@@ -24,7 +24,7 @@ abstract class Controller{
 	/** @var string */
 	var $layout;
 	
-	/** @var User */
+	/** @var UserExtended */
 	var $user;
 	
 	/** @var array */
@@ -37,8 +37,10 @@ abstract class Controller{
 	
 	
     public function __construct() {
-		$this->navbar = ['app-name' => "Centrum Logických Her"];
+		$this->user = \UserManager::getCurrentUser();
 		
+		$this->navbar = ['app-name' => "Centrum Logických Her",
+				'user' => $this->user];
 		
 		$this->layout = "layout.twig";
 		$this->template = [
@@ -46,7 +48,6 @@ abstract class Controller{
 			'js' => [],
 		];
 		
-		$this->user = new User();
 		
 	}
 	private function buildMenu(){
@@ -139,9 +140,9 @@ abstract class Controller{
 		$this->template['css'][] = $css;
 	}
 	protected function addJs($js){
-			foreach($this->template['js'] as $scr){
+		foreach($this->template['js'] as $scr){
 			if ($scr === $js){ return; }
-			}
+		}
 		$this->template['js'][] = $js;
 	}
     

@@ -10,8 +10,6 @@ use \model\database\tables\User;
  */
 class UserExtended extends User{
 	
-	var $role_id;
-	
 	var $role_label;
 	
 	var $ratings;
