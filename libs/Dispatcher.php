@@ -37,12 +37,13 @@ class Dispatcher {
         switch($controllerName){
             default:
                 return null;
-			case "vypis":	return  new controllers\VypisController();
-			case "sprava":	return  new controllers\SpravaController();
-			case "rezervace":return new controllers\RezervaceController();
-			case "letiste":	return  new controllers\LetisteController();
-			case "login":	return  new controllers\LoginController();
-			case "xml":		return  new controllers\XMLgenerator();
+			case "vypis":	return	new controllers\VypisController();
+			case "sprava":	return	new controllers\SpravaController();
+			case "rezervace":return	new controllers\RezervaceController();
+			case "letiste":	return	new controllers\LetisteController();
+			case "login":	return	new controllers\LoginController();
+			case "xml":		return	new controllers\XMLgenerator();
+			case "ajax":	return	new controllers\AjaxController();
         }
 	}
 	private function getControllerInstance($controllerName){
@@ -52,7 +53,7 @@ class Dispatcher {
 		return $cont;
     }
 	
-	public function dispatch($contName, $action = null, $params = null){
+	public function dispatch($contName, $action = null){
 		$cont = self::getControllerInstance($contName);
 		if($cont == null){
 			$this->error(ErrorController::NO_CONTROLLER_FOUND, $contName);
@@ -63,10 +64,13 @@ class Dispatcher {
 		
 		$prepAction = $this->prepareActionName($action);
 		$contResponse = $this->getControllerResponse($cont, $prepAction, $noSauce);
-		
+		if($cont instanceof \controllers\AjaxController){
+			$this->invokeAjaxResponse($cont, $contResponse['do']);
+			return;
+		}
 		$contResponse["startup"]->invoke($cont);
 		unset($contResponse["startup"]);
-		$this->invokeResponse($contResponse, $cont, $contName, $action, $params);
+		$this->invokeResponse($contResponse, $cont, $contName, $action);
 		
 	}
 	
@@ -76,16 +80,15 @@ class Dispatcher {
 	 * @param controllers\Controller $cont
 	 * @param string $contName
 	 * @param string $action
-	 * @param array $params
 	 * @return type
 	 */
-	private function invokeResponse($contResponse, $cont, $contName, $action, $params){
+	private function invokeResponse($contResponse, $cont, $contName, $action){
 		if(empty($contResponse)){
 			$this->error(ErrorController::NOT_RECOGNISED_ACTION, $contName, $action);
 			return;
 		}
 		if(isset($contResponse['do'])){
-			$contResponse['do']->invoke($cont, $params);
+			$contResponse['do']->invoke($cont, null);
 		}
 		if(isset($contResponse['render'])){
 			$layoutBody = $this->getLayoutPath($contName, $action);
@@ -93,16 +96,26 @@ class Dispatcher {
 				$this->error(ErrorController::NO_TEMPLATE, $contName, $action);
 				return;
 			}
-			$contResponse['render']->invoke($cont, $params);
+			$contResponse['render']->invoke($cont, null);
 			echo $this->render($layoutBody, $cont->template, $cont->layout);
 		} else {
 			$this->error(ErrorController::NO_RENDER_OR_REDIRECT, $contName, $action);
 		}
 	}
 	
+	/**
+	 * 
+	 * @param controllers\Controller $cont
+	 * @param ReflectionMethod $action 
+	 */
+	private function invokeAjaxResponse($cont, $action){
+		$action->invoke($cont, null);
+		echo $this->twig->render($cont->layout, $cont->template);
+	}
+	
 	private function render($template, $vars, $layout){
 		$vars['layout'] = $this->twig->loadTemplate($layout);
-		echo $this->twig->render($template, $vars);
+		return $this->twig->render($template, $vars);
 	}
 	
 	private function error($errType, $contName, $action = null){
