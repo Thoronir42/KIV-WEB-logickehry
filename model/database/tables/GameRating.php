@@ -8,6 +8,9 @@ namespace model\database\tables;
  */
 class GameRating extends \model\database\DB_Entity{
 	
+	public static function fromPOST(){ return parent::fromPOST(self::class); }
+	
+	
 	var $game_rating_id;
 	
 	var $game_type_id;

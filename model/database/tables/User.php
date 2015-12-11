@@ -10,6 +10,15 @@ class User extends \model\database\DB_Entity{
 	
 	static $roles;
 	
+	public static function fromPOST(){ 
+		$instance = parent::fromPOST(self::class);
+		$instance->orion_login = filter_input(INPUT_SESSION, "orion_login");
+		return $instance;
+		
+	}
+	
+	
+	
 	var $user_id;
 	
 	var $orion_login;
