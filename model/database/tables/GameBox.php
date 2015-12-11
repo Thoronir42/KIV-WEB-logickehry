@@ -2,11 +2,11 @@
 namespace model\database\tables;
 
 /**
- * Description of User
+ * Description of GameBox
  *
  * @author Stepan
  */
-class GameBox extends \model\database\DB_Entity{
+class GameBox extends \model\database\DB_Entity{	
 	
 	var $game_box_id;
 	

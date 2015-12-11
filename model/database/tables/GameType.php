@@ -8,6 +8,10 @@ namespace model\database\tables;
  */
 class GameType extends \model\database\DB_Entity{
 	
+	public static function fromPOST(){
+		parent::fromPOST(self::class);
+	}
+	
 	var $game_type_id;
 	
 	var $game_name;
@@ -17,8 +21,4 @@ class GameType extends \model\database\DB_Entity{
 	var $min_players;
 	
 	var $max_players;
-	
-	public function __construct() {
-		
-	}
 }

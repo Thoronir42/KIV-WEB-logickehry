@@ -8,6 +8,9 @@ namespace model\database\tables;
  */
 class Reservation extends \model\database\DB_Entity{
 	
+	public static function fromPOST(){ return parent::fromPOST(self::class); }
+	
+	
 	var $reservation_id;
 	
 	var $game_box_id;
