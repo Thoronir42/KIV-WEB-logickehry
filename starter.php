@@ -10,9 +10,9 @@ $pdow = libs\PDOwrapper::getConnection($pdoCfg);
 $loader = new Twig_Loader_Filesystem(__DIR__.'/templates/');
 $twig = new Twig_Environment($loader, array(
     /*'cache' => __DIR__.'/cache/',*/
-	/*'debug' => true,*/
+	'debug' => true,
 ));
-/*$twig->addExtension(new Twig_Extension_Debug());*/
+$twig->addExtension(new Twig_Extension_Debug());
 
 // Setup URL generator
 $protocol = (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']))

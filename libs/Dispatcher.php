@@ -49,6 +49,8 @@ class Dispatcher {
 	}
 	private function getControllerInstance($controllerName){
 		$cont = self::getControler($controllerName);
+		if(!$cont){ return null; }
+		
 		if(!isset($cont->blockSauce)){ $cont->urlGen = $this->urlGen; }
 		$cont->pdoWrapper = $this->pdoWrapper;
 		return $cont;
@@ -56,7 +58,7 @@ class Dispatcher {
 	
 	public function dispatch($contName, $action = null){
 		$cont = self::getControllerInstance($contName);
-		if($cont == null){
+		if($cont == null){ 
 			$this->error(ErrorController::NO_CONTROLLER_FOUND, $contName);
 			return;
 		}
@@ -65,12 +67,10 @@ class Dispatcher {
 		
 		$prepAction = $this->prepareActionName($action);
 		$contResponse = $this->getControllerResponse($cont, $prepAction, $noSauce);
+		
 		if($cont instanceof \controllers\AjaxController){
-			$this->invokeAjaxResponse($cont, $contResponse['do']);
-			return;
+			$this->invokeAjaxResponse($cont, $contResponse['do']); return;
 		}
-		$contResponse["startup"]->invoke($cont);
-		unset($contResponse["startup"]);
 		$this->invokeResponse($contResponse, $cont, $contName, $action);
 		
 	}
@@ -84,6 +84,8 @@ class Dispatcher {
 	 * @return type
 	 */
 	private function invokeResponse($contResponse, $cont, $contName, $action){
+		$contResponse["startup"]->invoke($cont);
+		unset($contResponse["startup"]);
 		if(empty($contResponse)){
 			$this->error(ErrorController::NOT_RECOGNISED_ACTION, $contName, $action);
 			return;
@@ -98,7 +100,7 @@ class Dispatcher {
 				return;
 			}
 			$contResponse['render']->invoke($cont, null);
-			echo $this->render($layoutBody, $cont->template, $cont->layout);
+			$this->render($layoutBody, $cont->template, $cont->layout);
 		} else {
 			$this->error(ErrorController::NO_RENDER_OR_REDIRECT, $contName, $action);
 		}
@@ -117,7 +119,7 @@ class Dispatcher {
 	private function render($template, $vars, $layout){
 		$vars['layout'] = $this->twig->loadTemplate($layout);
 		$vars['urlgen'] = $this->urlGen;
-		return $this->twig->render($template, $vars);
+		echo $this->twig->render($template, $vars);
 	}
 	
 	private function error($errType, $contName, $action = null){
