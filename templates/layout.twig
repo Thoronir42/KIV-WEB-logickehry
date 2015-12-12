@@ -30,6 +30,13 @@
         {% include 'mini/top-navbar.twig' with {'navbar': navbar} %}
 		<div class="row">
             <div class="bodyContainer col-xs-offset-2 col-sm-8">
+				{% if alert_messages %}
+					<div class="alerts">
+					{% for msg in alert_messages %}
+						<div class="alert alert-{{ msg['level'] }}">{{ msg['text'] }}</div>
+					{% endfor %}
+					</div>
+				{% endif %}
 				<h1>{{ pageTitle }}</h1>
                 {{ block('bodyContent') }}
             </div>

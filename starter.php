@@ -1,6 +1,9 @@
 <?php
 include __DIR__.'/libs/autoloader.php';
 
+// Prepare session
+session_start();
+
 //	Setup PDO connection
 $cfgFile = __DIR__.((true) ? "/config/database.local.php" : "/config/database.php");
 $pdoCfg = include "$cfgFile";
@@ -20,11 +23,11 @@ $protocol = (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']))
 $prefix =  $protocol."://$_SERVER[SERVER_NAME]/"; 
 $urlGen = new libs\URLgen($prefix);
 
-// Prepare session
-session_start();
+// Prepare message buffer
+$buffer = libs\MessageBuffer::getInstance("CLH_alert_log");
 
 // Prepare dispatcher
-$dispatcher = new Dispatcher($pdow, $twig, $urlGen);
+$dispatcher = new Dispatcher($pdow, $twig, $urlGen, $buffer);
 
 $controller = filter_input(INPUT_GET, 'controller') ?: "vypis";
 $action = filter_input(INPUT_GET, 'action') ?: "hry";

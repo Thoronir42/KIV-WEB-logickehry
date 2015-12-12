@@ -17,15 +17,21 @@ class Dispatcher {
 	/** @var libs\URLgen */
 	var $urlGen;
 	
+	/** @var \libs\MessageBuffer */
+	var $messageBuffer;
+	
 	/**
 	 * 
 	 * @param PDOwrapper $pdoConnection
 	 * @param Twig_Environment $twig
+	 * @param \libs\URLgen
+	 * @param \libs\MessageBuffer;
 	 */
-    public function __construct($pdoConnection, $twig, $urlGen) {
+    public function __construct($pdoConnection, $twig, $urlGen, $messageBuffer) {
         $this->pdoWrapper = $pdoConnection;
 		$this->twig = $twig;
 		$this->urlGen = $urlGen;
+		$this->messageBuffer = $messageBuffer;
     }
     
 	/**
@@ -51,7 +57,11 @@ class Dispatcher {
 		$cont = self::getControler($controllerName);
 		if(!$cont){ return null; }
 		
-		if(!isset($cont->blockSauce)){ $cont->urlGen = $this->urlGen; }
+		if(!isset($cont->blockSauce)){ 
+			$cont->urlGen = $this->urlGen; 
+			$cont->messageBuffer = $this->messageBuffer;
+			
+		}
 		$cont->pdoWrapper = $this->pdoWrapper;
 		return $cont;
     }
@@ -85,8 +95,7 @@ class Dispatcher {
 	 */
 	private function invokeResponse($contResponse, $cont, $contName, $action){
 		$contResponse["startup"]->invoke($cont);
-		unset($contResponse["startup"]);
-		if(empty($contResponse)){
+		if(sizeof($contResponse) < 3){
 			$this->error(ErrorController::NOT_RECOGNISED_ACTION, $contName, $action);
 			return;
 		}
@@ -100,6 +109,7 @@ class Dispatcher {
 				return;
 			}
 			$contResponse['render']->invoke($cont, null);
+			$contResponse['prerender']->invoke($cont, null);
 			$this->render($layoutBody, $cont->template, $cont->layout);
 		} else {
 			$this->error(ErrorController::NO_RENDER_OR_REDIRECT, $contName, $action);
@@ -141,6 +151,7 @@ class Dispatcher {
 		$methodTypes = ["do", "render"];
 		$return = [];
 		$return["startup"] = $contClass->getMethod("startUp");
+		$return["prerender"]=$contClass->getMethod("preRender");
 		foreach($methodTypes as $mt){
 			$methodName = $mt.$action;
 			if ( $contClass->hasMethod($methodName) ){

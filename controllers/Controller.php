@@ -2,7 +2,8 @@
 namespace controllers;
 
 use libs\URLgen,
-	libs\PDOwrapper;
+	libs\PDOwrapper,
+	libs\MessageBuffer;
 use model\database\tables\UserExtended;
 
 /**
@@ -33,14 +34,18 @@ abstract class Controller{
 	/** @var String */
 	var $action, $controller;
 	
+	/** @var MessageBuffer */
+	var $messageBuffer;
 	
 	
 	
     public function __construct() {
 		$this->user = \UserManager::getCurrentUser();
 		
-		$this->navbar = ['app-name' => "Centrum Logických Her",
-				'user' => $this->user];
+		$this->navbar = [];
+		['app-name' => "Centrum Logických Her"];
+		$this->navbar['user'] = $this->user;
+		$this->navbar['login_url'] = ['controller' => 'uzivatel', 'action' => 'PrihlasitSe'];	
 		
 		$this->layout = "layout.twig";
 		$this->template = [
@@ -119,14 +124,6 @@ abstract class Controller{
 		return $menu;
 	}
 	
-    public function renderDefault(){
-        
-    }
-	
-	protected function getUser(){
-		
-	}
-	
 	protected function getParam($name, $method = INPUT_GET){
 		switch($method){
 			default: return null;
@@ -145,14 +142,28 @@ abstract class Controller{
 		}
 		$this->template['js'][] = $js;
 	}
-    
+	
+	protected function message($text, $level = MessageBuffer::LVL_INF){
+		$this->messageBuffer->log($text, $level);
+	}
+	
     public function redirect($location){
-        \header("Location: /$location");
+        \header("Location: $location");
 		\header("Connection: close");
     }
 	
+	public function redirectPars($controller = 'vypis', $action = null) {
+		$location = $this->urlGen->url(['controller' => $controller, "action" => $action]);
+		$this->redirect($location);
+	}
+	
 	public function __toString() {
 		return explode("\\", get_class($this))[1];
+	}
+	
+	
+	public function preRender(){
+		$this->template['alert_messages'] = $this->messageBuffer->getLog();
 	}
 	
 }
