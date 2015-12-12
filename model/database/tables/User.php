@@ -41,4 +41,8 @@ class User extends \model\database\DB_Entity{
 		}
 		return true;
 	}
+	
+	public function isLoggedIn(){
+		return (!empty($this->orion_login));
+	}
 }
