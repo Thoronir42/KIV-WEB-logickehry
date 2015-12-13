@@ -2,7 +2,7 @@
 include __DIR__.'/libs/autoloader.php';
 
 // Prepare session
-session_start();
+\libs\SessionManager::run();
 
 //	Setup PDO connection
 $cfgFile = __DIR__.((true) ? "/config/database.local.php" : "/config/database.php");
