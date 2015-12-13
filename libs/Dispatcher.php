@@ -72,6 +72,10 @@ class Dispatcher {
 			$this->error(ErrorController::NO_CONTROLLER_FOUND, $contName);
 			return;
 		}
+		if(!$action || strlen($action) < 1){
+			$cont->redirectPars($contName, $cont->getDefaultAction());
+		}
+		
 		$noSauce = isset($cont->blockSauce);
 		if(!$noSauce){ $cont->setActiveMenuItem($contName, $action); }
 		

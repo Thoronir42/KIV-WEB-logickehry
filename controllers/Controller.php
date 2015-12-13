@@ -40,7 +40,7 @@ abstract class Controller{
 	
 	
     public function __construct() {
-		$this->user = \UserManager::getCurrentUser();
+		$this->user = UzivatelController::getCurrentUser();
 		$this->navbar = [];
 		$this->navbar['app-name'] ="Centrum Logických Her";
 		if($this->user->isLoggedIn()){
@@ -48,7 +48,7 @@ abstract class Controller{
 		} else {
 			$this->navbar['login_url'] = ['controller' => 'uzivatel', 'action' => 'PrihlasitSe'];	
 		}
-		
+		$this->navbar['session_time'] = date("d/m/y H:i:s", $_SESSION['LAST_ACTIVITY']);
 		$this->layout = "layout.twig";
 		$this->template = [
 			'css' => [],
@@ -156,7 +156,6 @@ abstract class Controller{
     }
 	
 	public function redirectPars($controller = 'vypis', $action = null) {
-		$action = $action ? : $this->getDefaultAction();
 		$location = $this->urlGen->url(['controller' => $controller, "action" => $action]);
 		$this->redirect($location);
 	}
