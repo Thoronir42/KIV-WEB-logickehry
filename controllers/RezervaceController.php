@@ -19,7 +19,8 @@ class RezervaceController extends Controller{
 		];
 		return $menu;
 	}
-
+	
+	public function getDefaultAction() { return "vypis"; }
 	
 	public function renderVypis(){
 		$this->template["pageTitle"] = "Výpis rezervací";

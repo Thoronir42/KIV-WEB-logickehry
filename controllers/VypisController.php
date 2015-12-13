@@ -21,6 +21,8 @@ class VypisController extends Controller{
 		return $menu;
 	}
 	
+	public function getDefaultAction() { return "hry"; }
+	
 	public function startUp(){
 		parent::startUp();
 		$this->layout = 'layout.twig';
