@@ -33,7 +33,8 @@
 		</ul>
       <ul class="nav navbar-nav navbar-right">
 	  {% if user.isLoggedIn %}
-			<li class="dropdown">
+		  <li><a>{{ navbar.session_time }}</a></li>	
+		  <li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 					{% if not user.isReady %}<span class="label label-danger">!</span>{% endif %}
 					{{ user.orion_login }}<span class="caret"></span></a>

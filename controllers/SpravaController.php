@@ -22,6 +22,10 @@ class SpravaController extends Controller{
 	
 	public function startUp(){
 		parent::startUp();
+		if(!$this->user->isSupervisor()){
+			$this->message("Do sekce Správa nemáte přístup", \libs\MessageBuffer::LVL_WAR);
+			$this->redirectPars('vypis');
+		}
 		$this->layout = 'layout.twig';
 	}
 	

@@ -29,7 +29,7 @@ $buffer = libs\MessageBuffer::getInstance("CLH_alert_log");
 // Prepare dispatcher
 $dispatcher = new Dispatcher($pdow, $twig, $urlGen, $buffer);
 
-$controller = filter_input(INPUT_GET, 'controller') ?: "vypis";
-$action = filter_input(INPUT_GET, 'action') ?: "hry";
+$controller = filter_input(INPUT_GET, 'controller');
+$action = filter_input(INPUT_GET, 'action');
 
 $dispatcher->dispatch($controller, $action, []);
