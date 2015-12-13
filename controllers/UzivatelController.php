@@ -1,12 +1,26 @@
 <?php
 namespace controllers;
 
+use model\database\views\UserExtended;
+
 /**
  * Description of UzivatelControler
  *
  * @author Stepan
  */
 class UzivatelController extends Controller{
+	
+	/**
+	 * 
+	 * @return UserExtended
+	 */
+	public static function getCurrentUser(){
+		//unset($_SESSION['user']);
+		if(!isset($_SESSION['user'])){ return new UserExtended(); }
+		$userSer = $_SESSION['user'];
+		$user = unserialize($userSer);
+		return $user;
+	}
 	
 	public static function buildUserActionsMenu($user){
 		
@@ -20,9 +34,6 @@ class UzivatelController extends Controller{
 		return $menu;	
 	}
 	
-	
-	var $block_sauce = true;
-	
 	public function getDefaultAction() { return "mojeUdaje"; }
 	
 	public function renderMojeUdaje(){
@@ -30,7 +41,6 @@ class UzivatelController extends Controller{
 	}
 	
 	public function doUlozitUdaje(){
-		var_dump($_POST);
 		$pars = ["orion_login"	=> $this->user->orion_login,
 					"name"		=> $this->getParam("name", INPUT_POST),
 					"surname"	=> $this->getParam("surname", INPUT_POST)
@@ -45,7 +55,7 @@ class UzivatelController extends Controller{
 			$this->message("Při ukládání vašich údajů nastala chyba.", \libs\MessageBuffer::LVL_DNG);
 		}
 		
-		$this->redirectPars();
+		$this->redirectPars("uzivatel");
 	}
 	
 	public function doOdhlasitSe(){
