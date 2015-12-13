@@ -31,18 +31,19 @@ class User extends \model\database\DB_Entity{
 	
 	
 	public function isSupervisor(){
-		return true;
+		//return $this->role > 1;
+		return $this->isLoggedIn();
 	}
 	
 	public function isReady(){
-		$arr = (array)$this;
-		foreach($arr as $prop){
-			if(empty($prop)){ return false; }
+		$params = ['name' => 3, 'surname' => 3];
+		foreach($params as $par => $length){
+			if(strlen($this->$par) < $length){ return false; }
 		}
 		return true;
 	}
 	
 	public function isLoggedIn(){
-		return (!empty($this->orion_login));
+		return (strlen($this->orion_login) > 2);
 	}
 }

@@ -18,7 +18,6 @@ class UserManager {
 		//unset($_SESSION['user']);
 		if(!isset($_SESSION['user'])){ return new UserExtended(); }
 		$userSer = $_SESSION['user'];
-		var_dump($userSer);
 		$user = unserialize($userSer);
 		return $user;
 	}

@@ -106,4 +106,14 @@ class PDOwrapper{
 		return ($statement->execute(['ol' => $orion_login]));
 	}
 
+	public function updateUser($pars) {
+		$statement = $this->connection->prepare(
+			"UPDATE `web_logickehry_db`.`user` SET "
+				. "`name` = :name, "
+				. "`surname` = :surname "
+				. "WHERE `user`.`orion_login` = :orion_login"
+				);
+		return $statement->execute($pars);
+	}
+
 }

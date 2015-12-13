@@ -27,7 +27,7 @@
         <title>{{ title }}</title>
     </head>
     <body>
-        {% include 'mini/top-navbar.twig' with {'navbar': navbar} %}
+        {% include 'mini/top-navbar.twig' with {'navbar': navbar, 'user': user} %}
 		<div class="row">
             <div class="bodyContainer col-xs-offset-2 col-sm-8">
 				{% if alert_messages %}

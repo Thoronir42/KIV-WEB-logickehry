@@ -4,7 +4,7 @@ namespace controllers;
 use libs\URLgen,
 	libs\PDOwrapper,
 	libs\MessageBuffer;
-use model\database\tables\UserExtended;
+use model\database\views\UserExtended;
 
 /**
  * Description of Controler
@@ -41,16 +41,19 @@ abstract class Controller{
 	
     public function __construct() {
 		$this->user = \UserManager::getCurrentUser();
-		
 		$this->navbar = [];
-		['app-name' => "Centrum Logických Her"];
-		$this->navbar['user'] = $this->user;
-		$this->navbar['login_url'] = ['controller' => 'uzivatel', 'action' => 'PrihlasitSe'];	
+		$this->navbar['app-name'] ="Centrum Logických Her";
+		if($this->user->isLoggedIn()){
+			$this->navbar['user_actions'] = UzivatelController::buildUserActionsMenu($this->user);
+		} else {
+			$this->navbar['login_url'] = ['controller' => 'uzivatel', 'action' => 'PrihlasitSe'];	
+		}
 		
 		$this->layout = "layout.twig";
 		$this->template = [
 			'css' => [],
 			'js' => [],
+			'user' => $this->user,
 		];
 		
 		
@@ -81,7 +84,7 @@ abstract class Controller{
 		return $menu;
 	}
 	protected function buildSubmenu(){ return false; }
-
+	public function getDefaultAction(){ return null; }
 
 	public function startUp(){
 		$menu = $this->buildUrls($this->buildMenu(), true);
@@ -153,6 +156,7 @@ abstract class Controller{
     }
 	
 	public function redirectPars($controller = 'vypis', $action = null) {
+		$action = $action ? : $this->getDefaultAction();
 		$location = $this->urlGen->url(['controller' => $controller, "action" => $action]);
 		$this->redirect($location);
 	}

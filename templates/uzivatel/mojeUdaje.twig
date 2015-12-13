@@ -1,0 +1,23 @@
+{# uzivatel/zmenaUdaju.twig  #}
+
+{% extends layout %}
+
+{% block bodyContent %}
+	<form class="form-group" action="{{ urlgen.url(form_action) }}" method="post">
+		<div class="row">
+			<div class="col-md-6">
+				<label class="control-label" for="name">Jméno</label>
+				<input type="text" name ="name" class="form-control" value="{{ user.name }}">
+			</div>
+			<div class="col-md-6">
+				<label class="control-label" for="surname">Příjmení</label>
+				<input type="text" name="surname" class="form-control" value="{{ user.surname }}">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<input type="submit" class="form-control" value="Uložit detaily">
+			</div>
+		</div>
+	</form>
+{% endblock %}
