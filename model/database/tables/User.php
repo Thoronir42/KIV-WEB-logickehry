@@ -34,6 +34,10 @@ class User extends \model\database\DB_Entity{
 		return $this->role_id > 1;
 	}
 	
+	public function isAdministrator() {
+		return $this->isSupervisor();
+	}
+	
 	public function isReady(){
 		$params = ['name' => 3, 'surname' => 3];
 		foreach($params as $par => $length){

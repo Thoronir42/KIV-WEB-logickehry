@@ -7,14 +7,19 @@ class SpravaController extends Controller{
 	
 	protected function buildSubmenu() {
 		$menu = [];
-		$menu[]= ["urlParams" => ["controller" => "sprava", "action"=>"hry"],
+		$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"hry"],
 				"label" => "Hry"];
-		$menu[]= ["urlParams" => ["controller" => "sprava", "action"=>"inventar"],
+		$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"inventar"],
 				"label" => "Inventář"];
-		$menu[]= ["urlParams" => ["controller" => "sprava", "action"=>"rezervace"],
+		$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"rezervace"],
 				"label" => "Rezervace"];
-		$menu[]= ["urlParams" => ["controller" => "sprava", "action"=>"uzivatele"],
+		$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"uzivatele"],
 				"label" => "Uživatelé"];
+		if($this->user->isAdministrator()){
+			$menu[] = ["separator" => true];
+			$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"ovladaciPanel"],
+					"label" => "Ovládací panel"];
+		}
 		return $menu;
 	}
 	
@@ -82,5 +87,10 @@ class SpravaController extends Controller{
 		}
 		
 		$this->template['pageTitle'] = "Zavést novou hru";
+	}
+	
+	public function renderOvladaciPanel(){
+		$this->template['xml_inventory'] = ['controller' => 'xml', 'action' => 'inventory'];
+		$this->template['xml_reservations'] = ['controller' => 'xml', 'action' => 'reservations'];
 	}
 }
