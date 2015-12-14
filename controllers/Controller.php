@@ -53,6 +53,7 @@ abstract class Controller{
 		$this->template = [
 			'css' => [],
 			'js' => [],
+			'title' => $this->navbar['app-name'], 
 			'user' => $this->user,
 		];
 		
@@ -67,10 +68,6 @@ abstract class Controller{
 		if($this->user->isSupervisor()){
 			$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"hry"],
 					"label" => "Správa"];
-			$menu[] = ["urlParams" => ["controller" => "letiste", "action"=>"rezervace"],
-				"label" => "(Letiště)"];
-			$menu[] = ["urlParams" => ["controller" => "xml", "action"=>"inventory"],
-					"label" => "(XML)"];
 		}
 		
 		foreach($menu as $k => $v){
@@ -87,24 +84,10 @@ abstract class Controller{
 	public function getDefaultAction(){ return null; }
 
 	public function startUp(){
-		$menu = $this->buildUrls($this->buildMenu(), true);
+		$menu = $this->buildMenu();
 		$this->navbar['menu'] = $this->activeMenuParse($menu, 'controller', $this->controller, true);
 		$this->template['navbar'] = $this->navbar;
-		$this->addCss("default.css");
-		
-	}
-	
-	private function buildUrls($menu, $recursion = false){
-		if(!$menu){
-			return false;
-		}
-		foreach($menu as $key => $item){
-			$menu[$key]["url"] = $this->urlGen->url($item['urlParams']);
-			if($recursion){
-				$menu[$key]['dropdown'] = $this->buildUrls($item['dropdown']);
-			}
-		}
-		return $menu;
+		$this->addCss("default.css");	
 	}
     
 	public function setActiveMenuItem($controller = null, $action = null){
@@ -114,6 +97,7 @@ abstract class Controller{
 	private function activeMenuParse($menu, $checkKey, $checkVal, $continue = false){
 		if(!$menu){ return $menu; }
 		foreach($menu as $key => $val){
+			if(!isset($val['urlParams'])){ continue; }
 			if($val['urlParams'][$checkKey] == $checkVal){
 				$menu[$key]['active'] = true;
 				$activeKey = $key;

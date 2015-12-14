@@ -15,29 +15,21 @@ class XMLgenerator{
 	/** @var string */
 	var $layout;
 	
-    /** @var array */
-    var $game_type;
-    /** @var array */
-    var $game_box;
-    /** @var array */
-    var $reservation;
+	/** @var array */
+	var $game_type;
+	/** @var array */
+	var $game_box;
+	/** @var array */
+	var $reservation;
 	
 	/** @var array */
 	var $template;
-    
-	public function buildSubmenu(){
-		$menu = [];
-		$menu[] = ["urlParams" => ["controller" => "xml", "action"=>"games"],
-				"label" => "Katalog Her"];
-		$menu[] = ["urlParams" => ["controller" => "xml", "action"=>"inventory"],
-				"label" => "Inventář"];
-		
-		return $menu;
-	}
+	
+	public function buildSubmenu(){ return false; }
 	
 	public function __construct() {
 		$this->template = [];
-		$this->layout = "layoutXML.twig";
+		$this->layout = "xml.twig";
 	}
 	
 	public function startUp(){
@@ -52,6 +44,10 @@ class XMLgenerator{
 		$this->template["game_box"] = $this->pdoWrapper->getGameBoxes();
 	}
 	
+	public function renderReservations(){
+		
+	}
+	
 	
     public function fetchWeek($week){
         $this->game_type = $this->fetchGameTypes($week);
@@ -59,6 +55,7 @@ class XMLgenerator{
         $this->reservation = $this->fetchReservations($week);
     }
 	
+	public function preRender(){ return false; }
 	
 	
 	public function __toString() {

@@ -27,7 +27,7 @@
 				</ul>
 			  </li>
 			{% else %}
-				<li{% if nav['active'] %} class="active"{% endif %}><a href="{{ nav['url'] }}">{{ nav['label'] }}<span class="sr-only">(current)</span></a></li>
+				<li{% if nav['active'] %} class="active"{% endif %}><a href="{{ urlgen.url(nav['urlParams']) }}">{{ nav['label'] }}<span class="sr-only">(current)</span></a></li>
 			{% endif %}
 		{% endfor %}
 		</ul>
