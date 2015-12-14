@@ -12,6 +12,7 @@ class URLgen{
 	
 	public function url($params){
 		$return = $this->urlPrefix;
+		if(!$params){ return $return; }
 		$first = true;
 		foreach($params as $parKey => $parVal){
 			$return.=($first ?"?":"&")."$parKey=$parVal";
