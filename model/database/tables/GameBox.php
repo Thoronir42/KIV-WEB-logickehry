@@ -16,4 +16,6 @@ class GameBox extends \model\database\DB_Entity{
 	
 	var $add_note;
 	
+	var $retired;
+	
 }

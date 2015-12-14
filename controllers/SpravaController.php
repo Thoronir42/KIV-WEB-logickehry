@@ -48,6 +48,7 @@ class SpravaController extends Controller{
 	}
 	
 	public function renderInventar(){
+		$retired = $this->getParam("retired");
 		$this->addCss("sprava_inventar.css");
 		$this->addJs("sprava_inventar.js");
 		$this->template['pageTitle'] = "Správa evidovaných herních krabic";
@@ -61,7 +62,9 @@ class SpravaController extends Controller{
 					"game_type_id"=>$g->game_type_id, "picture_path" => $path,
 					"tracking_codes" => []];
 			}
-			$gamesSrt[$g->game_type_id]["tracking_codes"][] = $g->tracking_code;
+			if($g->tracking_code && (!$g->retired || $retired)){
+				$gamesSrt[$g->game_type_id]["tracking_codes"][] = $g;
+			}
 		}
 		$this->template['games'] = $gamesSrt;
 	}

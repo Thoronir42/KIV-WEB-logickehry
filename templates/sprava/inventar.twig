@@ -23,12 +23,16 @@
 						<div class="row"> {% set open_row = true %}
 					{% endif %}
 					
-					<div class="col-md-4" id="ig_{{ code }}">
+					<div class="col-md-4" id="ig_{{ code.tracking_code }}">
 						<div class="input-group">
-							<input type="text" class="form-control" value="{{ code }}" readonly>
+							<input type="text" class="form-control" value="{{ code.tracking_code }}" readonly>
+							{% if not code.retired %}
 							<span class="input-group-btn">
 								<button class="btn btn-default retire" type="button">Vyřadit</button>
 							</span>
+							{% else %}
+								<span class="input-group-addon">Vyřazený</span>
+							{% endif %}
 						</div><!-- /input-group -->
 					</div><!-- /.col-lg-6 -->
 					{% if loop.index0 % 3 == 2 %}
