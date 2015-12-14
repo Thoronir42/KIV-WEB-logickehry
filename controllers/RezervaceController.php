@@ -9,31 +9,22 @@ class RezervaceController extends Controller{
 	}
 	
 	protected function buildSubmenu() {
-		$menu = [
+		return false;
+		/*$menu = [
 			["urlParams" => ["controller" => "rezervace", "action"=>"vypis"],
 				"label" => "Vypis"
 			],
-			["urlParams" => ["controller" => "rezervace", "action"=>"zadat"],
-				"label" => "Zadat"
-			],
 		];
-		return $menu;
+		return $menu;*/
 	}
 	
 	public function getDefaultAction() { return "vypis"; }
 	
 	public function renderVypis(){
 		$this->template["pageTitle"] = "Výpis rezervací";
-		$reservations = $this->pdoWrapper->getReservationsAndAll();
 		
-		$this->template["rezervace"] = $reservations;
-	}
-	
-	public function renderZadat(){
-		$this->template['pageTitle'] = "Zadat novou rezervaci";
 		$this->template['games'] = $this->pdoWrapper->getGameTypes();
 		$this->template['desks'] = $this->pdoWrapper->getDesks();
+		$this->template["rezervace"] = $this->pdoWrapper->getReservationsExtended();
 	}
-	
-	
 }
