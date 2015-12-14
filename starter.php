@@ -32,4 +32,4 @@ $dispatcher = new Dispatcher($pdow, $twig, $urlGen, $buffer);
 $controller = filter_input(INPUT_GET, 'controller');
 $action = filter_input(INPUT_GET, 'action');
 
-$dispatcher->dispatch($controller, $action, []);
+$dispatcher->dispatch($controller, $action);

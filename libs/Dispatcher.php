@@ -41,8 +41,7 @@ class Dispatcher {
 	 */
 	public static function getControler($controllerName){
         switch($controllerName){
-            default:
-                return null;
+            default: return null;
 			case "vypis":	return	new controllers\VypisController();
 			case "sprava":	return	new controllers\SpravaController();
 			case "rezervace":return	new controllers\RezervaceController();
