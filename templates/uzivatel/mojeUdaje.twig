@@ -3,20 +3,28 @@
 {% extends layout %}
 
 {% block bodyContent %}
-	<h2>Mé osobní údaje</h2>
-	<form class="form-inline" action="{{ urlgen.url(form_action) }}" method="post">
-		<label class="control-label" for="name">Jméno</label>
-		<input type="text" name ="name" class="form-control" value="{{ user.name }}">
-		<label class="control-label" for="surname">Příjmení</label>
-		<input type="text" name="surname" class="form-control" value="{{ user.surname }}">
-		<input type="submit" class="form-control" value="Uložit detaily">
-	</form>
-		
-	<h2>Mé rezervace tento týden</h2>
-		{% for r in reservations %}
+	<div class="panel panel-default">
+		<div class="panel-heading"><h2 class="panel-title">Mé osobní údaje</h2></div>
+		<div class="panel-body">
+			<form class="form-inline" action="{{ urlgen.url(form_action) }}" method="post">
+				<label class="control-label" for="name">Jméno</label>
+				<input type="text" name ="name" class="form-control" value="{{ user.name }}">
+				<label class="control-label" for="surname">Příjmení</label>
+				<input type="text" name="surname" class="form-control" value="{{ user.surname }}">
+				<input type="submit" class="form-control btn btn-default" value="Uložit detaily">
+			</form>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h2 class="panel-title">Mé rezervace tento týden</h2>
+		</div>
+		<div class="panel-body">
+			{% for r in reservations %}
 			<span>Res: {{ dump(r) }}</span>
 		{% else %}
 			<span>Žádné rezervace</span>
 		{% endfor %}
-		
+		</div>
+	</div>
 {% endblock %}
