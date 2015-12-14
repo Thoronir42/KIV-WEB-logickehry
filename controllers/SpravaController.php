@@ -11,8 +11,6 @@ class SpravaController extends Controller{
 				"label" => "Hry"];
 		$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"inventar"],
 				"label" => "Inventář"];
-		$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"rezervace"],
-				"label" => "Rezervace"];
 		$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"uzivatele"],
 				"label" => "Uživatelé"];
 		if($this->user->isAdministrator()){

@@ -1,6 +1,8 @@
 <?php
 namespace controllers;
 
+use model\DatetimeManager;
+
 
 class RezervaceController extends Controller{
 
@@ -25,6 +27,15 @@ class RezervaceController extends Controller{
 		
 		$this->template['games'] = $this->pdoWrapper->getGameTypes();
 		$this->template['desks'] = $this->pdoWrapper->getDesks();
-		$this->template["rezervace"] = $this->pdoWrapper->getReservationsExtended();
+		
+		$timePars = DatetimeManager::getWeeksBounds(0, DatetimeManager::DB_FORMAT);
+		$reservations = $this->pdoWrapper->getReservationsExtended($timePars);
+		$reservationDays = [];
+		foreach($reservations as $r){
+			$day = date("w", strtotime($reservations[0]->time_from));
+			if(!isset($reservationDays[$day])){ $reservationDays[$day] = []; }
+			$reservationDays[$day][] = $r;
+		}
+		$this->template["reservationDays"] = $reservationDays;
 	}
 }

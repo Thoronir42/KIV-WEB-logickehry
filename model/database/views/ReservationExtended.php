@@ -8,7 +8,7 @@ use \model\database\tables\Reservation;
  *
  * @author Stepan
  */
-class ReservationAndAll extends Reservation{
+class ReservationExtended extends Reservation{
 	
 	var $borrower_name;
 	

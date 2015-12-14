@@ -1,0 +1,11 @@
+{# mini/rezervace_graficky.twig #}
+{% for i in 1..7 %}
+	{% if reservationDays[i] %}
+		{% set rd = reservationDays[i] %}
+		{{ dump(rd) }}
+		<br>
+	{% else %}
+		Day {{ i }} is empty.
+ 	{% endif %}
+	<hr>
+{% endfor %}

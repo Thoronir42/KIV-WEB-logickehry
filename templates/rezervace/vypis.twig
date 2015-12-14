@@ -8,11 +8,11 @@
 			<h2 class="panel-title">Grafické zobrazení rezervací</h2>
 		</div>
 		<div class="panel-body">
-			lol u wish
+			{% include "mini/rezervace_graficky.twig" with {'reservationDays': reservationDays} %}
 		</div>
 	</div>
 	
-	
+	{% if user.isLoggedIn() %}
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h2 class="panel-title">Přidat rezervaci</h2>
@@ -21,7 +21,7 @@
 			{% include "mini/rezervace_form.twig" %}
 		</div>
 	</div>
-	
+	{% endif %}
 	
 {% for r in rezervace %}
     <div class="reservation">
@@ -34,7 +34,6 @@
         <div class="res-body row">
             <span></span>
         </div>
-        
     </div>
 {% endfor %}
 
