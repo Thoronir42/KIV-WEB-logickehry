@@ -3,8 +3,25 @@
 
 {% block bodyContent %}
 
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h2 class="panel-title">Grafické zobrazení rezervací</h2>
+		</div>
+		<div class="panel-body">
+			lol u wish
+		</div>
+	</div>
 	
-	{% include "mini/rezervace_form.twig" %}
+	
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h2 class="panel-title">Přidat rezervaci</h2>
+		</div>
+		<div class="panel-body">
+			{% include "mini/rezervace_form.twig" %}
+		</div>
+	</div>
+	
 	
 {% for r in rezervace %}
     <div class="reservation">

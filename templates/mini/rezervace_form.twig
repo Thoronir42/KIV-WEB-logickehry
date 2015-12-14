@@ -1,43 +1,21 @@
 {# mini/rezervace_form.twig #}
 
 <form class="form-horizontal">
-	<table>
-		<tr>
-			<td>
-				<label class="control-label" for="game_type_id">Hra</label>
-			</td>
-			<td>
-				<select name="game_type_id" class="form-control">
-					{% for g in games %}
-						<option  value="{{ g.game_type_id }}">{{ g.game_name }}</option>
-					{% endfor %}
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td><label class="control-label" for="reservation_date">Datum rezervace</label></td>
-			<td><input type="date" name="reservation_date" class="form-control"></td>
-		</tr>
-		<tr>
-			<td><label class="control-label" for="time_from">Čas rezervace</label>	</td>
-			<td><input class="form-control" type="time" name="time_from" id="time_from"><input class="form-control" type="time" name="time_to" id="time_to"></td>
-		</tr>
-		<tr>
-			<td>
-				<label for="desk_id" class="control-label">Stůl</label>
-			</td>
-			<td>
-				<select name="desk_id" class="form-control">
-					{% for d in desks %}
-						<option value="{{ d.desk_id}}">{{ 'Stůl číslo %02d (míst: %d)'|format(d.desk_id, d.capacity) }}</option>
-					{% endfor %}
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<input type="submit" name="submit" value="Zarezervovat">
-			</td>
-		</tr>
-	</table>
+	<label class="control-label" for="game_type_id">Hra</label>
+	<select name="game_type_id" class="form-control">
+		{% for g in games %}
+			<option  value="{{ g.game_type_id }}">{{ g.game_name }}</option>
+		{% endfor %}
+	</select>
+	<label class="control-label" for="reservation_date">Datum rezervace</label>
+	<input type="date" name="reservation_date" class="form-control">
+	<label class="control-label" for="time_from">Čas rezervace</label>
+	<input class="form-control" type="time" name="time_from" id="time_from"><input class="form-control" type="time" name="time_to" id="time_to">
+	<label for="desk_id" class="control-label">Stůl</label>
+	<select name="desk_id" class="form-control">
+		{% for d in desks %}
+			<option value="{{ d.desk_id}}">{{ 'Stůl číslo %02d (míst: %d)'|format(d.desk_id, d.capacity) }}</option>
+		{% endfor %}
+	</select>
+	<input type="submit" name="submit" value="Zarezervovat">
 </form>
