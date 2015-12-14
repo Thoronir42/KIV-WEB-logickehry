@@ -16,7 +16,7 @@ class GameType extends \model\database\DB_Entity{
 	
 	var $game_name;
 	
-	var $avg_game_time;
+	var $avg_playtime;
 	
 	var $min_players;
 	

@@ -27,12 +27,11 @@ class User extends \model\database\DB_Entity{
 	
 	var $surname;
 	
-	var $role;
+	var $role_id;
 	
 	
 	public function isSupervisor(){
-		//return $this->role > 1;
-		return $this->isLoggedIn();
+		return $this->role_id > 1;
 	}
 	
 	public function isReady(){

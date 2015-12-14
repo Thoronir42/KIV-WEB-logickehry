@@ -20,10 +20,14 @@
 						Hráčů:{{ "%d - %d"|format(g.min_players, g.max_players) }}
 					</li>
 					<li class="list-group-item">
-						Prům. Doba Hry: {{ g.avg_game_time }}
+						Prům. Doba Hry: {{ g.avg_playtime }}
 					</li>
 					<li class="list-group-item">
-						Hodnocení:{{ '%d (%d)'|format(g.average_score, g.rating_count) }}
+						Hodnocení:{% if g.rating_count %}
+							{{ '%d (%d)'|format(g.average_score, g.rating_count) }}
+							{% else %}
+								Zatím nehodnoceno
+							{% endif %}
 					</li>
 					<li class="list-group-item">
 						Odběratelů: {{ g.subscribed_users }}

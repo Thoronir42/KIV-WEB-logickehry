@@ -14,7 +14,7 @@ class GameTypeExtended extends GameType{
 	
 	var $rating_count;
 	
-	var $subsribed_users;
+	var $subscribed_users;
 	
 	var $box_count;
 }
