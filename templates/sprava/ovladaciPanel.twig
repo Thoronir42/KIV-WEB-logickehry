@@ -1,0 +1,38 @@
+{# sprava/ovladaciPanel.twig  #}
+{% extends layout %}
+
+{% block bodyContent %}
+	<div class="panel panel-default">
+		<div class="panel-heading"><h2 class="panel-title">XML export</h2></div>
+		<div class="panel-body">
+			<h3>Katalog her a evidenčních čísel</h3>
+			<form class="form-inline" action="{{ urlgen.url(xml_inventory) }}" method="post">
+				<input type="submit" value="Vygenerovat XML" class="form-control btn btn-default">
+			</form>
+			<h3>Rezervace za období</h3>
+			<form action="{{ urlgen.url(xml_reservations) }}" method="post">
+				<div class='row'>
+					<div class='col-md-5'>
+					<label class="control-label" for="name">Od</label>
+					<input type="date" name ="date_from" id='date_from' class="form-control" value="{{ user.name }}">
+					</div>
+					<div class='col-md-5'>
+					<label class="control-label" for="surname">Příjmení</label>
+					<input type="date" name="date_to" id='date_from' class="form-control" value="{{ user.surname }}">
+					</div>
+					<div class='col-md-2'>
+						<input type="submit" value="Vygenerovat XML" class="form-control btn btn-default">
+					</div>
+
+				</div>
+			</form>
+		</div>
+	</div>
+					
+<div class="panel panel-default">
+	<div class="panel-heading"><h2 class="panel-title">Odkazy na letiště</h2></div>
+	<div class="panel-body">
+
+	</div>
+</div>
+{% endblock %}

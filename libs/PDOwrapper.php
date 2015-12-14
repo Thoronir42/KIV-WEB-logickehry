@@ -52,11 +52,13 @@ class PDOwrapper{
 		return $result;
 	}
 	
-	public function getGameBoxes($withRetired = false){
+	/**
+	 * 
+	 * @param type $withRetired
+	 * @return Views\GameBoxExtended[]
+	 */
+	public function getGameBoxes(){
 		$sql = "SELECT * FROM game_box_extended";
-		if(!$withRetired){
-			$sql .= " WHERE retired = 0";
-		}
 		$result = $this->connection->query($sql)
 				->fetchAll(PDO::FETCH_CLASS, Views\GameBoxExtended::class);
 		return $result;
