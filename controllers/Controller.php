@@ -61,7 +61,7 @@ abstract class Controller{
 	private function buildMenu(){
 		$menu = [];
 		$menu[] = ["urlParams" => ["controller" => "vypis", "action"=>"hry"],
-				"label" => "Seznamy"];
+				"label" => "Seznam her"];
 		$menu[] = ["urlParams" => ["controller" => "rezervace", "action"=>"vypis"],
 				"label" => "Rezervace"];
 		if($this->user->isSupervisor()){
