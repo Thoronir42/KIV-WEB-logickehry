@@ -3,21 +3,20 @@
 {% extends layout %}
 
 {% block bodyContent %}
-	<form class="form-group" action="{{ urlgen.url(form_action) }}" method="post">
-		<div class="row">
-			<div class="col-md-6">
-				<label class="control-label" for="name">Jméno</label>
-				<input type="text" name ="name" class="form-control" value="{{ user.name }}">
-			</div>
-			<div class="col-md-6">
-				<label class="control-label" for="surname">Příjmení</label>
-				<input type="text" name="surname" class="form-control" value="{{ user.surname }}">
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<input type="submit" class="form-control" value="Uložit detaily">
-			</div>
-		</div>
+	<h2>Mé osobní údaje</h2>
+	<form class="form-inline" action="{{ urlgen.url(form_action) }}" method="post">
+		<label class="control-label" for="name">Jméno</label>
+		<input type="text" name ="name" class="form-control" value="{{ user.name }}">
+		<label class="control-label" for="surname">Příjmení</label>
+		<input type="text" name="surname" class="form-control" value="{{ user.surname }}">
+		<input type="submit" class="form-control" value="Uložit detaily">
 	</form>
+		
+	<h2>Mé rezervace tento týden</h2>
+		{% for r in reservations %}
+			<span>Res: {{ dump(r) }}</span>
+		{% else %}
+			<span>Žádné rezervace</span>
+		{% endfor %}
+		
 {% endblock %}

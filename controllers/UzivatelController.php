@@ -15,7 +15,6 @@ class UzivatelController extends Controller{
 	 * @return UserExtended
 	 */
 	public static function getCurrentUser(){
-		//unset($_SESSION['user']);
 		if(!isset($_SESSION['user'])){ return new UserExtended(); }
 		$userSer = $_SESSION['user'];
 		$user = unserialize($userSer);
@@ -82,10 +81,11 @@ class UzivatelController extends Controller{
 		$user = $this->pdoWrapper->fetchUser($orion_login);
 		if(!$user){
 			if(!$this->pdoWrapper->insertUser($orion_login)){
-				$this->message("Nepodařilo se pro vás vytvořit uživatelský účet");
+				$this->message("Nepodařilo se pro vás vytvořit uživatelský účet", \libs\MessageBuffer::LVL_DNG);
+				$this->redirectPars('vypis');
 			} else {
 				$user = $this->pdoWrapper->fetchUser($orion_login);
-				$this->message("Váš uživatelský účet byl úspěšně vytvořen", \libs\MessageBuffer::LVL_SUC);
+				$this->message("Váš uživatelský účet byl úspěšně vytvořen, vítejte $orion_login", \libs\MessageBuffer::LVL_SUC);
 			}
 		} else {
 			$this->message("Vítejte zpět, $orion_login!", \libs\MessageBuffer::LVL_SUC);
