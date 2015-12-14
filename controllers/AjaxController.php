@@ -15,14 +15,16 @@ class AjaxController extends Controller{
 		$this->layout = "ajax.twig";
 	}
 	
-	public function doStuff(){
-		$id=$this->getParam("id");
-		$this->template['response'] = $id;
+	public function doRetireBox(){
+		if(!$this->user->isSupervisor()){ return 'false'; }
+		
+		$code = $this->getParam("code");
+		$box = $this->pdoWrapper->retireBox($code);
+		$this->template['response'] = $box ? $code : 'false';
 	}
 	
-	public function doRetireBox(){
+	public function doInsertBox(){
+		if(!$this->user->isSupervisor()){ return 'false'; }
 		$code = $this->getParam("code");
-		$box = $this->pdoWrapper->fetchBox($code);
-		$this->template['response'] = $box ? $code : 'false';
 	}
 }

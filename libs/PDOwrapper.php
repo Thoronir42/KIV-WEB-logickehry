@@ -30,13 +30,13 @@ class PDOwrapper{
 	}
 	
 	public function getGamesWithScores(){
-		$result = $this->connection->query("SELECT * FROM `game_type_w_score`")
+		$result = $this->connection->query("SELECT * FROM `game_type_extended`")
 				->fetchAll(PDO::FETCH_CLASS, Views\GameTypeExtended::class);
 		return $result;
 	}
 	
-	public function getReservationsAndAll(){
-		$result = $this->connection->query("SELECT * FROM `reservation_and_all`")
+	public function getReservationsExtended(){
+		$result = $this->connection->query("SELECT * FROM `reservation_extended`")
 				->fetchAll(PDO::FETCH_CLASS, Views\ReservationAndAll::class);
 		return $result;
 	}
@@ -52,8 +52,12 @@ class PDOwrapper{
 		return $result;
 	}
 	
-	public function getGameBoxes(){
-		$result = $this->connection->query("SELECT * FROM game_box_extended")
+	public function getGameBoxes($withRetired = false){
+		$sql = "SELECT * FROM game_box_extended";
+		if(!$withRetired){
+			$sql .= " WHERE retired = 0";
+		}
+		$result = $this->connection->query($sql)
 				->fetchAll(PDO::FETCH_CLASS, Views\GameBoxExtended::class);
 		return $result;
 	}
@@ -102,7 +106,7 @@ class PDOwrapper{
 
 	public function insertUser($orion_login) {
 		$statement = $this->connection->prepare(
-			"INSERT INTO `web_logickehry_db`.`user` (``orion_login`) VALUES (':ol);");
+			"INSERT INTO `web_logickehry_db`.`user` (`orion_login`) VALUES (:ol)");
 		return ($statement->execute(['ol' => $orion_login]));
 	}
 
@@ -114,6 +118,20 @@ class PDOwrapper{
 				. "WHERE `user`.`orion_login` = :orion_login"
 				);
 		return $statement->execute($pars);
+	}
+
+	public function retireBox($code) {
+		$box = $this->fetchBox($code);
+		if(!$box){ return null; }
+		$statement = $this->connection->prepare(
+			"UPDATE `web_logickehry_db`.`game_box` SET "
+				. "`retired` = 1 "
+				. "WHERE `game_box`.`tracking_code` = :tracking_code"
+				);
+		if($statement->execute(['tracking_code' => $code])){
+			return $box;
+		}
+		return null;
 	}
 
 }
