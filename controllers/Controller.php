@@ -13,6 +13,8 @@ use model\database\views\UserExtended;
  */
 abstract class Controller{
 	
+	const DEFAULT_CONTROLLER = 'vypis';
+	
 	/** @var URLgen */
     var $urlGen;
 	

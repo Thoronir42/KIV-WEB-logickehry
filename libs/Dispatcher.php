@@ -1,5 +1,6 @@
 <?php
-use controllers\ErrorController;
+use controllers\Controller,
+	controllers\ErrorController;
 
 /**
  * Description of Dispatcher
@@ -37,7 +38,7 @@ class Dispatcher {
 	/**
 	 * 
 	 * @param String $controllerName
-	 * @return \controllers\Controller
+	 * @return Controller
 	 */
 	public static function getControler($controllerName){
         switch($controllerName){
@@ -67,12 +68,18 @@ class Dispatcher {
 	
 	public function dispatch($contName, $action = null){
 		$cont = self::getControllerInstance($contName);
-		if($cont == null){ 
-			$this->error(ErrorController::NO_CONTROLLER_FOUND, $contName);
-			return;
+		
+		if(!$contName || strlen($cont) < 1){
+			$cont = $this->getControllerInstance(Controller::DEFAULT_CONTROLLER);
+			$cont->redirectPars(Controller::DEFAULT_CONTROLLER, $cont->getDefaultAction());
 		}
 		if(!$action || strlen($action) < 1){
 			$cont->redirectPars($contName, $cont->getDefaultAction());
+		}
+		
+		if($cont == null){ 
+			$this->error(ErrorController::NO_CONTROLLER_FOUND, $contName);
+			return;
 		}
 		
 		$noSauce = isset($cont->blockSauce);
@@ -91,7 +98,7 @@ class Dispatcher {
 	/**
 	 * 
 	 * @param array $contResponse
-	 * @param controllers\Controller $cont
+	 * @param Controller $cont
 	 * @param string $contName
 	 * @param string $action
 	 * @return type
@@ -121,7 +128,7 @@ class Dispatcher {
 	
 	/**
 	 * 
-	 * @param controllers\Controller $cont
+	 * @param Controller $cont
 	 * @param ReflectionMethod $action 
 	 */
 	private function invokeAjaxResponse($cont, $action){
