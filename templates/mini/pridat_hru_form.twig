@@ -1,14 +1,42 @@
 {# mini/pridat_hru_form.twig #}
 
-<form class="form-horizontal">
-	<label for="game_name" class="control-label">Název hry</label>
-	<input name="game_name" class="form-control">
-	
-	<label for="avg_playtime" class="control-label">Průměrná doba hry</label>
-	<div class="input-group">
-		<input type="text" name="avg_playtime" class="form-control">
-		<span class="input-group-addon">minut</span>
+<form class="form-horizontal" action="{{ urlgen.url(insert_game_form_action) }}" method="post">
+	<div class="row">
+		<div class="col-md-6">
+			<label for="game_name" class="control-label">Název hry</label>
+			<input name="game_name" class="form-control">
+			<label for="picture" class="control-label">Obrázek hry</label>
+			<div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-default btn-file">
+                        Procházet&hellip; <input type="file" name="picture">
+                    </span>
+                </span>
+                <input type="text" class="form-control" readonly>
+            </div>
+		</div>
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-6">
+					<label for="min_players" class="control-label">Min. počet hráčů</label>
+					<input type="number" name="min_players" min="1" class="form-control">
+				</div>
+				<div class="col-md-6">
+					<label for="max_players" class="control-label">Max. počet hráčů</label>
+					<input type="number" name="max_players" min="1" class="form-control">
+				</div>
+			</div>
+			<label for="avg_playtime" class="control-label">Průměrná doba hry</label>
+			<div class="input-group">
+				<input type="text" name="avg_playtime" class="form-control">
+				<span class="input-group-addon">minut</span>
+			</div>
+		</div>
 	</div>
-	<br>
-	<input type="submit" name="submit" value="Uložit hru" class="form-control btn btn-default">
+	<hr>
+	<div class="row">
+		<div class="col-md-offset-3 col-md-6">
+			<input type="submit" name="submit" value="Uložit hru" class="form-control btn btn-default">
+		</div>
+	</div>
 </form>
