@@ -37,6 +37,7 @@ class UzivatelController extends Controller{
 	
 	public function renderMojeUdaje(){
 		$this->template['form_action'] = ["controller" => "uzivatel", "action" => "ulozitUdaje"];
+		$this->template['resLink'] = ['controller' => 'rezervace', 'action' => 'vypis'];
 	}
 	
 	public function doUlozitUdaje(){
@@ -59,7 +60,8 @@ class UzivatelController extends Controller{
 	
 	public function doOdhlasitSe(){
 		unset($_SESSION['user']);
-		$this->message("Vaše odhlášení proběhlo úspěšně.", \libs\MessageBuffer::LVL_INF);
+		$this->message("Vaše odhlášení z aplikace proběhlo úspěšně.", \libs\MessageBuffer::LVL_INF);
+		$this->message("Pro přihlášení pod jiným účtem se nejdříve odhlašte z orion loginu, např. na Portalu", \libs\MessageBuffer::LVL_WAR);
 		$this->redirectPars();
 	}
 	
