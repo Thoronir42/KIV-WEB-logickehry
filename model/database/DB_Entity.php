@@ -8,20 +8,31 @@ namespace model\database;
  */
 abstract class DB_Entity{
 	
+	/**
+	 * 
+	 * @param String $class required DB_Entity class to be instantiated
+	 * @return DB_Entity
+	 */
 	public static function fromPOST($class = null){
 		if($class == null){ return null; }
 		$rc = new \ReflectionClass($class);
 		
 		$properties = $rc->getProperties();
 		$instance = $rc->newInstanceArgs();
-		
+		$missing = [];
 		foreach($properties as $prp){
 			$prpName = $prp->name;
 			$val = filter_input(INPUT_POST, $prpName);
 			if($prpName === "misc"){ continue; }
+			if(!$val){ $missing[] = $prpName; }
 			$instance->$prpName = $val; 
 		}
+		if(!empty($missing)){
+			$instance->missing = $missing;
+		}
+		return $instance;
 	}
+	
 	var $misc;
 	
 	public function __construct() {
@@ -40,6 +51,19 @@ abstract class DB_Entity{
 
 	public function __set($name, $value) {
 		$this->misc[$name] = $value;
+	}
+	
+	public function asArray($includeMissing = false){
+		$ret = [];
+		foreach($this as $prpKey => $prpVal){
+			if($prpKey === "misc"){ continue; }
+			$ret[$prpKey] = $prpVal;
+		}
+		if($includeMissing && isset($this->missing)){
+			$ret['missing'] = $this->missing;
+		}
+		
+		return $ret;
 	}
 
 	
