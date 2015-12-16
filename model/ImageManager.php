@@ -39,11 +39,10 @@ class ImageManager{
 	}
 	
 	public static function put($sourceKey, $destFile){
-		$target_file =$this->getNonExistingFilename(basename($_FILES[$sourceKey]["name"]), self::IMG_FOLDER);
 		// Allow certain file formats
-		$fileType = self::checkFileType(basename($_FILES[$sourceKey]["tmp_name"]));
+		$fileType = self::checkFileType(basename($_FILES[$sourceKey]["name"]));
 		if(!$fileType){
-			return ['result' => false, 'message' => "Nahraný soubor není jedním z povolených typů: ".implode(", ", self::ALLOWED_FILE_TYPES)];
+			return ['result' => false, 'message' => "Nahraný soubor ".$_FILES[$sourceKey]["name"]." není jedním z povolených typů: ".implode(", ", self::ALLOWED_FILE_TYPES)];
 		}
 		
 		// Check if image file is a actual image or fake image
@@ -56,7 +55,7 @@ class ImageManager{
 		}
 		
 		// if everything is ok, try to upload file
-		$finalFileName = self::IMG_FOLDER.$destFile.$fileType;
+		$finalFileName = self::IMG_FOLDER."$destFile.$fileType";
 		if (move_uploaded_file($_FILES[$sourceKey]["tmp_name"], $finalFileName)) {
 			return ['result' => true, 'message' => "Obrázek se podařilo nahrát do $finalFileName"];
 		} else {
@@ -71,6 +70,7 @@ class ImageManager{
 		foreach(self::ALLOWED_FILE_TYPES as $ft){
 			if($imageFileType == $ft) { return $ft; }
 		}
+		echo $imageFileType;
 		return false;
 	}
 	

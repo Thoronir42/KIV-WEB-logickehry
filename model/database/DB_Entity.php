@@ -21,7 +21,6 @@ abstract class DB_Entity{
 			if($prpName === "misc"){ continue; }
 			$instance->$prpName = $val; 
 		}
-		var_dump($instance);
 	}
 	var $misc;
 	

@@ -34,8 +34,11 @@ class SpravaController extends Controller{
 	
 	public function renderHry(){
 		$this->addCss("hra.css");
+		$this->addCss('input-file.css');
+		$this->addJs('input-file.js');
 		
 		$this->template['pageTitle'] = "Správa her";
+		$this->template['insert_game_form_action'] = ['controller' => 'sprava', 'action' => 'pridatHru'];
 		
 		$games = $this->pdoWrapper->getGamesWithScores();
 		foreach($games as $key => $g){
@@ -43,6 +46,17 @@ class SpravaController extends Controller{
 			$games[$key]->picture_path = $path;
 		}
 		$this->template['games'] = $games;
+	}
+	
+	public function doPridatHru(){
+		$nextId = $this->pdoWrapper->getFirstUnusedGameTypeId();
+		$gameType = \model\database\tables\GameType::fromPOST();
+		echo "nextId: $nextId<br/>";
+		var_dump("post", $_POST);
+		var_dump("files", $_FILES);
+		$imageResult = ImageManager::put("picture", sprintf("game_%03d", $nextId));
+		var_dump($imageResult);
+		
 	}
 	
 	public function renderUzivatele(){

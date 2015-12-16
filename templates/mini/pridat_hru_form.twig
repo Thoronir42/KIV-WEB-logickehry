@@ -1,6 +1,6 @@
 {# mini/pridat_hru_form.twig #}
 
-<form class="form-horizontal" action="{{ urlgen.url(insert_game_form_action) }}" method="post">
+<form class="form-horizontal" action="{{ urlgen.url(insert_game_form_action) }}" method="post" enctype="multipart/form-data">
 	<div class="row">
 		<div class="col-md-6">
 			<label for="game_name" class="control-label">Název hry</label>

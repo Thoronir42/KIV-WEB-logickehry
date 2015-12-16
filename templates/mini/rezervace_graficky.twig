@@ -7,5 +7,7 @@
 	{% else %}
 		Day {{ i }} is empty.
  	{% endif %}
+	{% if not loop.last %}
 	<hr>
+	{% endif %}
 {% endfor %}

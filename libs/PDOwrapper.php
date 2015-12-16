@@ -35,6 +35,12 @@ class PDOwrapper{
 		return $result;
 	}
 	
+	public function getFirstUnusedGameTypeId(){
+		 $result = $this->connection->query("SELECT game_type_id FROM game_type "
+				 . "ORDER BY game_type_id DESC")->fetchColumn();
+		 return $result;
+	}
+	
 	/**
 	 * 
 	 * @param type $pars
