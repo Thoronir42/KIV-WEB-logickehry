@@ -13,8 +13,9 @@
 			<div class="game panel panel-default">
 				<div class="panel-heading">
 					<div class="row" style="height: 100%;">
-					<span class="col-lg-9 game-title pull-left" style="overflow-y: auto; height: 100%;">
-						{{ g.game_name }}
+					<span class="col-lg-9 pull-left">
+						<div class="row game-title"><div class="col-xs-12">{{ g.game_name }}</div></div>
+						<div class="row game-subtitle"><div class="col-xs-12">{{ g.subtitle }}</div></div>
 					</span>
 					<span class="col-lg-3 image-frame pull-right">
 						<img src="{{ g.picture_path }}" class="img-rounded img-responsive">

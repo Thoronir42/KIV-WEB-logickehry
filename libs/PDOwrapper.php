@@ -38,7 +38,7 @@ class PDOwrapper{
 	public function getFirstUnusedGameTypeId(){
 		 $result = $this->connection->query("SELECT game_type_id FROM game_type "
 				 . "ORDER BY game_type_id DESC")->fetchColumn();
-		 return $result;
+		 return $result + 1;
 	}
 	
 	/**
@@ -72,11 +72,43 @@ class PDOwrapper{
 				->fetchAll(PDO::FETCH_CLASS, Tables\User::class);
 		return $result;
 	}
+	
+	/**
+	 * 
+	 * @param type $game_id
+	 * @return Views\GameTypeExtended;
+	 */
+	public function gameTypeById($game_id) {
+		$statement = $this->connection->prepare("SELECT * FROM game_type_extended WHERE game_type_id = :id");
+		if($statement->execute(['id' => $game_id])){
+			$result = $statement->fetchObject(Views\GameTypeExtended::class);
+			return $result;
+		}
+		return null;
+	}
+	
 	public function getGameTypes(){
 		$result = $this->connection->query("SELECT * FROM game_type")
 				->fetchAll(PDO::FETCH_CLASS, Tables\GameType::class);
 		return $result;
 	}
+	/**
+	 * 
+	 * @param Tables\GameType $gameType
+	 * @param int $game_type_id
+	 */
+	public function insertGameType($gameType, $game_type_id) {
+		$statement = $this->connection->prepare("INSERT INTO `web_logickehry_db`.`game_type` "
+			. "(`game_type_id`, `game_name`, `subtitle`, `avg_playtime`, `max_players`, `min_players`) "
+	 ."VALUES ( :game_type_id,  :game_name,  :subtitle,  :avg_playtime,  :max_players,  :min_players');");
+		
+		$pars = $gameType->asArray();
+		$pars['game_type_id'] = $game_type_id;
+		var_dump('insert', $pars, '<hr>');
+		return ($statement->execute($pars));
+	}
+	
+	
 	
 	/**
 	 * 
@@ -88,6 +120,30 @@ class PDOwrapper{
 		$result = $this->connection->query($sql)
 				->fetchAll(PDO::FETCH_CLASS, Views\GameBoxExtended::class);
 		return $result;
+	}
+	
+	public function insertGameBox($pars) {
+		$statement = $this->connection->prepare("INSERT INTO `web_logickehry_db`.`game_box` "
+			. "(`tracking_code`, `game_type_id`) "
+	 ."VALUES ( :tracking_code,  :game_type_id);");
+		if($statement->execute($pars)){ return true; } else {
+			var_dump($statement->errorInfo());
+			echo "<br>".$statement->queryString;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param String $code
+	 * @return Views\GameBoxExtended
+	 */
+	public function gameGameBoxByCode($code){
+		$statement = $this->connection->prepare("SELECT * FROM game_box_extended WHERE tracking_code = :code");
+		if($statement->execute(['code' => $code])){
+			$result = $statement->fetchObject(Views\GameBoxExtended::class);
+			return $result;
+		}
+		return null;
 	}
 	
 	public function getDesks(){

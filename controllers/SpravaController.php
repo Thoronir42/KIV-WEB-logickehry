@@ -54,9 +54,10 @@ class SpravaController extends Controller{
 		$nextId = $this->pdoWrapper->getFirstUnusedGameTypeId();
 		$_POST['game_type_id'] = $nextId;
 		$gameType = \model\database\tables\GameType::fromPOST();
-		$this->pdoWrapper->insertGameType($gameType, $nextId);
+		if($gameType->readyForInsert()){
+			$this->pdoWrapper->insertGameType($gameType, $nextId);
+		}
 		var_dump($gameType, '<hr>');
-		var_dump($gameType->asArray(true), '<hr>');
 		
 		var_dump("files", $_FILES, '<hr>');
 		$imageResult = ImageManager::put("picture", sprintf("game_%03d", $nextId));

@@ -24,7 +24,7 @@ abstract class DB_Entity{
 			$prpName = $prp->name;
 			$val = filter_input(INPUT_POST, $prpName);
 			if($prpName === "misc"){ continue; }
-			if(!$val){ $missing[] = $prpName; }
+			if(!$val){ $missing[$prpName] = true; }
 			$instance->$prpName = $val; 
 		}
 		if(!empty($missing)){
@@ -64,6 +64,13 @@ abstract class DB_Entity{
 		}
 		
 		return $ret;
+	}
+	/**
+	 * 
+	 */
+	public function readyForInsert(){
+		$everythingSet = !isset($this->missing);
+		return $everythingSet;
 	}
 
 	

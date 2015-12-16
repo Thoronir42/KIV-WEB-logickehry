@@ -20,12 +20,15 @@
 		<div class="col-md-{{ 12 / gpr }}">
 			<div class="game panel panel-default">
 				<div class="panel-heading">
-					<span class="game-title pull-left">
-						{{ g.game_name }}
+					<div class="row">
+					<span class="col-lg-9 pull-left">
+						<div class="row game-title"><div class="col-xs-12">{{ g.game_name }}</div></div>
+						<div class="row game-subtitle"><div class="col-xs-12">{{ g.subtitle }}</div></div>
 					</span>
-					<span class="image-frame pull-right">
+					<span class="col-lg-3 image-frame pull-right">
 						<img src="{{ g.picture_path }}" class="img-rounded img-responsive">
 					</span>
+					</div>
 				</div>
 				<div class="panel-body">
 					<ul class="list-group">

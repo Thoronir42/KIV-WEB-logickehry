@@ -2,20 +2,13 @@
 
 <form class="form-horizontal" action="{{ urlgen.url(insert_game_form_action) }}" method="post" enctype="multipart/form-data">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-5">
 			<label for="game_name" class="control-label">Název hry</label>
-			<input name="game_name" class="form-control">
-			<label for="picture" class="control-label">Obrázek hry</label>
-			<div class="input-group">
-                <span class="input-group-btn">
-                    <span class="btn btn-default btn-file">
-                        Procházet&hellip; <input type="file" name="picture">
-                    </span>
-                </span>
-                <input type="text" class="form-control" readonly>
-            </div>
+			<input name="game_name" class="form-control">	
+			<label for="subtitle" class="control-label">Podtitulek hry</label>
+			<input name="subtitls" class="form-control">
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-7">
 			<div class="row">
 				<div class="col-md-6">
 					<label for="min_players" class="control-label">Min. počet hráčů</label>
@@ -26,10 +19,25 @@
 					<input type="number" name="max_players" min="1" class="form-control">
 				</div>
 			</div>
-			<label for="avg_playtime" class="control-label">Průměrná doba hry</label>
-			<div class="input-group">
-				<input type="text" name="avg_playtime" class="form-control">
-				<span class="input-group-addon">minut</span>
+			<div class="row">
+				<div class="col-md-6">
+					<label for="avg_playtime" class="control-label">Průměrná doba hry</label>
+					<div class="input-group">
+						<input type="text" name="avg_playtime" class="form-control">
+						<span class="input-group-addon">minut</span>
+					</div>
+				</div>
+				<div class="col-md-6">
+				<label for="picture" class="control-label">Obrázek hry</label>
+				<div class="input-group">
+					<span class="input-group-btn">
+						<span class="btn btn-default btn-file">
+							Procházet&hellip; <input type="file" name="picture">
+						</span>
+					</span>
+					<input type="text" class="form-control" readonly>
+				</div>
+				</div>
 			</div>
 		</div>
 	</div>
