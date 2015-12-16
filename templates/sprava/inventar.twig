@@ -5,8 +5,12 @@
 {% block bodyContent %}
 	
 	<p>Výpis inventářových entit seskupené podle herních druhů.</p>
-	
+	{% set open_game_row = false %}
 	{% for g in games %}
+	{% if loop.index0 % gpr == 0 %}
+		<div class="row"> {% set open_code_row = true %}
+	{% endif %}
+		<div class="col-md-{{ 12 / gpr }}">
 		<div class="game panel panel-default">
 			<div class="panel-heading">
 				<span class="game-title pull-left">
@@ -17,13 +21,13 @@
 				</span>
 			</div>
 			<div class="panel-body">
-				{% set open_row = false %}
+				{% set open_code_row = false %}{% set gLoop = loop %}
 				{% for code in g.tracking_codes%}
-					{% if loop.index0 % 3 == 0 %}
-						<div class="row"> {% set open_row = true %}
+					{% if loop.index0 % ipr == 0 %}
+						<div class="row"> {% set open_code_row = true %}
 					{% endif %}
 					
-					<div class="col-md-4" id="ig_{{ code.tracking_code }}">
+					<div class="col-md-{{ 12 / ipr }}" id="ig_{{ code.tracking_code }}">
 						<div class="input-group">
 							<input type="text" class="form-control" value="{{ code.tracking_code }}" readonly>
 							{% if not code.retired %}
@@ -33,19 +37,19 @@
 							{% else %}
 								<span class="input-group-addon">Vyřazený</span>
 							{% endif %}
-						</div><!-- /input-group -->
-					</div><!-- /.col-lg-6 -->
-					{% if loop.index0 % 3 == 2 %}
-						</div> {% set open_row = false %}
+						</div>
+					</div>
+					{% if loop.index0 % ipr == ipr-1 %}
+						</div> {% set open_code_row = false %}
 					{% endif %}
-				{% endfor %}
-				{% if open_row %}
+				{% endfor %}{% set loop = gLoop %}
+				{% if open_code_row %}
 				</div>
 				{% endif %}
 				<hr>
 				<div class="row">
 					<div class="col-md-offset-3 col-md-6 input-group">
-						<label class="input-group-addon" for="addcode{{g.game_type_id}}">Evidovat krabici</label>
+						<label class="input-group-addon" for="addcode{{g.game_type_id}}">+</label>
 						<input type="text" class="form-control" name="addcode{{g.game_type_id}}" placeholder="G00001">
 						<span class="input-group-btn">
 							<button class="btn btn-default" type="button">OK</button>
@@ -53,7 +57,13 @@
 					</div>
 				</div>
 			</div>
-			
 		</div>
+		</div>
+	{% if loop.index0 % gpr == gpr-1 %}
+		</div> {% set open_game_row = false %}
+	{% endif %}
 	{% endfor %}
+	{% if open_game_row %}
+		</div>
+	{% endif %}
 {% endblock %}
