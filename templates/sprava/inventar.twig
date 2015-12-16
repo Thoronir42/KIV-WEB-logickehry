@@ -13,12 +13,15 @@
 		<div class="col-md-{{ 12 / gpr }}">
 		<div class="game panel panel-default">
 			<div class="panel-heading">
-				<span class="game-title pull-left">
-					{{ g.game_name }}
+				<div class="row" style="height: 100%;">
+				<span class="col-lg-9 pull-left">
+					<div class="row game-title"><div class="col-xs-12">{{ g.game_name }}</div></div>
+					<div class="row game-subtitle"><div class="col-xs-12">{{ g.subtitle }}</div></div>
 				</span>
-				<span class="image-frame pull-right">
+				<span class="col-lg-3 image-frame pull-right">
 					<img src="{{ g.picture_path }}" class="img-rounded img-responsive">
 				</span>
+				</div>
 			</div>
 			<div class="panel-body">
 				{% set open_code_row = false %}{% set gLoop = loop %}
@@ -42,6 +45,8 @@
 					{% if loop.index0 % ipr == ipr-1 %}
 						</div> {% set open_code_row = false %}
 					{% endif %}
+				{% else %}
+					<div class="well"><span class="label label-warning">!</span> Pro tuto hru nejsou evidovány žádné kódy</div>
 				{% endfor %}{% set loop = gLoop %}
 				{% if open_code_row %}
 				</div>
@@ -49,10 +54,11 @@
 				<hr>
 				<div class="row">
 					<div class="col-md-offset-3 col-md-6 input-group">
-						<label class="input-group-addon" for="addcode{{g.game_type_id}}">+</label>
-						<input type="text" class="form-control" name="addcode{{g.game_type_id}}" placeholder="G00001">
+						<label class="input-group-addon" for="addcode_{{g.game_type_id}}">+</label>
+						<input type="text" class="form-control" name="addcode_{{g.game_type_id}}" placeholder="G00001">
 						<span class="input-group-btn">
-							<button class="btn btn-default" type="button">OK</button>
+							<a tabindex="{{ loop.index0 }}" class="btn btn btn-default insert" id="ai_{{ g.game_type_id }}"
+							   role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="Chyba?">Ok</a>
 						</span>
 					</div>
 				</div>

@@ -72,9 +72,10 @@ class SpravaController extends Controller{
 	public function renderInventar(){
 		$retired = $this->getParam("retired");
 		$this->addCss("sprava_inventar.css");
+		$this->addCss("hra.css");
 		$this->addJs("sprava_inventar.js");
 		$this->template['pageTitle'] = "Správa evidovaných herních krabic";
-		$this->template['gpr'] = 3;
+		$this->template['gpr'] = 2;
 		$this->template['ipr'] = 2;
 		
 		

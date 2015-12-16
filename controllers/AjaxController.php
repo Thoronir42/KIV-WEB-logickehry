@@ -8,7 +8,10 @@ namespace controllers;
  */
 class AjaxController extends Controller{
     
+	const MIN_CODE_LENGTH = 5;
+	
 	var $block_sauce = true;
+	
 	
 	public function __construct(){
 		parent::__construct();
@@ -24,7 +27,36 @@ class AjaxController extends Controller{
 	}
 	
 	public function doInsertBox(){
-		if(!$this->user->isSupervisor()){ return 'false'; }
 		$code = $this->getParam("code");
+		$game_id = intval($this->getParam("gameId"));
+		
+		$fail = $this->checkBeforeInsert($code, $game_id);
+		if(!$fail){
+			$result = $this->pdoWrapper->insertGameBox(['game_type_id' => $game_id, 'tracking_code' => $code]);
+			if(!$result){
+				$fail =  "Při ukládání do databáze nastala neočekávaná chyba";;
+			}
+		}
+		$this->template['response'] = (!$fail ? "true" : "$game_id;$fail");
+	}
+	
+	private function checkBeforeInsert($code, $game_id){
+		if(!$this->user->isSupervisor()){
+			return "Nedostatečná uživatelská oprávnění";
+		}
+		if(strlen($code) < self::MIN_CODE_LENGTH){
+			return sprintf("Evidenční kód musí být alespoň %d znaků dlouhý.", self::MIN_CODE_LENGTH);
+		}
+		$gameBox = $this->pdoWrapper->gameGameBoxByCode($code);
+		if($gameBox){
+			$response = "Kód $code je v databázi již veden, ";
+			$response .= ($gameBox->retired ? "je však vyřazený z oběhu" : "náleží hře ".$gameBox->game_name);
+			return $response;
+		}
+		$gameType = $this->pdoWrapper->gameTypeById($game_id);
+		if(!$gameType){
+			return $this->template['response'] = sprintf("Nebyla nalezena hra %03d", $game_id);
+		}
+		return false;
 	}
 }

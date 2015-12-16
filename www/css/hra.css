@@ -7,15 +7,19 @@
 	border: black 1px solid;
 }
 
-.game div div div{
-	background: bisque;
+.game .game-title{
+	font-size: 1.72em;
+}
+
+.game .game-subtitle{
+	font-size: 1.40em;
+}
+
+
+.game img{
+	max-width: 100%; max-height: 60px;
 }
 
 .game .panel-heading{
-	font-size: 2.2em;
 	height: 80px;
-}
-
-.game .image-frame img{
-	max-height: 64px;
 }
