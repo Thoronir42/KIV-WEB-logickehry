@@ -30,9 +30,10 @@ class VypisController extends Controller{
     public function renderHry(){
 		$this->addCss("hra.css");
 		$this->template['pageTitle'] = "Výpis her";
+		$this->template['gpr'] = 3; // games per row
 		$games = $this->pdoWrapper->getGamesWithScores();
 		foreach($games as $key => $g){
-			$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d.png", $g->game_type_id)));
+			$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d", $g->game_type_id)));
 			$games[$key]->picture_path = $path;
 		}
         $this->template['hry'] = $games;

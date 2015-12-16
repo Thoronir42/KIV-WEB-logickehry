@@ -4,38 +4,47 @@
 
 {% block bodyContent %}
 	<div>
+	{% set open_row = false %}
 	{% for g in hry %}
-		<div class="game panel panel-default">
-			<div class="panel-heading">
-				<span class="game-title pull-left">
-					{{ g.game_name }}
-				</span>
-				<span class="image-frame pull-right">
-					<img src="{{ g.picture_path }}" class="img-rounded img-responsive">
-				</span>
+		{% if loop.index0 % gpr == 0 %}
+			<div class="row"> {% set open_row = true %}
+		{% endif %}
+		<div class="col-md-{{ 12 / gpr }}">
+			<div class="game panel panel-default">
+				<div class="panel-heading">
+					<div class="row" style="height: 100%;">
+					<span class="col-lg-9 game-title pull-left" style="overflow-y: auto; height: 100%;">
+						{{ g.game_name }}
+					</span>
+					<span class="col-lg-3 image-frame pull-right">
+						<img src="{{ g.picture_path }}" class="img-rounded img-responsive">
+					</span>
+					</div>
+				</div>
+				<div class="panel-body">
+					<ul class="list-group">
+						<li class="list-group-item">
+							Hodnocení:{{ '%d (%d)'|format(g.average_score, g.rating_count) }}
+						</li>
+						<li class="list-group-item">
+							Hráčů:{{ "%d - %d"|format(g.min_players, g.max_players) }}
+						</li>
+						<li class="list-group-item">
+							Prům. Doba Hry: {{ g.avg_playtime }}
+						</li>
+						<li class="list-group-item">
+							Odběratelů: {{ g.subscribed_users }}
+						</li>
+					</ul>
+				</div>
 			</div>
-			<div class="panel-body">
-				<ul class="list-group">
-					<li class="list-group-item">
-						Hráčů:{{ "%d - %d"|format(g.min_players, g.max_players) }}
-					</li>
-					<li class="list-group-item">
-						Prům. Doba Hry: {{ g.avg_playtime }}
-					</li>
-					<li class="list-group-item">
-						Hodnocení:{% if g.rating_count %}
-							{{ '%d (%d)'|format(g.average_score, g.rating_count) }}
-							{% else %}
-								Zatím nehodnoceno
-							{% endif %}
-					</li>
-					<li class="list-group-item">
-						Odběratelů: {{ g.subscribed_users }}
-					</li>
-				</ul>
-			</div>
-
 		</div>
+		{% if loop.index0 % gpr == gpr - 1 %}
+			</div> {% set open_row = false %}
+		{% endif %}
 	{% endfor %}
+	{% if open_row %}
+	</div>
+	{% endif %}
 	</div>
 {% endblock %}

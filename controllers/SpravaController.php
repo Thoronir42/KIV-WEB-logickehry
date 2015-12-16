@@ -39,10 +39,12 @@ class SpravaController extends Controller{
 		
 		$this->template['pageTitle'] = "Správa her";
 		$this->template['insert_game_form_action'] = ['controller' => 'sprava', 'action' => 'pridatHru'];
+		$this->template['gpr'] = 3;
+		
 		
 		$games = $this->pdoWrapper->getGamesWithScores();
 		foreach($games as $key => $g){
-			$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d.png", $g->game_type_id)));
+			$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d", $g->game_type_id)));
 			$games[$key]->picture_path = $path;
 		}
 		$this->template['games'] = $games;
@@ -50,10 +52,13 @@ class SpravaController extends Controller{
 	
 	public function doPridatHru(){
 		$nextId = $this->pdoWrapper->getFirstUnusedGameTypeId();
+		$_POST['game_type_id'] = $nextId;
 		$gameType = \model\database\tables\GameType::fromPOST();
-		echo "nextId: $nextId<br/>";
-		var_dump("post", $_POST);
-		var_dump("files", $_FILES);
+		$this->pdoWrapper->insertGameType($gameType, $nextId);
+		var_dump($gameType, '<hr>');
+		var_dump($gameType->asArray(true), '<hr>');
+		
+		var_dump("files", $_FILES, '<hr>');
 		$imageResult = ImageManager::put("picture", sprintf("game_%03d", $nextId));
 		var_dump($imageResult);
 		
@@ -69,12 +74,15 @@ class SpravaController extends Controller{
 		$this->addCss("sprava_inventar.css");
 		$this->addJs("sprava_inventar.js");
 		$this->template['pageTitle'] = "Správa evidovaných herních krabic";
+		$this->template['gpr'] = 3;
+		$this->template['ipr'] = 2;
+		
 		
 		$games = $this->pdoWrapper->getGameBoxes();
 		$gamesSrt = [];
 		foreach($games as $g){
 			if(!isset($gamesSrt[$g->game_type_id])){
-				$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d.png", $g->game_type_id)));
+				$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d", $g->game_type_id)));
 				$gamesSrt[$g->game_type_id] = ["game_name"=>$g->game_name, 
 					"game_type_id"=>$g->game_type_id, "picture_path" => $path,
 					"tracking_codes" => []];

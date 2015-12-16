@@ -19,17 +19,18 @@ class ImageManager{
 	
 	public static function get($fileName, $extension = null){
 		if(file_exists(self::IMG_FOLDER.$fileName)){
-			self::IMG_FOLDER.$fileName;
+			echo "<br>";
+			return $fileName;
 		}
 		if($extension != null){
-			$fn = self::IMG_FOLDER.$fileName.$extension;
-			if(file_exists($fn)){
+			$fn = "$fileName.$extension";
+			if(file_exists(self::IMG_FOLDER.$fn)){
 				return $fn;
 			}
 		} else {
 			foreach(self::ALLOWED_FILE_TYPES as $ext){
-				$fn = self::IMG_FOLDER.$fileName.$ext;
-				if(file_exists($fn)){
+				$fn = "$fileName.$ext";
+				if(file_exists(self::IMG_FOLDER.$fn)){
 					return $fn;
 				}
 			}
