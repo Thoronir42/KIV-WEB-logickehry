@@ -29,7 +29,11 @@ class PDOwrapper{
 		$this->connection = $pdo;
 	}
 	
-	public function getGamesWithScores(){
+	/**
+	 * 
+	 * @return Tables\GameType[]
+	 */
+	public function getGameTypesExtended(){
 		$result = $this->connection->query("SELECT * FROM `game_type_extended`")
 				->fetchAll(PDO::FETCH_CLASS, Views\GameTypeExtended::class);
 		return $result;
@@ -53,6 +57,8 @@ class PDOwrapper{
 		if($statement->execute($pars)){
 			return $statement->fetchAll(PDO::FETCH_CLASS, Views\ReservationExtended::class);
 		}
+		return null;
+	}
 		
 		return null;
 	}

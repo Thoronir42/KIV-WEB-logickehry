@@ -30,7 +30,7 @@ class AjaxController extends Controller{
 		$code = $this->getParam("code");
 		$game_id = intval($this->getParam("gameId"));
 		
-		$fail = $this->checkBeforeInsert($code, $game_id);
+		$fail = $this->checkBoxBeforeInsert($code, $game_id);
 		if(!$fail){
 			$result = $this->pdoWrapper->insertGameBox(['game_type_id' => $game_id, 'tracking_code' => $code]);
 			if(!$result){
@@ -40,7 +40,7 @@ class AjaxController extends Controller{
 		$this->template['response'] = (!$fail ? "true" : "$game_id;$fail");
 	}
 	
-	private function checkBeforeInsert($code, $game_id){
+	private function checkBoxBeforeInsert($code, $game_id){
 		if(!$this->user->isSupervisor()){
 			return "Nedostatečná uživatelská oprávnění";
 		}

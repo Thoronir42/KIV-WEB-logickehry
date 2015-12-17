@@ -42,7 +42,7 @@ class SpravaController extends Controller{
 		$this->template['gpr'] = 3;
 		
 		
-		$games = $this->pdoWrapper->getGamesWithScores();
+		$games = $this->pdoWrapper->getGameTypesExtended();
 		foreach($games as $key => $g){
 			$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d", $g->game_type_id)));
 			$games[$key]->picture_path = $path;
