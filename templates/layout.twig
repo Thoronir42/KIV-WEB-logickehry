@@ -33,7 +33,12 @@
 				{% if alert_messages %}
 					<div class="alerts">
 					{% for msg in alert_messages %}
-						<div class="alert alert-{{ msg['level'] }}">{{ msg['text'] }}</div>
+						<div class="alert alert-{{ msg['level'] }}">
+							{{ msg['text'] }}
+							{% if msg['link'] %}
+							<a href="{{ msg['link']['url'] }}" class="alert-link pull-right">{{ msg['link']['label'] }}</a>
+							{% endif %}
+						</div>
 					{% endfor %}
 					</div>
 				{% endif %}

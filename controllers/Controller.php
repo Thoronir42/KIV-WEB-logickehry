@@ -133,8 +133,8 @@ abstract class Controller{
 		$this->template['js'][] = $js;
 	}
 	
-	protected function message($text, $level = MessageBuffer::LVL_INF){
-		$this->messageBuffer->log($text, $level);
+	protected function message($text, $level = MessageBuffer::LVL_INF, $link = null){
+		$this->messageBuffer->log($text, $level, $link);
 	}
 	
     public function redirect($location){

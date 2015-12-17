@@ -10,6 +10,8 @@ use model\database\views\UserExtended;
  */
 class UzivatelController extends Controller{
 	
+	const PORTAL_LOGOUT_URL = 'https://portal.zcu.cz/portal/logout';
+	
 	/**
 	 * 
 	 * @return UserExtended
@@ -68,7 +70,8 @@ class UzivatelController extends Controller{
 	public function doOdhlasitSe(){
 		unset($_SESSION['user']);
 		$this->message("Vaše odhlášení z aplikace proběhlo úspěšně.", \libs\MessageBuffer::LVL_INF);
-		$this->message("Pro přihlášení pod jiným účtem se nejdříve odhlašte z orion loginu, např. na Portalu", \libs\MessageBuffer::LVL_WAR);
+		$this->message("Pro přihlášení pod jiným účtem se nejdříve odhlašte z orion loginu", \libs\MessageBuffer::LVL_WAR,
+				['label' => "Odhlásit se", 'url' => self::PORTAL_LOGOUT_URL]);
 		$this->redirectPars();
 	}
 	

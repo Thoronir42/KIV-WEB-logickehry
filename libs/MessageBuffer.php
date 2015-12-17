@@ -18,6 +18,7 @@ class MessageBuffer {
 	
 	const PRT_LVL = 'level';
 	const PRT_MSG = 'text';
+	const PRT_LNK = 'link';
 	
 	
     /**
@@ -61,8 +62,8 @@ class MessageBuffer {
      * @param string $message 
      * @param int $level
      */
-    public static function logMessage($message, $level){
-        self::getInstance()->log($message, $level);
+    public static function logMessage($message, $level, $link = null){
+        self::getInstance()->log($message, $level, $link);
     }
     
     /**
@@ -95,13 +96,19 @@ class MessageBuffer {
      * @param string $message
      * @param int $level
      */
-    public function log($message, $level = self::LVL_INF){
+    public function log($message, $level = self::LVL_INF, $link = null){
         if( !$this->validLevel($level) ){ $level = self::LVL_INF; }
         if(!isset($_SESSION[$this->session_key])){
 			$_SESSION[$this->session_key] = [];
 		}
-        $_SESSION[$this->session_key][] = [self::PRT_MSG  => $message, 
-                                self::PRT_LVL => $level];
+		$msg =[self::PRT_MSG  => $message, self::PRT_LVL => $level];
+		if(is_array($link)){
+			if(isset($link['url']) && isset($link['label'])){
+				$msg[self::PRT_LNK] = $link;
+			}
+			
+		}
+		$_SESSION[$this->session_key][] = $msg;
         
     }
     
