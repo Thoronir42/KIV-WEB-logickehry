@@ -62,7 +62,7 @@ class UzivatelController extends Controller{
 			$this->message("Při ukládání vašich údajů nastala chyba.", \libs\MessageBuffer::LVL_DNG);
 		}
 		
-		$this->redirectPars("uzivatel");
+		$this->redirectPars("uzivatel", $this->getDefaultAction());
 	}
 	
 	public function doOdhlasitSe(){
@@ -82,7 +82,7 @@ class UzivatelController extends Controller{
 	public function doPrihlaseni(){
 		if(!isset($_SESSION['orion_login'])){
 			$this->message("Neplatny pokus o prihlaseni!", \libs\MessageBuffer::LVL_WAR);
-			$this->redirectPars("vypis", "hry");
+			$this->redirectPars();
 		}
 		$orion_login = $_SESSION["orion_login"];
 		unset($_SESSION['orion_login']);
@@ -100,7 +100,7 @@ class UzivatelController extends Controller{
 			$this->message("Vítejte zpět, $orion_login!", \libs\MessageBuffer::LVL_SUC);
 		}
 		$_SESSION['user'] = serialize($user);
-		$this->redirectPars('vypis', 'hry');
+		$this->redirectPars();
 		
 	}
 }

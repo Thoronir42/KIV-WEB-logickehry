@@ -142,8 +142,8 @@ abstract class Controller{
 		\header("Connection: close");
     }
 	
-	public function redirectPars($controller = 'vypis', $action = null) {
-		$location = $this->urlGen->url(['controller' => $controller, "action" => $action]);
+	public function redirectPars($controller = null, $action = null) {
+		$location = $this->urlGen->url(['controller' => $controller ?: self::DEFAULT_CONTROLLER, "action" => $action]);
 		$this->redirect($location);
 	}
 	
