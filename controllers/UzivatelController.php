@@ -33,6 +33,13 @@ class UzivatelController extends Controller{
 		return $menu;	
 	}
 	
+	public function startUp() {
+		parent::startUp();
+		if(!$this->user->isLoggedIn()){
+			$this->redirectPars(Controller::DEFAULT_CONTROLLER);
+		}
+	}
+	
 	public function getDefaultAction() { return "mojeUdaje"; }
 	
 	public function renderMojeUdaje(){

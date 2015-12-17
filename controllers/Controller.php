@@ -13,7 +13,7 @@ use model\database\views\UserExtended;
  */
 abstract class Controller{
 	
-	const DEFAULT_CONTROLLER = 'vypis';
+	const DEFAULT_CONTROLLER = 'rezervace';
 	
 	/** @var URLgen */
     var $urlGen;
@@ -63,10 +63,11 @@ abstract class Controller{
 	}
 	private function buildMenu(){
 		$menu = [];
-		$menu[] = ["urlParams" => ["controller" => "vypis", "action"=>"hry"],
-				"label" => "Seznam her"];
 		$menu[] = ["urlParams" => ["controller" => "rezervace", "action"=>"vypis"],
 				"label" => "Rezervace"];
+		$menu[] = ["urlParams" => ["controller" => "vypis", "action"=>"hry"],
+				"label" => "Seznam her"];
+		
 		if($this->user->isSupervisor()){
 			$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"hry"],
 					"label" => "Správa"];
