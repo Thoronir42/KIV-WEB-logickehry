@@ -1,8 +1,6 @@
 <?php
 namespace controllers;
 
-use model\ImageManager;
-
 /**
  * Description of HomeControler
  *
@@ -33,10 +31,23 @@ class VypisController extends Controller{
 		$this->template['gpr'] = 3; // games per row
 		$games = $this->pdoWrapper->getGameTypesExtended();
 		foreach($games as $key => $g){
-			$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d", $g->game_type_id)));
-			$games[$key]->picture_path = $path;
+			$games[$key]->detail_link = ['controller' => 'vypis', 'action' => 'detailHry', 'id' => $g->game_type_id];
 		}
         $this->template['hry'] = $games;
     }
+	
+	public function renderDetailHry(){
+		$id = $this->getParam("id");
+		$gameType = $this->pdoWrapper->gameTypeById($id);
+		if(!$gameType){
+			$this->message("Požadovaná hra nebyla nalezena.", \libs\MessageBuffer::LVL_WAR);
+			$this->redirectPars('vypis', 'hry');
+		}
+		$this->addCss("vypis_detailHry.css");
+		
+		$this->template['g'] = $gameType;
+		$this->template['ratings'] = $this->pdoWrapper->gameRatingsByGameType($id);
+		$this->template['rating'] = ['min' => 1, 'def' => 3, 'max' => 5];
+	}
 	
 }

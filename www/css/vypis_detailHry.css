@@ -1,0 +1,24 @@
+/* 
+    Created on : 2.12.2015, 17:01:05
+    Author     : Stepan
+*/
+
+.game{
+	border: black 1px solid;
+}
+
+.game .panelTitle{
+	height: 128px;
+}
+
+.game .panelTitle img{
+	height: 110px;
+}
+
+.game .game-title{
+	font-size: 3.2em;
+}
+
+.game .game-subtitle{
+	font-size: 2.00em;
+}

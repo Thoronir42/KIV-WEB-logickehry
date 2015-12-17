@@ -1,6 +1,7 @@
 <?php
 namespace libs;
 
+use model\ImageManager;
 
 class URLgen{
 	
@@ -33,6 +34,12 @@ class URLgen{
 	}
 	public function img($file){
 		return $this->urlPrefix."images/".$file;
+	}
+	
+	public function gImg($game_type_id){
+		$filename = sprintf("game_%03d", $game_type_id);
+		$path = ImageManager::get($filename);
+		return $this->img($path);
 	}
 }
 

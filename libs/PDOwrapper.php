@@ -56,10 +56,17 @@ class PDOwrapper{
 				. "ORDER BY time_from ASC");
 		if($statement->execute($pars)){
 			return $statement->fetchAll(PDO::FETCH_CLASS, Views\ReservationExtended::class);
-		}
+		}	
 		return null;
 	}
-		
+	
+	public function gameRatingsByGameType($id) {
+		$statement = $this->connection->prepare("SELECT * FROM `game_rating_extended` "
+				. "WHERE game_type_id = :id "
+				. "ORDER BY time_from ASC");
+		if($statement->execute(['id' => $id])){
+			return $statement->fetchAll(PDO::FETCH_CLASS, Views\ReservationExtended::class);
+		}
 		return null;
 	}
 	
