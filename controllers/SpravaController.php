@@ -17,6 +17,8 @@ class SpravaController extends Controller{
 			$menu[] = ["separator" => true];
 			$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"ovladaciPanel"],
 					"label" => "Ovládací panel"];
+			$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"hromadnyMail"],
+					"label" => "Hromadný mail"];
 		}
 		return $menu;
 	}
@@ -114,5 +116,14 @@ class SpravaController extends Controller{
 	public function renderOvladaciPanel(){
 		$this->template['xml_inventory'] = ['controller' => 'xml', 'action' => 'inventory'];
 		$this->template['xml_reservations'] = ['controller' => 'xml', 'action' => 'reservations'];
+	}
+	
+	public function renderHromadnyMail(){
+		$this->template['send_url'] = ['controller' => 'sprava', 'action' => 'poslatMail'];
+		$this->template['games'] = $this->pdoWrapper->getGameTypesExtended();
+	}
+	
+	public function doPoslatMail(){
+		
 	}
 }

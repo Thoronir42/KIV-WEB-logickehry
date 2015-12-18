@@ -10,7 +10,8 @@
 			<div class="row"> {% set open_row = true %}
 		{% endif %}
 		<div class="col-md-{{ 12 / gpr }}">
-			<div class="game panel panel-default">
+			{% set game_panel_class = (user.isSubscribedTo(g.game_type_id) ? 'panel-info' : 'panel-default' ) %}
+			<div class="game panel {{ game_panel_class }}" id="gp_{{ g.game_type_id }}">
 				<div class="panel-heading">
 					<div class="row" style="height: 100%;">
 					<span class="col-lg-9 pull-left"><a href="{{ urlgen.url(g.detail_link) }}">
@@ -33,9 +34,20 @@
 						<li class="list-group-item">
 							Prům. Doba Hry: {{ g.avg_playtime }}
 						</li>
+					{% if not user.isLoggedIn %}
 						<li class="list-group-item">
 							Odběratelů: {{ g.subscribed_users }}
 						</li>
+					{% else %}
+						<li class="list-group-item" style="padding: 0px; border-width: 0px;">
+							<div class="input-group">
+								<span class="form-control">Odběratelů: {{ g.subscribed_users }}</span>
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="button" style="background: #bce8f1">+</button>
+								</span>
+							</div>
+						</li>
+					{% endif %}
 					</ul>
 				</div>
 			</div>

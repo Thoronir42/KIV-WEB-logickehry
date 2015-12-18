@@ -14,6 +14,8 @@ class UzivatelController extends Controller{
 	
 	/**
 	 * 
+	 * @param \libs\PDOwrapper $pdoWrapper
+	 * 
 	 * @return UserExtended
 	 */
 	public static function getCurrentUser(){
@@ -22,6 +24,8 @@ class UzivatelController extends Controller{
 		$user = unserialize($userSer);
 		return $user;
 	}
+	
+	
 	
 	public static function buildUserActionsMenu($user){
 		

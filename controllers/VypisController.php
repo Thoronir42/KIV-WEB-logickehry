@@ -30,6 +30,7 @@ class VypisController extends Controller{
 		$this->template['pageTitle'] = "Výpis her";
 		$this->template['gpr'] = 3; // games per row
 		$games = $this->pdoWrapper->getGameTypesExtended();
+		$this->user->setSubscribedItems($this->pdoWrapper->usersSubscribedGames($this->user->user_id));
 		foreach($games as $key => $g){
 			$games[$key]->detail_link = ['controller' => 'vypis', 'action' => 'detailHry', 'id' => $g->game_type_id];
 		}

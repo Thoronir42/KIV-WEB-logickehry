@@ -17,8 +17,6 @@ class User extends \model\database\DB_Entity{
 		
 	}
 	
-	
-	
 	var $user_id;
 	
 	var $orion_login;

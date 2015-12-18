@@ -231,4 +231,13 @@ class PDOwrapper{
 		return null;
 	}
 
+	public function usersSubscribedGames($uid) {
+		$statement = $this->connection->prepare("SELECT game_type_id FROM subscription
+			WHERE user_id = :uid");
+		if($statement->execute(['uid' => $uid])){
+			return $statement->fetchAll(PDO::FETCH_COLUMN);
+		}
+		return null;
+	}
+
 }
