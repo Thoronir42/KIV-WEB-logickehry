@@ -26,5 +26,9 @@ class UserExtended extends User {
 	public function setSubscribedItems($items) {
 		$this->subscribedGames = $items;
 	}
-
+	
+	
+	public function __sleep() {
+		return parent::__sleep();
+	}
 }

@@ -47,4 +47,10 @@ class User extends \model\database\DB_Entity{
 	public function isLoggedIn(){
 		return (strlen($this->orion_login) > 2);
 	}
+	
+	public function __sleep() {
+		$ret = parent::__sleep();
+		$ret[] = 'orion_login';
+		return $ret;
+	}
 }
