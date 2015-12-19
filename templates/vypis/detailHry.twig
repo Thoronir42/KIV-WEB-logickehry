@@ -5,13 +5,13 @@
 	<div class="game panel panel-default">
 		<div class="panel-heading panelTitle">
 			<div class="row" style="height: 100%;">
-			<span class="col-lg-9 pull-left">
-				<div class="row game-title"><div class="col-xs-12">{{ g.game_name }}</div></div>
-				<div class="row game-subtitle"><div class="col-xs-12">{{ g.subtitle }}</div></div>
-			</span>
-			<span class="col-lg-3 image-frame">
-				<img src="{{ urlgen.gImg(g.game_type_id) }}" class="img-rounded img-responsive pull-right">
-			</span>
+				<span class="col-lg-9 pull-left">
+					<div class="row game-title"><div class="col-xs-12">{{ g.game_name }}</div></div>
+					<div class="row game-subtitle"><div class="col-xs-12">{{ g.subtitle }}</div></div>
+				</span>
+				<span class="col-lg-3 image-frame">
+					<img src="{{ urlgen.gImg(g.game_type_id) }}" class="img-rounded img-responsive pull-right">
+				</span>
 			</div>
 		</div>
 		<div class="panel-body">
@@ -37,14 +37,14 @@
 						<div class="panel review">
 							<div class="panel-heading">
 								<div class="row">
-								{% if not r.review %}
-									<div class="col-md-8">{{ r.orion_login}}</div>
-									<div class="col-md-4">{{ r.score }}</div>
-								{% else %}
-									<div class="col-md-7">{{ r.orion_login}}</div>
-									<div class="col-md-4">{{ r.score }}</div>
-									<div class="col-md-1 rwSlideToggle">&hellip;</div>
-								{% endif %}
+									{% if not r.review %}
+										<div class="col-md-8">{{ r.orion_login}}</div>
+										<div class="col-md-4">{{ r.score }}</div>
+									{% else %}
+										<div class="col-md-7">{{ r.orion_login}}</div>
+										<div class="col-md-4">{{ r.score }}</div>
+										<div class="col-md-1 rwSlideToggle">&hellip;</div>
+									{% endif %}
 								</div>
 								<div class="panel-body panel-collapse">
 									{{ r.review }}
@@ -57,36 +57,38 @@
 				</div>
 			</div>
 			{% if user.isLoggedIn() %}
-			<hr/>
-			<div class="panel panel-default">
-				<div class="panel-heading">Zhodnotit hru:</div>
-				<div class="panel-body">
-					<form class="form-horizontal">
-						<div class="row">
-							<div class="col-md-2">
-								<label class="control-label" for="rating">Hodnocení</label><br/>
-								
-								<div class="btn-group" data-toggle="buttons">
-								{% for val in (rating['min'])..(rating['max']) %}
-									<label class="btn btn-default{% if val == rating['def'] %} active{% endif %}">
-										<input type="radio" name="rating" id="rating{{ val }}" value="{{ val }}" {% if val == rating['def'] %}checked{% endif %}> {{ val }}
-									</label>
-								{% endfor %}
+				<hr/>
+				<div class="panel panel-default">
+					<div class="panel-heading">Zhodnotit hru:</div>
+					<div class="panel-body">
+						<form class="form-horizontal">
+							<div class="row">
+								<div class="col-md-12">
+									<label for="review"  class="control-label">Komentář:</label>
+									<textarea class="form-control" rows="5" id="review"></textarea>
 								</div>
 							</div>
-							<div class="form-group col-md-8">
-								<label for="review"  class="control-label">Komentář:</label>
-								<textarea class="form-control" rows="5" id="review"></textarea>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="control-label" for="rating">Hodnocení</label><br/>
+									<div class="btn-group" data-toggle="buttons">
+										{% for val in (rating['min'])..(rating['max']) %}
+											<label class="btn btn-default{% if val == rating['def'] %} active{% endif %}">
+												<input type="radio" name="rating" id="rating{{ val }}" value="{{ val }}" {% if val == rating['def'] %}checked{% endif %}> {{ val }}
+											</label>
+										{% endfor %}
+									</div>
+								</div>
+								<div class="form-group col-md-4">
+									<label class="control-label"></label>
+									<input type="submit" class="form-control btn btn-default" value="Uložit hodnocení" style="height:42px">
+								</div>
 							</div>
-							<div class="form-group col-md-2">
-								<input type="submit" class="form-control btn btn-default pull-right" value="Uložit hodnocení" style="height:80px">
-							</div>
-						</div>
-					</form>
+						</form>
+					</div>
 				</div>
-			</div>
 			{% endif %}
 		</div>
 	</div>
-							
+
 {% endblock %}

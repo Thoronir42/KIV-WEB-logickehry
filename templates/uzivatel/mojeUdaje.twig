@@ -3,7 +3,7 @@
 {% extends layout %}
 
 {% block bodyContent %}
-	<div class="panel panel-default">
+	<div class="panel panel-default myDetails">
 		<div class="panel-heading"><h2 class="panel-title">Mé osobní údaje</h2></div>
 		<div class="panel-body">
 			<form class="form-inline" action="{{ urlgen.url(form_action) }}" method="post">
@@ -15,19 +15,43 @@
 			</form>
 		</div>
 	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h2 class="panel-title">Mé rezervace tento týden</h2>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-default stats reservations">
+				<div class="panel-heading">
+					<h2 class="panel-title">Mé rezervace tento týden</h2>
+				</div>
+				<div class="panel-body">
+				{% for r in reservations %}
+					<span>Res: {{ dump(r) }}</span>
+				{% if not loop.last %}
+					<hr/>
+				{% endif %}
+				{% else %}
+					<span>Žádné rezervace</span>
+				{% endfor %}
+				</div>
+				<div class="panel-footer">
+					Přejít na <a href="{{ urlgen.url(resLink) }}">Rezervace&hellip;</a>
+				</div>
+			</div>
 		</div>
-		<div class="panel-body">
-			{% for r in reservations %}
-			<span>Res: {{ dump(r) }}</span>
-		{% else %}
-			<span>Žádné rezervace</span>
-		{% endfor %}
-		</div>
-		<div class="panel-footer">
-			Přejít na <a href="{{ urlgen.url(resLink) }}">Rezervace&hellip;</a>
+		<div class="col-md-6">
+			<div class="panel panel-default myStats">
+				<div class="panel-heading">
+					<h2 class="panel-title">Má hodnocení</h2>
+				</div>
+				<div class="panel-body">
+					{% for r in ratings %}
+					<span>Res: {{ dump(r) }}</span>
+				{% else %}
+					<span>Zatím jsem nerecenzoval žádnou hru</span>
+				{% endfor %}
+				</div>
+				<div class="panel-footer">
+					Přejít na <a href="{{ urlgen.url(resLink) }}">Seznam her&hellip;</a>
+				</div>
+			</div>
 		</div>
 	</div>
 {% endblock %}
