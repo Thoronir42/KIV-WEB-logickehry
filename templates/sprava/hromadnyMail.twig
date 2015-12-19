@@ -9,19 +9,15 @@
 			<form class="form-horizontal" action="{{ urlgen.url(send_url) }}" method="post">
 				<select name="game_type_id" class="form-control">
 					{% for g in games %}
-						<option>{{ '%s (%d)'|format(g.game_name, g.subscribed_users)}}</option>
+						<option value="{{ g.game_type_id }}">{{ '%s (%d)'|format(g.game_name, g.subscribed_users)}}</option>
 					{% endfor%}
 				</select>
 			<label for="text_body" class="control-label">Text mailu</label>
 			<textarea name="text_body" class="form-control" rows="6"></textarea>
+			<input type="submit" class="btn btn-primary" value="Rozeslat">
+			
 			</form>
 		</div>
-	</div>
-					
-<div class="panel panel-default">
-	<div class="panel-heading"><h2 class="panel-title">Odkazy na letiště</h2></div>
-	<div class="panel-body">
-
 	</div>
 </div>
 {% endblock %}

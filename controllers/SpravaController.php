@@ -1,7 +1,8 @@
 <?php
 namespace controllers;
 
-use \model\ImageManager;
+use \model\ImageManager,
+	model\MailManager;
 
 class SpravaController extends Controller{
 	
@@ -11,10 +12,10 @@ class SpravaController extends Controller{
 				"label" => "Hry"];
 		$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"inventar"],
 				"label" => "Inventář"];
-		$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"uzivatele"],
-				"label" => "Uživatelé"];
 		if($this->user->isAdministrator()){
 			$menu[] = ["separator" => true];
+			$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"uzivatele"],
+				"label" => "Uživatelé"];
 			$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"ovladaciPanel"],
 					"label" => "Ovládací panel"];
 			$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"hromadnyMail"],
@@ -68,6 +69,10 @@ class SpravaController extends Controller{
 	}
 	
 	public function renderUzivatele(){
+		if(!$this->user->isAdministrator()){
+			$this->message("Do správy uživatelů nemáte přístup.");
+			$this->redirect("sprava", $this->getDefaultAction());
+		}
 		$this->template['pageTitle'] = "Správa registrovaných uživatelů";
 		$this->template['users'] = $this->pdoWrapper->getUsers();
 	}
@@ -124,6 +129,18 @@ class SpravaController extends Controller{
 	}
 	
 	public function doPoslatMail(){
+		$gid = $this->getParam('game_type_id', INPUT_POST);
+		$content = $this->getParam('content', INPUT_POST);
+		$users = $this->pdoWrapper->subscribedUsersByGame($gid);
+		var_dump($gid, $content, $users);
 		
+		$result = MailManager::send($users, $content);
+		if($result['result']){
+			$this->message($result['message'], \libs\MessageBuffer::LVL_SUC);
+		} else {
+			$this->message($result['message'], \libs\MessageBuffer::LVL_DNG);
+		}
+		
+		$this->redirectPars('sprava', $this->getDefaultAction());
 	}
 }
