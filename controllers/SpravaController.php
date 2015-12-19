@@ -6,6 +6,9 @@ use \model\ImageManager,
 
 class SpravaController extends Controller{
 	
+	public static function getDefaultAction() { return "hry"; }
+	
+	
 	protected function buildSubmenu() {
 		$menu = [];
 		$menu[] = ["urlParams" => ["controller" => "sprava", "action"=>"hry"],
@@ -23,8 +26,6 @@ class SpravaController extends Controller{
 		}
 		return $menu;
 	}
-	
-	public function getDefaultAction() { return "hry"; }
 	
 	public function startUp(){
 		parent::startUp();

@@ -8,6 +8,9 @@ namespace controllers;
  */
 class VypisController extends Controller{
 	
+	public static function getDefaultAction() { return "hry"; }
+	
+	
 	protected function buildSubmenu(){
 		return false;
 		$menu = [];
@@ -15,8 +18,6 @@ class VypisController extends Controller{
 				"label" => "Seznam her"];
 		return $menu;
 	}
-	
-	public function getDefaultAction() { return "hry"; }
 	
 	public function startUp(){
 		parent::startUp();

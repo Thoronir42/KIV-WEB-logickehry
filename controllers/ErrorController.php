@@ -13,11 +13,6 @@ class ErrorController extends Controller{
 	const NO_TEMPLATE = 3;
 	const NO_RENDER_OR_REDIRECT = 4;
 	
-	public function __construct(){
-		parent::__construct();
-		
-	}
-	
 	public function startUp(){
 		parent::startUp();
 		$this->layout = 'layout.twig';

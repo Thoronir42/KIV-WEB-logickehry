@@ -10,8 +10,6 @@ class AjaxController extends Controller{
     
 	const MIN_CODE_LENGTH = 5;
 	
-	var $block_sauce = true;
-	
 	
 	public function __construct(){
 		parent::__construct();

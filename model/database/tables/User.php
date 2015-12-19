@@ -49,7 +49,7 @@ class User extends \model\database\DB_Entity{
 	}
 	
 	public function __sleep() {
-		$ret = parent::__sleep();
+		$ret = [];
 		$ret[] = 'orion_login';
 		return $ret;
 	}

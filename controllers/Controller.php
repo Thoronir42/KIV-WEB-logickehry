@@ -5,6 +5,7 @@ use libs\URLgen,
 	libs\PDOwrapper,
 	libs\MessageBuffer;
 use model\database\views\UserExtended;
+use model\UserManager;
 
 /**
  * Description of Controler
@@ -15,11 +16,17 @@ abstract class Controller{
 	
 	const DEFAULT_CONTROLLER = 'rezervace';
 	
+	public static function getDefaultAction(){ return null; }
+	
 	/** @var URLgen */
     var $urlGen;
 	
 	/** @var PDOwrapper */
 	var $pdoWrapper;
+	
+	/** @var MessageBuffer */
+	var $mb;
+	
 	
     /** @var array */
     var $template;
@@ -36,15 +43,18 @@ abstract class Controller{
 	/** @var String */
 	var $action, $controller;
 	
-	/** @var MessageBuffer */
-	var $mb;
 	
-	
-	
-    public function __construct() {
-		$this->user = UzivatelController::getCurrentUser();
+    public function __construct($support) {
+		if($support instanceof UserExtended){
+			$this->user = $support;
+			return;
+		}
+		$this->pdoWrapper = $support['pdo'];
+		$this->urlGen = $support['urlgen'];
+		$this->mb = $support['mb'];
+		$this->user = UserManager::getCurrentUser($this->pdoWrapper);
 		$this->navbar = [];
-		$this->navbar['app-name'] ="Centrum Logických Her";
+		$this->navbar['app-name'] = "Centrum Logických Her";
 		if($this->user->isLoggedIn()){
 			$this->navbar['user_actions'] = UzivatelController::buildUserActionsMenu($this->user);
 		} else {
@@ -74,7 +84,7 @@ abstract class Controller{
 		}
 		
 		foreach($menu as $k => $v){
-			$cont = \Dispatcher::getControler($v['urlParams']['controller']);
+			$cont = \Dispatcher::getControler($v['urlParams']['controller'], $this->user);
 			if($cont == null){ continue; }
 			$menu[$k]["dropdown"] = $cont->buildSubmenu();
 			
@@ -84,7 +94,6 @@ abstract class Controller{
 		return $menu;
 	}
 	protected function buildSubmenu(){ return false; }
-	public function getDefaultAction(){ return null; }
 
 	public function startUp(){
 		$menu = $this->buildMenu();

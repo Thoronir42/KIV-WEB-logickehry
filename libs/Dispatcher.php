@@ -38,23 +38,30 @@ class Dispatcher {
 	/**
 	 * 
 	 * @param String $controllerName
+	 * @param mixed[] $support
 	 * @return Controller
 	 */
-	public static function getControler($controllerName){
-        switch($controllerName){
-            default: return null;
-			case "vypis":	return	new controllers\VypisController();
-			case "sprava":	return	new controllers\SpravaController();
-			case "rezervace":return	new controllers\RezervaceController();
-			case "letiste":	return	new controllers\LetisteController();
-			case "login":	return	new controllers\LoginController();
-			case "xml":		return	new controllers\XMLgenerator();
-			case "ajax":	return	new controllers\AjaxController();
-			case "uzivatel":return new controllers\UzivatelController();
+	public static function getControler($controllerName, $support){
+		switch($controllerName){
+            default:		return  new controllers\ErrorController($support);
+			case "vypis":	return	new controllers\VypisController($support);
+			case "sprava":	return	new controllers\SpravaController($support);
+			case "rezervace":return	new controllers\RezervaceController($support);
+			case "letiste":	return	new controllers\LetisteController($support);
+			case "login":	return	new controllers\LoginController($support);
+			case "xml":		return	new controllers\XMLgenerator($support);
+			case "ajax":	return	new controllers\AjaxController($support);
+			case "uzivatel":return new controllers\UzivatelController($support);
         }
 	}
+	
+	private function packSupport(){
+		return ['pdo' => $this->pdoWrapper, 'urlgen' => $this->urlGen, 'mb' => $this->messageBuffer];
+	}
+	
 	private function getControllerInstance($controllerName){
-		$cont = self::getControler($controllerName);
+		$support = $this->packSupport();
+		$cont = self::getControler($controllerName, $support);
 		if(!$cont){ return null; }
 		
 		if(!isset($cont->blockSauce)){ 
@@ -143,7 +150,7 @@ class Dispatcher {
 	}
 	
 	private function error($errType, $contName, $action = null){
-		$errCont = new ErrorController();
+		$errCont = self::getControler($this->packSupport());
 		$errCont->urlGen = $this->urlGen;
 		$errCont->startUp();
 		$errCont->renderError($errType, $contName, $action);

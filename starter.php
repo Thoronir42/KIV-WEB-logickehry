@@ -5,7 +5,7 @@ include __DIR__.'/libs/autoloader.php';
 \libs\SessionManager::run();
 
 //	Setup PDO connection
-$cfgFile = __DIR__.((true) ? "/config/database.local.php" : "/config/database.php");
+$cfgFile = __DIR__.("/config/database.cfg.php");
 $pdoCfg = include "$cfgFile";
 $pdow = libs\PDOwrapper::getConnection($pdoCfg);
 

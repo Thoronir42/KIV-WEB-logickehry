@@ -6,6 +6,9 @@ use model\DatetimeManager;
 
 class RezervaceController extends Controller{
 
+	public static function getDefaultAction(){ return "vypis"; }
+	
+	
 	public function startUp(){
 		parent::startUp();
 	}
@@ -19,8 +22,6 @@ class RezervaceController extends Controller{
 		];
 		return $menu;*/
 	}
-	
-	public function getDefaultAction() { return "vypis"; }
 	
 	public function renderVypis(){
 		$this->template["pageTitle"] = "Výpis rezervací";
