@@ -8,7 +8,7 @@ use model\database\tables as Tables;
 
 class PDOwrapper{
     /** @var PDO */
-    private $connection;
+    private $con;
     
 	/**
 	 * 
@@ -26,7 +26,7 @@ class PDOwrapper{
 	 * @param PDO $pdo
 	 */
 	private function __construct($pdo) {
-		$this->connection = $pdo;
+		$this->con = $pdo;
 	}
 	
 	/**
@@ -34,13 +34,13 @@ class PDOwrapper{
 	 * @return Tables\GameType[]
 	 */
 	public function getGameTypesExtended(){
-		$result = $this->connection->query("SELECT * FROM `game_type_extended`")
+		$result = $this->con->query("SELECT * FROM `game_type_extended`")
 				->fetchAll(PDO::FETCH_CLASS, Views\GameTypeExtended::class);
 		return $result;
 	}
 	
 	public function getFirstUnusedGameTypeId(){
-		 $result = $this->connection->query("SELECT game_type_id FROM game_type "
+		 $result = $this->con->query("SELECT game_type_id FROM game_type "
 				 . "ORDER BY game_type_id DESC")->fetchColumn();
 		 return $result + 1;
 	}
@@ -51,7 +51,7 @@ class PDOwrapper{
 	 * @return Views\ReservationExtended[]
 	 */
 	public function getReservationsExtended($pars){
-		$statement = $this->connection->prepare("SELECT * FROM `reservation_extended` "
+		$statement = $this->con->prepare("SELECT * FROM `reservation_extended` "
 				. "WHERE time_from > :time_from AND time_to < :time_to "
 				. "ORDER BY time_from ASC");
 		if($statement->execute($pars)){
@@ -61,7 +61,7 @@ class PDOwrapper{
 	}
 	
 	public function gameRatingsByGameType($id) {
-		$statement = $this->connection->prepare("SELECT * FROM `game_rating_extended` "
+		$statement = $this->con->prepare("SELECT * FROM `game_rating_extended` "
 				. "WHERE game_type_id = :id "
 				. "ORDER BY time_from ASC");
 		if($statement->execute(['id' => $id])){
@@ -81,7 +81,7 @@ class PDOwrapper{
 	}
 	
 	public function getUsers(){
-		$result = $this->connection->query("SELECT * FROM user")
+		$result = $this->con->query("SELECT * FROM user")
 				->fetchAll(PDO::FETCH_CLASS, Tables\User::class);
 		return $result;
 	}
@@ -92,7 +92,7 @@ class PDOwrapper{
 	 * @return Views\GameTypeExtended;
 	 */
 	public function gameTypeById($game_id) {
-		$statement = $this->connection->prepare("SELECT * FROM game_type_extended WHERE game_type_id = :id");
+		$statement = $this->con->prepare("SELECT * FROM game_type_extended WHERE game_type_id = :id");
 		if($statement->execute(['id' => $game_id])){
 			$result = $statement->fetchObject(Views\GameTypeExtended::class);
 			return $result;
@@ -101,7 +101,7 @@ class PDOwrapper{
 	}
 	
 	public function getGameTypes(){
-		$result = $this->connection->query("SELECT * FROM game_type")
+		$result = $this->con->query("SELECT * FROM game_type")
 				->fetchAll(PDO::FETCH_CLASS, Tables\GameType::class);
 		return $result;
 	}
@@ -111,7 +111,7 @@ class PDOwrapper{
 	 * @param int $game_type_id
 	 */
 	public function insertGameType($gameType, $game_type_id) {
-		$statement = $this->connection->prepare("INSERT INTO `web_logickehry_db`.`game_type` "
+		$statement = $this->con->prepare("INSERT INTO `web_logickehry_db`.`game_type` "
 			. "(`game_type_id`, `game_name`, `subtitle`, `avg_playtime`, `max_players`, `min_players`) "
 	 ."VALUES ( :game_type_id,  :game_name,  :subtitle,  :avg_playtime,  :max_players,  :min_players');");
 		
@@ -130,13 +130,13 @@ class PDOwrapper{
 	 */
 	public function getGameBoxes(){
 		$sql = "SELECT * FROM game_box_extended";
-		$result = $this->connection->query($sql)
+		$result = $this->con->query($sql)
 				->fetchAll(PDO::FETCH_CLASS, Views\GameBoxExtended::class);
 		return $result;
 	}
 	
 	public function insertGameBox($pars) {
-		$statement = $this->connection->prepare("INSERT INTO `web_logickehry_db`.`game_box` "
+		$statement = $this->con->prepare("INSERT INTO `web_logickehry_db`.`game_box` "
 			. "(`tracking_code`, `game_type_id`) "
 	 ."VALUES ( :tracking_code,  :game_type_id);");
 		if($statement->execute($pars)){ return true; } else {
@@ -151,7 +151,7 @@ class PDOwrapper{
 	 * @return Views\GameBoxExtended
 	 */
 	public function gameGameBoxByCode($code){
-		$statement = $this->connection->prepare("SELECT * FROM game_box_extended WHERE tracking_code = :code");
+		$statement = $this->con->prepare("SELECT * FROM game_box_extended WHERE tracking_code = :code");
 		if($statement->execute(['code' => $code])){
 			$result = $statement->fetchObject(Views\GameBoxExtended::class);
 			return $result;
@@ -160,7 +160,7 @@ class PDOwrapper{
 	}
 	
 	public function getDesks(){
-		$result = $this->connection->query("SELECT * FROM desk")
+		$result = $this->con->query("SELECT * FROM desk")
 				->fetchAll(PDO::FETCH_CLASS, Tables\Desk::class);
 		return $result;
 	}
@@ -170,7 +170,7 @@ class PDOwrapper{
 	 */
 	public function fetchGame($id) {
 		if(!is_numeric($id)){ return null; }
-		$statement = $this->connection->prepare("SELECT * FROM game_type"
+		$statement = $this->con->prepare("SELECT * FROM game_type"
 				. "WHERE game_type_id == :game_type_id");
 		if($statement->execute(["game_type_id" => $id])){
 			return $statement->fetchObject(Tables\GameType::class);
@@ -184,7 +184,7 @@ class PDOwrapper{
 	 * @return type
 	 */
 	public function fetchBox($code){
-		$statement = $this->connection->prepare("SELECT * FROM game_box
+		$statement = $this->con->prepare("SELECT * FROM game_box
 			WHERE tracking_code = :code");
 		if($statement->execute(['code' => $code])){
 			return $statement->fetchObject(Tables\GameBox::class);
@@ -193,7 +193,7 @@ class PDOwrapper{
 	}
 
 	public function fetchUser($orion_login) {
-		$statement = $this->connection->prepare("SELECT * FROM user_extended
+		$statement = $this->con->prepare("SELECT * FROM user_extended
 			WHERE orion_login = :ol");
 		if($statement->execute(['ol' => $orion_login])){
 			return $statement->fetchObject(Views\UserExtended::class);
@@ -202,13 +202,13 @@ class PDOwrapper{
 	}
 
 	public function insertUser($orion_login) {
-		$statement = $this->connection->prepare(
+		$statement = $this->con->prepare(
 			"INSERT INTO `web_logickehry_db`.`user` (`orion_login`) VALUES (:ol)");
 		return ($statement->execute(['ol' => $orion_login]));
 	}
 
 	public function updateUser($pars) {
-		$statement = $this->connection->prepare(
+		$statement = $this->con->prepare(
 			"UPDATE `web_logickehry_db`.`user` SET "
 				. "`name` = :name, "
 				. "`surname` = :surname "
@@ -220,7 +220,7 @@ class PDOwrapper{
 	public function retireBox($code) {
 		$box = $this->fetchBox($code);
 		if(!$box){ return null; }
-		$statement = $this->connection->prepare(
+		$statement = $this->con->prepare(
 			"UPDATE `web_logickehry_db`.`game_box` SET "
 				. "`retired` = 1 "
 				. "WHERE `game_box`.`tracking_code` = :tracking_code"
@@ -232,9 +232,18 @@ class PDOwrapper{
 	}
 
 	public function usersSubscribedGames($uid) {
-		$statement = $this->connection->prepare("SELECT game_type_id FROM subscription
+		$statement = $this->con->prepare("SELECT game_type_id FROM subscription
 			WHERE user_id = :uid");
 		if($statement->execute(['uid' => $uid])){
+			return $statement->fetchAll(PDO::FETCH_COLUMN);
+		}
+		return null;
+	}
+	
+	public function subscribedUsersByGame($gid){
+		$statement = $this->con->prepare("SELECT orion_login FROM subscribees "
+				. "WHERE game_type_id = :gid");
+		if($statement->execute(['gid' => $gid])){
 			return $statement->fetchAll(PDO::FETCH_COLUMN);
 		}
 		return null;

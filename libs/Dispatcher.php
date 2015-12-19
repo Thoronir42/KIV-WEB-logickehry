@@ -59,7 +59,7 @@ class Dispatcher {
 		
 		if(!isset($cont->blockSauce)){ 
 			$cont->urlGen = $this->urlGen; 
-			$cont->messageBuffer = $this->messageBuffer;
+			$cont->mb = $this->messageBuffer;
 			
 		}
 		$cont->pdoWrapper = $this->pdoWrapper;

@@ -37,7 +37,7 @@ abstract class Controller{
 	var $action, $controller;
 	
 	/** @var MessageBuffer */
-	var $messageBuffer;
+	var $mb;
 	
 	
 	
@@ -134,7 +134,7 @@ abstract class Controller{
 	}
 	
 	protected function message($text, $level = MessageBuffer::LVL_INF, $link = null){
-		$this->messageBuffer->log($text, $level, $link);
+		$this->mb->log($text, $level, $link);
 	}
 	
     public function redirect($location){
@@ -143,7 +143,7 @@ abstract class Controller{
     }
 	
 	public function redirectPars($controller = null, $action = null) {
-		$location = $this->urlGen->url(['controller' => $controller ?: self::DEFAULT_CONTROLLER, "action" => $action]);
+		$location = $this->urlGen->url(['controller' => $controller ?: self::DEFAULT_CONTROLLER, 'action' => $action]);
 		$this->redirect($location);
 	}
 	
@@ -153,7 +153,7 @@ abstract class Controller{
 	
 	
 	public function preRender(){
-		$this->template['alert_messages'] = $this->messageBuffer->getLog();
+		$this->template['alert_messages'] = $this->mb->getLog();
 	}
 	
 }
