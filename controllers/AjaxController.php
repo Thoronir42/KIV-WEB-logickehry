@@ -11,8 +11,8 @@ class AjaxController extends Controller{
 	const MIN_CODE_LENGTH = 5;
 	
 	
-	public function __construct(){
-		parent::__construct();
+	public function __construct($support){
+		parent::__construct($support);
 		$this->layout = "ajax.twig";
 	}
 	

@@ -80,12 +80,6 @@ class PDOwrapper{
 		 */
 	}
 	
-	public function getUsers(){
-		$result = $this->con->query("SELECT * FROM user")
-				->fetchAll(PDO::FETCH_CLASS, Tables\User::class);
-		return $result;
-	}
-	
 	/**
 	 * 
 	 * @param type $game_id

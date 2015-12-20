@@ -80,4 +80,10 @@ class UserManager {
 		return ($statement->execute(['ol' => $orion_login]));
 	}
 
+	
+	public function fetchAll($pw){
+		$result = $pw->con->query("SELECT * FROM user_extended")
+				->fetchAll(PDO::FETCH_CLASS, UserExtended::class);
+		return $result;
+	}
 }
