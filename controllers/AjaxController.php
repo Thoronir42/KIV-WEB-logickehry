@@ -1,6 +1,8 @@
 <?php
 namespace controllers;
 
+use model\GameBoxManager;
+
 /**
  * Description of AjaxController
  *
@@ -20,17 +22,17 @@ class AjaxController extends Controller{
 		if(!$this->user->isSupervisor()){ return 'false'; }
 		
 		$code = $this->getParam("code");
-		$box = $this->pdoWrapper->retireBox($code);
+		$box = GameBoxManager::retire($this->pdoWrapper, $code);
 		$this->template['response'] = $box ? $code : 'false';
 	}
 	
 	public function doInsertBox(){
 		$code = $this->getParam("code");
-		$game_id = intval($this->getParam("gameId"));
+		$game_id = $this->getParam("gameId");
 		
 		$fail = $this->checkBoxBeforeInsert($code, $game_id);
 		if(!$fail){
-			$result = $this->pdoWrapper->insertGameBox(['game_type_id' => $game_id, 'tracking_code' => $code]);
+			$result = GameBoxManager::insert($this->pdoWrapper, ['game_type_id' => $game_id, 'tracking_code' => $code]);
 			if(!$result){
 				$fail =  "Při ukládání do databáze nastala neočekávaná chyba";;
 			}
@@ -45,7 +47,7 @@ class AjaxController extends Controller{
 		if(strlen($code) < self::MIN_CODE_LENGTH){
 			return sprintf("Evidenční kód musí být alespoň %d znaků dlouhý.", self::MIN_CODE_LENGTH);
 		}
-		$gameBox = $this->pdoWrapper->gameGameBoxByCode($code);
+		$gameBox = GameBoxManager::fetchByCode($this->pdoWrapper, $code);
 		if($gameBox){
 			$response = "Kód $code je v databázi již veden, ";
 			$response .= ($gameBox->retired ? "je však vyřazený z oběhu" : "náleží hře ".$gameBox->game_name);

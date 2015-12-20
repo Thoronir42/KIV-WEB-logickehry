@@ -117,41 +117,11 @@ class PDOwrapper{
 	
 	
 	
-	/**
-	 * 
-	 * @param type $withRetired
-	 * @return Views\GameBoxExtended[]
-	 */
-	public function getGameBoxes(){
-		$sql = "SELECT * FROM game_box_extended";
-		$result = $this->con->query($sql)
-				->fetchAll(PDO::FETCH_CLASS, Views\GameBoxExtended::class);
-		return $result;
-	}
 	
-	public function insertGameBox($pars) {
-		$statement = $this->con->prepare("INSERT INTO `web_logickehry_db`.`game_box` "
-			. "(`tracking_code`, `game_type_id`) "
-	 ."VALUES ( :tracking_code,  :game_type_id);");
-		if($statement->execute($pars)){ return true; } else {
-			var_dump($statement->errorInfo());
-			echo "<br>".$statement->queryString;
-		}
-	}
 	
-	/**
-	 * 
-	 * @param String $code
-	 * @return Views\GameBoxExtended
-	 */
-	public function gameGameBoxByCode($code){
-		$statement = $this->con->prepare("SELECT * FROM game_box_extended WHERE tracking_code = :code");
-		if($statement->execute(['code' => $code])){
-			$result = $statement->fetchObject(Views\GameBoxExtended::class);
-			return $result;
-		}
-		return null;
-	}
+	
+	
+	
 	
 	public function getDesks(){
 		$result = $this->con->query("SELECT * FROM desk")
@@ -172,33 +142,7 @@ class PDOwrapper{
 		return null;
 	}
 	
-	/**
-	 * 
-	 * @param \Tables\GameBox $code
-	 * @return type
-	 */
-	public function fetchBox($code){
-		$statement = $this->con->prepare("SELECT * FROM game_box
-			WHERE tracking_code = :code");
-		if($statement->execute(['code' => $code])){
-			return $statement->fetchObject(Tables\GameBox::class);
-		}
-		return null;
-	}
-
-	public function retireBox($code) {
-		$box = $this->fetchBox($code);
-		if(!$box){ return null; }
-		$statement = $this->con->prepare(
-			"UPDATE `web_logickehry_db`.`game_box` SET "
-				. "`retired` = 1 "
-				. "WHERE `game_box`.`tracking_code` = :tracking_code"
-				);
-		if($statement->execute(['tracking_code' => $code])){
-			return $box;
-		}
-		return null;
-	}
+	
 
 	public function usersSubscribedGames($uid) {
 		$statement = $this->con->prepare("SELECT game_type_id FROM subscription

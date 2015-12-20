@@ -1,8 +1,9 @@
 <?php
 namespace controllers;
 
-use \model\ImageManager,
-	model\MailManager;
+use \model\GameBoxManager,
+	\model\ImageManager,
+	\model\MailManager;
 
 class SpravaController extends Controller{
 	
@@ -88,17 +89,15 @@ class SpravaController extends Controller{
 		$this->template['ipr'] = 2;
 		
 		
-		$games = $this->pdoWrapper->getGameBoxes();
+		$games = GameBoxManager::fetchAll($this->pdoWrapper);
 		$gamesSrt = [];
 		foreach($games as $g){
 			if(!isset($gamesSrt[$g->game_type_id])){
-				$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d", $g->game_type_id)));
-				$gamesSrt[$g->game_type_id] = ["game_name"=>$g->game_name, 
-					"game_type_id"=>$g->game_type_id, "picture_path" => $path,
-					"tracking_codes" => []];
+				$gamesSrt[$g->game_type_id] = $g->asArray();
+				$gamesSrt[$g->game_type_id]['tracking_codes'] = [];
 			}
 			if($g->tracking_code && (!$g->retired || $retired)){
-				$gamesSrt[$g->game_type_id]["tracking_codes"][] = $g;
+				$gamesSrt[$g->game_type_id]['tracking_codes'][] = $g;
 			}
 		}
 		$this->template['games'] = $gamesSrt;
