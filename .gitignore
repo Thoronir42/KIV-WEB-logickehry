@@ -1,3 +1,6 @@
 nbproject/
 config/database*
 logs/
+database/CLG_schema.mwb.bak
+sh.exe.stackdump
+database/web_logickehry_db.mwb.bak
