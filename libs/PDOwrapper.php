@@ -8,7 +8,7 @@ use model\database\tables as Tables;
 
 class PDOwrapper{
     /** @var PDO */
-    private $con;
+    var $con;
     
 	/**
 	 * 
@@ -190,31 +190,6 @@ class PDOwrapper{
 			return $statement->fetchObject(Tables\GameBox::class);
 		}
 		return null;
-	}
-
-	public function fetchUser($orion_login) {
-		$statement = $this->con->prepare("SELECT * FROM user_extended
-			WHERE orion_login = :ol");
-		if($statement->execute(['ol' => $orion_login])){
-			return $statement->fetchObject(Views\UserExtended::class);
-		}
-		return null;
-	}
-
-	public function insertUser($orion_login) {
-		$statement = $this->con->prepare(
-			"INSERT INTO `web_logickehry_db`.`user` (`orion_login`) VALUES (:ol)");
-		return ($statement->execute(['ol' => $orion_login]));
-	}
-
-	public function updateUser($pars) {
-		$statement = $this->con->prepare(
-			"UPDATE `web_logickehry_db`.`user` SET "
-				. "`name` = :name, "
-				. "`surname` = :surname "
-				. "WHERE `user`.`orion_login` = :orion_login"
-				);
-		return $statement->execute($pars);
 	}
 
 	public function retireBox($code) {

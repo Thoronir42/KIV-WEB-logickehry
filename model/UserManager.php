@@ -4,8 +4,10 @@ namespace model;
 use model\database\views\UserExtended;
 
 /**
- * Description of UserManager
- *
+ * UserManager handles operations that regard currenly logged in user. 
+ * Logged user's orion_login is stored in session global under 'user' key and
+ * rest of the user data is fetched on each pageload.
+ * 
  * @author Stepan
  */
 class UserManager {
@@ -21,7 +23,7 @@ class UserManager {
 	public static function getCurrentUser($pw){
 		if(!isset($_SESSION['user'])){ return new UserExtended(); }
 		$orion_login = $_SESSION['user'];
-		$dbUser =  $pw->fetchUser($orion_login);
+		$dbUser =  self::fetch($pw, $orion_login);
 		return $dbUser;
 	}
 	
@@ -30,15 +32,15 @@ class UserManager {
 	 * @param \libs\PDOwrapper $pw
 	 * @param String $orion_login
 	 * 
-	 * @return database\views\UserExtended
+	 * @return UserExtended
 	 */
 	public static function login($pw, $orion_login){
-		$user = $pw->fetchUser($orion_login);
+		$user = self::fetch($pw, $orion_login);
 		if(!$user){
-			if(!$this->pdoWrapper->insertUser($orion_login)){
+			if(!self::insert($pw, $orion_login)){
 				return null;
 			} else {
-				$user = $this->pdoWrapper->fetchUser($orion_login);
+				$user = self::fetch($pw, $orion_login);
 				$user->loginStatus = self::LOGIN_NEW;
 			}
 		} else {
@@ -54,7 +56,28 @@ class UserManager {
 	}
 
 	public static function update($pw, $pars) {
-		return $this->pdoWrapper->updateUser($pars);
+		$statement = $pw->con->prepare(
+			"UPDATE `web_logickehry_db`.`user` SET "
+				. "`name` = :name, "
+				. "`surname` = :surname "
+				. "WHERE `user`.`orion_login` = :orion_login"
+				);
+		return $statement->execute($pars);
+	}
+	
+	private static function fetch($pw, $orion_login){
+		$statement = $pw->con->prepare("SELECT * FROM user_extended
+			WHERE orion_login = :ol");
+		if($statement->execute(['ol' => $orion_login])){
+			return $statement->fetchObject(UserExtended::class);
+		}
+		return null;
+	}
+	
+	private static function insert($pw, $orion_login){
+		$statement = $pw->con->prepare(
+			"INSERT INTO `web_logickehry_db`.`user` (`orion_login`) VALUES (:ol)");
+		return ($statement->execute(['ol' => $orion_login]));
 	}
 
 }
