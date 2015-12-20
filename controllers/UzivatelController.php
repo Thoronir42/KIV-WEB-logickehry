@@ -1,6 +1,8 @@
 <?php
 namespace controllers;
 
+use model\UserManager;
+
 /**
  * Description of UzivatelControler
  *
@@ -42,7 +44,7 @@ class UzivatelController extends Controller{
 					"name"		=> $this->getParam("name", INPUT_POST),
 					"surname"	=> $this->getParam("surname", INPUT_POST)
 			];
-		if($this->pdoWrapper->updateUser($pars)){
+		if (UserManager::update($this->pdoWrapper, $pars)) {
 			$this->message("Vaše údaje byly zpracovány...", \libs\MessageBuffer::LVL_SUC);
 		} else {
 			$this->message("Při ukládání vašich údajů nastala chyba.", \libs\MessageBuffer::LVL_DNG);
@@ -52,7 +54,7 @@ class UzivatelController extends Controller{
 	}
 	
 	public function doOdhlasitSe(){
-		unset($_SESSION['user']);
+		UserManager::logout();
 		$this->message("Vaše odhlášení z aplikace proběhlo úspěšně.", \libs\MessageBuffer::LVL_INF);
 		$this->message("Pro přihlášení pod jiným účtem se nejdříve odhlašte z orion loginu", \libs\MessageBuffer::LVL_WAR,
 				['label' => "Odhlásit se", 'url' => self::PORTAL_LOGOUT_URL]);
@@ -73,16 +75,16 @@ class UzivatelController extends Controller{
 		$orion_login = $_SESSION["orion_login"];
 		unset($_SESSION['orion_login']);
 		
-		$user = \model\UserManager::login($this->pdoWrapper, $orion_login);
+		$user = UserManager::login($this->pdoWrapper, $orion_login);
 		if(!$user){
 			$this->message("Nepodařilo se pro vás vytvořit uživatelský účet", \libs\MessageBuffer::LVL_DNG);
 			$this->redirectPars();
 		}
 		switch($user->loginStatus){
-			case \model\UserManager::LOGIN_NEW:
+			case UserManager::LOGIN_NEW:
 				$this->message("Váš uživatelský účet byl úspěšně vytvořen, vítejte $orion_login", \libs\MessageBuffer::LVL_SUC);
 				break;
-			case \model\UserManager::LOGIN_SUCCESS:
+			case UserManager::LOGIN_SUCCESS:
 				$this->message("Vítejte zpět, $orion_login!", \libs\MessageBuffer::LVL_SUC);
 				break;
 		}

@@ -47,5 +47,14 @@ class UserManager {
 		$_SESSION['user'] = $orion_login;
 		return $user;
 	}
-	
+
+	public static function logout() {
+		unset($_SESSION['user']);
+		return true;
+	}
+
+	public static function update($pw, $pars) {
+		return $this->pdoWrapper->updateUser($pars);
+	}
+
 }

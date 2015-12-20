@@ -150,7 +150,7 @@ class Dispatcher {
 	}
 	
 	private function error($errType, $contName, $action = null){
-		$errCont = self::getControler($this->packSupport());
+		$errCont = self::getControler('error', $this->packSupport());
 		$errCont->urlGen = $this->urlGen;
 		$errCont->startUp();
 		$errCont->renderError($errType, $contName, $action);
