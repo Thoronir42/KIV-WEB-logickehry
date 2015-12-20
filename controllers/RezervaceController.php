@@ -1,7 +1,8 @@
 <?php
 namespace controllers;
 
-use model\DatetimeManager;
+use model\DatetimeManager,
+	model\GameTypeManager;
 
 
 class RezervaceController extends Controller{
@@ -26,7 +27,7 @@ class RezervaceController extends Controller{
 	public function renderVypis(){
 		$this->template["pageTitle"] = "Výpis rezervací";
 		
-		$this->template['games'] = $this->pdoWrapper->getGameTypes();
+		$this->template['games'] = GameTypeManager::fetchAll($this->pdoWrapper);
 		$this->template['desks'] = $this->pdoWrapper->getDesks();
 		
 		$timePars = DatetimeManager::getWeeksBounds(0, DatetimeManager::DB_FORMAT);

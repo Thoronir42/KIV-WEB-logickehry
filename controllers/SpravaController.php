@@ -2,8 +2,11 @@
 namespace controllers;
 
 use \model\GameBoxManager,
+	\model\GameTypeManager,
 	\model\ImageManager,
 	\model\MailManager;
+
+use model\database\tables\GameType;
 
 class SpravaController extends Controller{
 	
@@ -47,7 +50,7 @@ class SpravaController extends Controller{
 		$this->template['gpr'] = 3;
 		
 		
-		$games = $this->pdoWrapper->getGameTypesExtended();
+		$games = \model\GameTypeManager::fetchAll($this->pdoWrapper);
 		foreach($games as $key => $g){
 			$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d", $g->game_type_id)));
 			$games[$key]->picture_path = $path;
@@ -56,18 +59,30 @@ class SpravaController extends Controller{
 	}
 	
 	public function doPridatHru(){
-		$nextId = $this->pdoWrapper->getFirstUnusedGameTypeId();
+		$nextId = GameTypeManager::nextId($this->pdoWrapper);
 		$_POST['game_type_id'] = $nextId;
-		$gameType = \model\database\tables\GameType::fromPOST();
+		$gameType = GameType::fromPOST();
 		if($gameType->readyForInsert()){
-			$this->pdoWrapper->insertGameType($gameType, $nextId);
+			$pars = $gameType->asArray();
+			$pars['game_type_id'] = $nextId;
+			if(!GameTypeManager::insert($this->pdoWrapper, $pars)){
+				$this->message("Nebylo možné přidat hru na úrovni databáze", \libs\MessageBuffer::LVL_WAR);
+				$this->redirectPars('sprava', 'hry');
+			} else {
+				$this->message("Hra $gameType->game_name byla úspěšně přidána do databáze", \libs\MessageBuffer::LVL_SUC);
+				$this->redirectPars('sprava', 'hry');
+			}
+		} else {
+			$this->message("Nebylo možné přidat hru, nebyla vyplněna následující pole: ".$gameType->getMissingParameters());
+			$this->redirectPars();
 		}
-		var_dump($gameType, '<hr>');
-		
-		var_dump("files", $_FILES, '<hr>');
-		$imageResult = ImageManager::put("picture", sprintf("game_%03d", $nextId));
-		var_dump($imageResult);
-		
+		$imgRes = ImageManager::put("picture", sprintf("game_%03d", $nextId));
+		if($imgRes['result']){
+			$this->message($imgRes['message'], \libs\MessageBuffer::LVL_SUC);
+		} else {
+			$this->message($imgRes['message'], \libs\MessageBuffer::LVL_WAR);
+		}
+		$this->redirect('sprava', 'hry');
 	}
 	
 	public function renderUzivatele(){

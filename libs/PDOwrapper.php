@@ -31,22 +31,6 @@ class PDOwrapper{
 	
 	/**
 	 * 
-	 * @return Tables\GameType[]
-	 */
-	public function getGameTypesExtended(){
-		$result = $this->con->query("SELECT * FROM `game_type_extended`")
-				->fetchAll(PDO::FETCH_CLASS, Views\GameTypeExtended::class);
-		return $result;
-	}
-	
-	public function getFirstUnusedGameTypeId(){
-		 $result = $this->con->query("SELECT game_type_id FROM game_type "
-				 . "ORDER BY game_type_id DESC")->fetchColumn();
-		 return $result + 1;
-	}
-	
-	/**
-	 * 
 	 * @param type $pars
 	 * @return Views\ReservationExtended[]
 	 */
@@ -80,69 +64,11 @@ class PDOwrapper{
 		 */
 	}
 	
-	/**
-	 * 
-	 * @param type $game_id
-	 * @return Views\GameTypeExtended;
-	 */
-	public function gameTypeById($game_id) {
-		$statement = $this->con->prepare("SELECT * FROM game_type_extended WHERE game_type_id = :id");
-		if($statement->execute(['id' => $game_id])){
-			$result = $statement->fetchObject(Views\GameTypeExtended::class);
-			return $result;
-		}
-		return null;
-	}
-	
-	public function getGameTypes(){
-		$result = $this->con->query("SELECT * FROM game_type")
-				->fetchAll(PDO::FETCH_CLASS, Tables\GameType::class);
-		return $result;
-	}
-	/**
-	 * 
-	 * @param Tables\GameType $gameType
-	 * @param int $game_type_id
-	 */
-	public function insertGameType($gameType, $game_type_id) {
-		$statement = $this->con->prepare("INSERT INTO `web_logickehry_db`.`game_type` "
-			. "(`game_type_id`, `game_name`, `subtitle`, `avg_playtime`, `max_players`, `min_players`) "
-	 ."VALUES ( :game_type_id,  :game_name,  :subtitle,  :avg_playtime,  :max_players,  :min_players');");
-		
-		$pars = $gameType->asArray();
-		$pars['game_type_id'] = $game_type_id;
-		var_dump('insert', $pars, '<hr>');
-		return ($statement->execute($pars));
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public function getDesks(){
 		$result = $this->con->query("SELECT * FROM desk")
 				->fetchAll(PDO::FETCH_CLASS, Tables\Desk::class);
 		return $result;
 	}
-
-	/**
-	 * @return Tables\GameType Typ hry id
-	 */
-	public function fetchGame($id) {
-		if(!is_numeric($id)){ return null; }
-		$statement = $this->con->prepare("SELECT * FROM game_type"
-				. "WHERE game_type_id == :game_type_id");
-		if($statement->execute(["game_type_id" => $id])){
-			return $statement->fetchObject(Tables\GameType::class);
-		}
-		return null;
-	}
-	
-	
 
 	public function usersSubscribedGames($uid) {
 		$statement = $this->con->prepare("SELECT game_type_id FROM subscription
