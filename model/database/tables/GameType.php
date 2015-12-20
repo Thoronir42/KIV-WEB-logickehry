@@ -16,11 +16,11 @@ class GameType extends \model\database\DB_Entity{
 		return parent::fromPOST(self::class);
 	}
 	
-	var $game_type_id;
+	var $game_type_id = false;
 	
 	var $game_name;
 	
-	var $subtitle;
+	var $subtitle = false;
 	
 	var $avg_playtime;
 	
@@ -28,9 +28,7 @@ class GameType extends \model\database\DB_Entity{
 	
 	var $max_players;
 	
-	public function readyForInsert() {
-		if(parent::readyForInsert()){ return true; }
-		return (sizeof($this->missing) < 2 && isset($this->missing['game_type_id']));
+	protected function checkRequiredProperties() {
+		return parent::checkRequiredProperties(self::class);
 	}
-	
 }

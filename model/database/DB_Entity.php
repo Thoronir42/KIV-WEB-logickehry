@@ -69,8 +69,32 @@ abstract class DB_Entity{
 	 * 
 	 */
 	public function readyForInsert(){
-		$everythingSet = !isset($this->missing);
-		return $everythingSet;
+		if(!isset($this->missing)){
+			return true;
+		}
+		return $this->checkRequiredProperties();
+	}
+	
+	protected function checkRequiredProperties($class = null){
+		if($class == null){
+			return false;
+		}
+		$rc = new \ReflectionClass($class);
+		
+		$properties = $rc->getProperties();
+		$instance = $rc->newInstanceArgs();
+		foreach($properties as $prp){
+			$prpName = $prp->name;
+			if($instance->$prpName === false || !isset($this->missing[$prpName])){
+				continue;
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	public function getMissingParameters(){
+		return implode(", ", array_keys($this->missing));
 	}
 
 	

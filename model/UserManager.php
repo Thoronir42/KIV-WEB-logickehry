@@ -79,7 +79,7 @@ class UserManager {
 			"INSERT INTO `web_logickehry_db`.`user` (`orion_login`) VALUES (:ol)");
 		return ($statement->execute(['ol' => $orion_login]));
 	}
-
+	
 	
 	public function fetchAll($pw){
 		$result = $pw->con->query("SELECT * FROM user_extended")
