@@ -44,23 +44,4 @@ class PDOwrapper{
 				->fetchAll(PDO::FETCH_CLASS, Tables\Desk::class);
 		return $result;
 	}
-
-	public function usersSubscribedGames($uid) {
-		$statement = $this->con->prepare("SELECT game_type_id FROM subscription
-			WHERE user_id = :uid");
-		if($statement->execute(['uid' => $uid])){
-			return $statement->fetchAll(PDO::FETCH_COLUMN);
-		}
-		return null;
-	}
-	
-	public function subscribedUsersByGame($gid){
-		$statement = $this->con->prepare("SELECT orion_login FROM subscribees "
-				. "WHERE game_type_id = :gid");
-		if($statement->execute(['gid' => $gid])){
-			return $statement->fetchAll(PDO::FETCH_COLUMN);
-		}
-		return null;
-	}
-
 }

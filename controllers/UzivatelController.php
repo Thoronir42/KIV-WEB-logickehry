@@ -35,6 +35,10 @@ class UzivatelController extends Controller{
 		if(!$this->user->isLoggedIn()){
 			$this->redirectPars(Controller::DEFAULT_CONTROLLER);
 		}
+		$this->template['subscriptions'] = \model\SubscriptionManager::fetchGamesDetailedByUser(
+				$this->pdoWrapper,
+				$this->user->user_id);
+		
 		$this->template['form_action'] = ["controller" => "uzivatel", "action" => "ulozitUdaje"];
 		$this->template['resLink'] = ['controller' => 'rezervace', 'action' => 'vypis'];
 	}
