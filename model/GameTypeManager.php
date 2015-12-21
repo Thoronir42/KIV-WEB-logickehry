@@ -44,8 +44,8 @@ class GameTypeManager {
 	 * @param int $game_id
 	 * @return GameTypeExtended
 	 */
-	public static function fetchById($game_id) {
-		$statement = $this->con->prepare("SELECT * FROM game_type_extended WHERE game_type_id = :id");
+	public static function fetchById($pw, $game_id) {
+		$statement = $pw->con->prepare("SELECT * FROM game_type_extended WHERE game_type_id = :id");
 		if($statement->execute(['id' => $game_id])){
 			$result = $statement->fetchObject(GameTypeExtended::class);
 			return $result;

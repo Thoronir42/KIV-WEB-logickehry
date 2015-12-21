@@ -42,7 +42,7 @@ class VypisController extends Controller{
 	
 	public function renderDetailHry(){
 		$id = $this->getParam("id");
-		$gameType = $this->pdoWrapper->gameTypeById($id);
+		$gameType = GameTypeManager::fetchById($this->pdoWrapper, $id);
 		if(!$gameType){
 			$this->message("Požadovaná hra nebyla nalezena.", \libs\MessageBuffer::LVL_WAR);
 			$this->redirectPars('vypis', 'hry');
