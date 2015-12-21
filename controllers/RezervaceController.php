@@ -2,7 +2,8 @@
 namespace controllers;
 
 use model\DatetimeManager,
-	model\GameTypeManager;
+	model\GameTypeManager,
+	model\ReservationManager;
 
 
 class RezervaceController extends Controller{
@@ -25,19 +26,51 @@ class RezervaceController extends Controller{
 	}
 	
 	public function renderVypis(){
-		$this->template["pageTitle"] = "Výpis rezervací";
-		
-		$this->template['games'] = GameTypeManager::fetchAll($this->pdoWrapper);
-		$this->template['desks'] = $this->pdoWrapper->getDesks();
-		
-		$timePars = DatetimeManager::getWeeksBounds(0, DatetimeManager::DB_FORMAT);
-		$reservations = $this->pdoWrapper->getReservationsExtended($timePars);
+		$week = $this->getParam("tyden");
+		if(!is_numeric($week)){
+			$week = 0;
+		}
+		$timePars = DatetimeManager::getWeeksBounds($week, DatetimeManager::DB_FORMAT);
+		$reservations = ReservationManager::fetchWithinTimespan(
+				$this->pdoWrapper,
+				DatetimeManager::format($timePars, DatetimeManager::DB_FORMAT));
 		$reservationDays = [];
 		foreach($reservations as $r){
 			$day = date("w", strtotime($reservations[0]->time_from));
 			if(!isset($reservationDays[$day])){ $reservationDays[$day] = []; }
 			$reservationDays[$day][] = $r;
 		}
+		
+		$this->template["pageTitle"] = $this->makeVypisTitle($week);
+		$this->template["timePars"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY_FORMAT);
+		$this->template['games'] = GameTypeManager::fetchAll($this->pdoWrapper);
+		$this->template['desks'] = $this->pdoWrapper->getDesks();
 		$this->template["reservationDays"] = $reservationDays;
+	}
+	
+	private function makeVypisTitle($week){
+		switch($week){
+			case -1: return "Výpis rezervací předcházejícího týdne";
+			case 0: return "Výpis rezervací aktuálního týdne";
+			case 1: return "Výpis rezervací následujícího týdne";
+		}
+		if($week < 0){
+			$w = -1 * $week;
+			$filler = "před";
+		} else {
+			$w = $week;
+			$filler = "za";
+		}
+		return "Výpis rezervací $filler $w týdny";
+	}
+	
+	
+	public function doRezervovat(){
+		$reservation = \model\database\tables\Reservation::fromPOST();
+		if(!$reservation->readyForInsert()){
+			
+		}
+		$pars = $reservation->asArray();
+		$pars['reservee_user_id'] = $this->user->user_id;
 	}
 }

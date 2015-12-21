@@ -17,12 +17,12 @@ class Reservation extends \model\database\DB_Entity{
 	
 	var $reservee_user_id;
 	
-	var $open_reservation;
+	var $open_reservation = false;
 	
 	var $time_from;
 	
 	var $time_to;
 	
-	var $desk_id;
+	var $desk_id = false;
 	
 }

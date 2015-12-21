@@ -2,7 +2,7 @@
 {% extends layout %}
 
 {% block bodyContent %}
-
+	<div class="date_bounds">{{ "%s - %s"|format(timePars['time_from'], timePars['time_to'])  }}</div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h2 class="panel-title">Grafické zobrazení rezervací</h2>

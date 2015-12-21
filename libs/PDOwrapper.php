@@ -29,21 +29,6 @@ class PDOwrapper{
 		$this->con = $pdo;
 	}
 	
-	/**
-	 * 
-	 * @param type $pars
-	 * @return Views\ReservationExtended[]
-	 */
-	public function getReservationsExtended($pars){
-		$statement = $this->con->prepare("SELECT * FROM `reservation_extended` "
-				. "WHERE time_from > :time_from AND time_to < :time_to "
-				. "ORDER BY time_from ASC");
-		if($statement->execute($pars)){
-			return $statement->fetchAll(PDO::FETCH_CLASS, Views\ReservationExtended::class);
-		}	
-		return null;
-	}
-	
 	public function gameRatingsByGameType($id) {
 		$statement = $this->con->prepare("SELECT * FROM `game_rating_extended` "
 				. "WHERE game_type_id = :id "
@@ -52,16 +37,6 @@ class PDOwrapper{
 			return $statement->fetchAll(PDO::FETCH_CLASS, Views\ReservationExtended::class);
 		}
 		return null;
-	}
-	
-	public function insertReservation($pars){
-		$pars['time_to'] = date(\model\DatetimeManager::DB_FORMAT, $pars['time_to']);
-		$pars['time_to'] = date(\model\DatetimeManager::DB_FORMAT, $pars['time_to']);
-		/*
-		 INSERT INTO `web_logickehry_db`.`reservation`
-		 * (`reservation_id`, `game_box_id`, `reservee_user_id`, `open_reservation`, `time_from`, `time_to`, `desk_id`)
-		 *  VALUES (NULL, '3', '6', '1', '2015-12-14 12:23:00', '2015-12-14 14:00:00', '1');
-		 */
 	}
 	
 	public function getDesks(){

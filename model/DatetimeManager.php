@@ -8,8 +8,9 @@ namespace model;
 class DatetimeManager {
 	
 	const DB_FORMAT = "y-m-d H:i:s";
+	const HUMAN_DATE_ONLY_FORMAT = "d. m. y";
 	
-	public static function getWeeksBounds($weekOffset = 0, $format = false){
+	public static function getWeeksBounds($weekOffset = 0){
 		if($weekOffset == 0){
 			$looseWeek = time();
 		} else {
@@ -24,10 +25,16 @@ class DatetimeManager {
 		$start = strtotime((($isMonday) ? 'this' : 'last').' Monday', $looseWeek);
 
 		$end = strtotime(($isMonday ? 'next' : 'this').' Monday', $looseWeek);
-		if($format){
-			return ['time_from' => date($format, $start),
-					'time_to' => date($format, $end)];
-		} else { return ['time_from' => $start, 'time_to' => $end]; }
+		
+		return ['time_from' => $start, 'time_to' => $end]; 
 	}
-	
+
+	public static function format($timePars, $format) {
+		$return = [];
+		foreach($timePars as $key => $val){
+			$return[$key] = date($format, $val);
+		}
+		return $return;
+	}
+
 }
