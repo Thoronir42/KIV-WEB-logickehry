@@ -1,7 +1,8 @@
 <?php
 namespace controllers;
 
-use model\GameTypeManager;
+use model\GameTypeManager,
+	model\SubscriptionManager;
 
 /**
  * Description of HomeControler
@@ -33,7 +34,7 @@ class VypisController extends Controller{
 		$this->template['pageTitle'] = "Výpis her";
 		$this->template['gpr'] = 3; // games per row
 		$games = GameTypeManager::fetchAll($this->pdoWrapper);
-		$this->user->setSubscribedItems($this->pdoWrapper->usersSubscribedGames($this->user->user_id));
+		$this->user->setSubscribedItems(SubscriptionManager::fetchGamesByUser($this->pdoWrapper, $this->user->user_id));
 		foreach($games as $key => $g){
 			$games[$key]->detail_link = ['controller' => 'vypis', 'action' => 'detailHry', 'id' => $g->game_type_id];
 		}

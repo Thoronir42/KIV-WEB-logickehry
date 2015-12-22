@@ -1,7 +1,9 @@
 <?php
 namespace controllers;
 
-use model\GameBoxManager;
+use model\GameBoxManager,
+	model\GameTypeManager,
+	model\ReservationManager;
 
 /**
  * Description of AjaxController
@@ -53,7 +55,7 @@ class AjaxController extends Controller{
 			$response .= ($gameBox->retired ? "je však vyřazený z oběhu" : "náleží hře ".$gameBox->game_name);
 			return $response;
 		}
-		$gameType = $this->pdoWrapper->gameTypeById($game_id);
+		$gameType = GameTypeManager::fetchById($this->pdoWrapper, $game_id);
 		if(!$gameType){
 			return $this->template['response'] = sprintf("Nebyla nalezena hra %03d", $game_id);
 		}
