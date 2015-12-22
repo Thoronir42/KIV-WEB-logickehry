@@ -37,28 +37,11 @@
 			</div>
 		</div>
 	</div>
-				
+	
 	
 	<div class="row">
 		<div class="col-md-6">
-			<div class="panel panel-default stats subscriptions">
-				<div class="panel-heading">
-					<h2 class="panel-title">Hry, které odebírám</h2>
-				</div>
-				<div class="panel-body">
-				{% for s in subscriptions %}
-					<span>Res: {{ dump(s) }}</span>
-				{% if not loop.last %}
-					<hr/>
-				{% endif %}
-				{% else %}
-					<span>Neodebíráte žádné hry</span>
-				{% endfor %}
-				</div>
-				<div class="panel-footer">
-					Přejít na <a href="{{ urlgen.url(resLink) }}">Rezervace&hellip;</a>
-				</div>
-			</div>
+			{% include "uzivatel/mini_subscriptions.twig" %}
 		</div>
 		<div class="col-md-6">
 			<div class="panel panel-default myStats">

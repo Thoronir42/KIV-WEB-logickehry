@@ -35,12 +35,35 @@ class UzivatelController extends Controller{
 		if(!$this->user->isLoggedIn()){
 			$this->redirectPars(Controller::DEFAULT_CONTROLLER);
 		}
-		$this->template['subscriptions'] = \model\SubscriptionManager::fetchGamesDetailedByUser(
+		$this->template['form_action'] = ["controller" => "uzivatel", "action" => "ulozitUdaje"];
+		
+		$this->template['subscriptions'] = $this->buildSubscriptions();
+		$this->template['ratings'] = $this->buildRatings();
+		$this->template['reservations'] = $this->buildReservations();
+		
+		$this->template['resLink'] = ['controller' => 'rezervace', 'action' => 'vypis'];
+		$this->template['gameListLink'] = ['controller' => 'vypis', 'action' => 'hry'];
+	}
+	
+	private function buildSubscriptions(){
+		$ret = [];
+		$ret['list'] = \model\SubscriptionManager::fetchGamesDetailedByUser(
 				$this->pdoWrapper,
 				$this->user->user_id);
+		$ret['gpr'] = 2;
+		return $ret;
+	}
+	
+	private function buildRatings(){
+		$ret = [];
 		
-		$this->template['form_action'] = ["controller" => "uzivatel", "action" => "ulozitUdaje"];
-		$this->template['resLink'] = ['controller' => 'rezervace', 'action' => 'vypis'];
+		return $ret;
+	}
+	
+	private function buildReservations(){
+		$ret = [];
+		
+		return $ret;
 	}
 	
 	public function doUlozitUdaje(){

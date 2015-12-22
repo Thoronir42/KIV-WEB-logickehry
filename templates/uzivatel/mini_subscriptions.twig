@@ -1,0 +1,41 @@
+{# uzivatel/mini_subscriptions.twig #}
+<div class="panel panel-default stats subscriptions">
+	<div class="panel-heading">
+		<h2 class="panel-title">Hry, které odebírám</h2>
+	</div>
+	<div class="panel-body">
+	{% set open_row = false %}
+	{% for sub in subscriptions['list'] %}
+		{% if loop.index0 % subscriptions['gpr'] == 0 %}
+			<div class="row"> {% set open_row = true %}
+		{% endif %}
+		<div class="col-md-{{ 12 / subscriptions['gpr'] }}">
+				<div class="media">
+					<div class="media-left">
+						<a href="{{ urlgen.gDet(sub.game_type_id) }}">
+							<img class="media-object" src="{{ urlgen.gImg(sub.game_type_id) }}" alt="{{ sub.game_name }}" style="max-height: 64px">
+						</a>
+					</div>
+					<div class="media-body">
+						<a href="{{ urlgen.gDet(sub.game_type_id) }}">
+							<h4 class="media-heading">{{ sub.game_name }}</h4>
+							<h5 class="media-heading">{{ sub.subtitle }}</h5>
+						</a>
+					</div>
+				</div>
+			
+		</div>
+		{% if loop.index0 % subscriptions['gpr'] == subscriptions['gpr'] - 1 %}
+			</div> {% set open_row = false %}
+		{% endif %}	
+	{% else %}
+		<span>Neodebíráte žádné hry</span>
+	{% endfor %}
+	{% if open_row %}
+	</div>
+	{% endif %}
+	</div>
+	<div class="panel-footer">
+		Přejít na <a href="{{ urlgen.url(gameListLink) }}">Seznam her&hellip;</a>
+	</div>
+</div>

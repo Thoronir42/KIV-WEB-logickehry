@@ -14,7 +14,7 @@
 			<div class="game panel {{ game_panel_class }}" id="gp_{{ g.game_type_id }}">
 				<div class="panel-heading">
 					<div class="row" style="height: 100%;">
-					<span class="col-lg-9 pull-left"><a href="{{ urlgen.url(g.detail_link) }}">
+					<span class="col-lg-9 pull-left"><a href="{{ urlgen.gDet(g.game_type_id) }}">
 						<div class="row game-title"><div class="col-xs-12">{{ g.game_name }}</div></div>
 						<div class="row game-subtitle"><div class="col-xs-12">{{ g.subtitle }}</div></div>
 					</a></span>
