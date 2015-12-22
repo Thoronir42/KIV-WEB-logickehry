@@ -20,6 +20,9 @@
 	max-width: 100%; max-height: 60px;
 }
 
-.game .panel-heading{
+.game ~ .panel-heading{
 	height: 80px;
 }
+
+.game .subscribe{ background: #bce8f1; }
+.game .unsubscribe{ background: #fcf8e3; }

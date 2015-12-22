@@ -3,7 +3,8 @@ namespace controllers;
 
 use model\GameBoxManager,
 	model\GameTypeManager,
-	model\ReservationManager;
+	model\ReservationManager,
+	model\SubscriptionManager;
 
 /**
  * Description of AjaxController
@@ -60,5 +61,30 @@ class AjaxController extends Controller{
 			return $this->template['response'] = sprintf("Nebyla nalezena hra %03d", $game_id);
 		}
 		return false;
+	}
+	
+	
+	public function doSubscribe(){
+		$this->changeSubscribe(true);
+	}
+	
+	public function doUnsubscribe(){
+		$this->changeSubscribe(false);
+	}
+	
+	private function changeSubscribe($new_value){
+		if(!$this->user->isLoggedIn()){
+			$this->template['response'] = 'false';
+			return;
+		}
+		$game_type_id = $this->getParam("id");
+		$user_id = $this->user->user_id;
+		SubscriptionManager::remove($this->pdoWrapper, $user_id, $game_type_id);
+		if($new_value){
+			SubscriptionManager::insert($this->pdoWrapper, $user_id, $game_type_id);
+		}
+		$new_sub_count = count(SubscriptionManager::fetchUsersByGame($this->pdoWrapper, $game_type_id));
+		
+		$this->template['response'] = $new_sub_count;
 	}
 }

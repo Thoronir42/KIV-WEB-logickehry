@@ -31,13 +31,11 @@ class VypisController extends Controller{
 	
     public function renderHry(){
 		$this->addCss("hra.css");
+		$this->addJs('odber_prepinac.js');
 		$this->template['pageTitle'] = "Výpis her";
 		$this->template['gpr'] = 3; // games per row
 		$games = GameTypeManager::fetchAll($this->pdoWrapper);
 		$this->user->setSubscribedItems(SubscriptionManager::fetchGamesByUser($this->pdoWrapper, $this->user->user_id));
-		foreach($games as $key => $g){
-			$games[$key]->detail_link = ['controller' => 'vypis', 'action' => 'detailHry', 'id' => $g->game_type_id];
-		}
         $this->template['hry'] = $games;
     }
 	
@@ -48,7 +46,12 @@ class VypisController extends Controller{
 			$this->message("Požadovaná hra nebyla nalezena.", \libs\MessageBuffer::LVL_WAR);
 			$this->redirectPars('vypis', 'hry');
 		}
+		$this->addCss("hra.css");
 		$this->addCss("vypis_detailHry.css");
+		$this->addJs('odber_prepinac.js');
+		
+		// @todo: fetch single subscribed game only
+		$this->user->setSubscribedItems(SubscriptionManager::fetchGamesByUser($this->pdoWrapper, $this->user->user_id));
 		
 		$this->template['g'] = $gameType;
 		$this->template['ratings'] = $this->pdoWrapper->gameRatingsByGameType($id);

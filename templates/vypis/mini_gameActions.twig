@@ -1,0 +1,30 @@
+{# empty Twig template #}
+<ul class="list-group">
+	<li class="list-group-item">
+		Hodnocení:{{ '%d (%d)'|format(g.average_score, g.rating_count) }}
+	</li>
+	<li class="list-group-item">
+		Hráčů:{{ "%d - %d"|format(g.min_players, g.max_players) }}
+	</li>
+	<li class="list-group-item">
+		Prům. Doba Hry: {{ g.avg_playtime }}
+	</li>
+{% if not user.isLoggedIn %}
+	<li class="list-group-item">
+		Odběratelů: {{ g.subscribed_users }}
+	</li>
+{% else %}
+	<li class="list-group-item" style="padding: 0px; border-width: 0px;">
+		<div class="input-group">
+			<span class="form-control">Odběratelů: <span class="sub_user_count">{{ g.subscribed_users }}</span></span>
+			<span class="input-group-btn" id="a_{{ g.game_type_id }}">
+				{% if not user.isSubscribedTo(g.game_type_id) %}
+					<a class="btn btn-default subscribe" type="button"><span class="glyphicon glyphicon-plus"></span></a>
+				{% else %}
+					<a class="btn btn-default unsubscribe" type="button"><span class="glyphicon glyphicon-minus"></span></a>
+				{% endif%}
+			</span>
+		</div>
+	</li>
+{% endif %}
+</ul>
