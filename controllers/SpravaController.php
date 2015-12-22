@@ -60,38 +60,37 @@ class SpravaController extends Controller{
 	
 	public function doPridatHru(){
 		$nextId = GameTypeManager::nextId($this->pdoWrapper);
-		$_POST['game_type_id'] = $nextId;
 		$gameType = GameType::fromPOST();
-		if($gameType->readyForInsert()){
-			$pars = $gameType->asArray();
-			$pars['game_type_id'] = $nextId;
-			if(!GameTypeManager::insert($this->pdoWrapper, $pars)){
-				$this->message("Nebylo možné přidat hru na úrovni databáze", \libs\MessageBuffer::LVL_WAR);
-				$this->redirectPars('sprava', 'hry');
-			} else {
-				$this->message("Hra $gameType->game_name byla úspěšně přidána do databáze", \libs\MessageBuffer::LVL_SUC);
-				$this->redirectPars('sprava', 'hry');
-			}
-		} else {
+		if(!$gameType->readyForInsert()){
 			$this->message("Nebylo možné přidat hru, nebyla vyplněna následující pole: ".$gameType->getMissingParameters());
 			$this->redirectPars();
 		}
+		$pars = $gameType->asArray();
+		$pars['game_type_id'] = $nextId;
+		if(!GameTypeManager::insert($this->pdoWrapper, $pars)){
+			$this->message("Nebylo možné přidat hru na úrovni databáze", \libs\MessageBuffer::LVL_WAR);
+			$this->redirectPars('sprava', 'hry');
+		} else {
+			$this->message("Hra $gameType->game_name byla úspěšně přidána do databáze", \libs\MessageBuffer::LVL_SUC);
+			$this->redirectPars('sprava', 'hry');
+		}
+		
 		$imgRes = ImageManager::put("picture", sprintf("game_%03d", $nextId));
 		if($imgRes['result']){
 			$this->message($imgRes['message'], \libs\MessageBuffer::LVL_SUC);
 		} else {
 			$this->message($imgRes['message'], \libs\MessageBuffer::LVL_WAR);
 		}
-		$this->redirect('sprava', 'hry');
+		$this->redirectPars('sprava', 'hry');
 	}
 	
 	public function renderUzivatele(){
 		if(!$this->user->isAdministrator()){
 			$this->message("Do správy uživatelů nemáte přístup.");
-			$this->redirect("sprava", $this->getDefaultAction());
+			$this->redirectPars("sprava", $this->getDefaultAction());
 		}
 		$this->template['pageTitle'] = "Správa registrovaných uživatelů";
-		$this->template['users'] = $this->pdoWrapper->getUsers();
+		$this->template['users'] = \model\UserManager::fetchAll($this->pdoWrapper);
 	}
 	
 	public function renderInventar(){
@@ -118,21 +117,6 @@ class SpravaController extends Controller{
 		$this->template['games'] = $gamesSrt;
 	}
 	
-	public function renderVlozitHru(){
-		$id = $this->getParam("game_type_id");
-		if($id != null){
-			$game = $this->pdoWrapper->fetchGame($id);
-			if(is_null($game)){
-				$this->renderNotFound("Hra s id $id nebyla nalezena");
-				return;
-			}
-		} else {
-			$game = \model\database\tables\GameType::fromPOST();
-		}
-		
-		$this->template['pageTitle'] = "Zavést novou hru";
-	}
-	
 	public function renderOvladaciPanel(){
 		$this->template['xml_inventory'] = ['controller' => 'xml', 'action' => 'inventory'];
 		$this->template['xml_reservations'] = ['controller' => 'xml', 'action' => 'reservations'];
@@ -140,7 +124,7 @@ class SpravaController extends Controller{
 	
 	public function renderHromadnyMail(){
 		$this->template['send_url'] = ['controller' => 'sprava', 'action' => 'poslatMail'];
-		$this->template['games'] = $this->pdoWrapper->getGameTypesExtended();
+		$this->template['games'] = GameTypeManager::fetchAll($this->pdoWrapper);
 	}
 	
 	public function doPoslatMail(){
