@@ -1,0 +1,9 @@
+.table { display: table; } 
+.table>* { display: table-row;}
+.table>*>* { display: table-cell; }
+
+.thead>*{
+	font-weight: bold;
+	border-bottom: 1px darkgray solid;
+	margin-bottom: 20px;
+}

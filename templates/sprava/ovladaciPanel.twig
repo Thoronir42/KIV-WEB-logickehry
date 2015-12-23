@@ -5,6 +5,39 @@
 	<div class="panel panel-default">
 		<div class="panel-heading"><h2 class="panel-title">XML export</h2></div>
 		<div class="panel-body">
+			<div class="table">
+				<div class="thead">
+					<span>Typ exportu</span>
+					<span>Parametry</span>
+					<span>Export</span>
+				</div>
+				
+				<form class="form-inline" action="{{ urlgen.url(xml_inventory) }}" method="post">
+					<span>Katalog her a evidenčních čísel</span>
+					<span><span class="glyphicon glyphicon-remove-sign"></span></span>
+					<span> <button type="submit" class="form-control btn btn-default"><span class="glyphicon glyphicon-share"></span></button></span>
+				</form>
+					
+				<form class="form-inline" action="{{ urlgen.url(xml_reservations) }}" method="post">
+					<span>Rezervace za období</span>
+					<span>
+						<label class="control-label" for="date_from">Od</label>
+						<input type="date" name ="date_from" id='date_from' class="form-control" value="{{ user.name }}">
+						<label class="control-label" for="date_to">Do</label>
+						<input type="date" name="date_to" id='date_from' class="form-control" value="{{ user.surname }}">
+					</span>
+					<span>
+						<span> <button type="submit" class="form-control btn btn-default"><span class="glyphicon glyphicon-share"></span></button></span>
+					</span>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="panel panel-default">
+		<div class="panel-heading"><h2 class="panel-title">XML export</h2></div>
+		<div class="panel-body">
 			<h3>Katalog her a evidenčních čísel</h3>
 			<form class="form-inline" action="{{ urlgen.url(xml_inventory) }}" method="post">
 				<input type="submit" value="Vygenerovat XML" class="form-control btn btn-default">
@@ -12,18 +45,17 @@
 			<h3>Rezervace za období</h3>
 			<form action="{{ urlgen.url(xml_reservations) }}" method="post">
 				<div class='row'>
-					<div class='col-md-5'>
-					<label class="control-label" for="name">Od</label>
+					<div class='col-md-4'>
+					<label class="control-label" for="date_from">Od</label>
 					<input type="date" name ="date_from" id='date_from' class="form-control" value="{{ user.name }}">
 					</div>
-					<div class='col-md-5'>
-					<label class="control-label" for="surname">Příjmení</label>
+					<div class='col-md-4'>
+					<label class="control-label" for="date_to">Do</label>
 					<input type="date" name="date_to" id='date_from' class="form-control" value="{{ user.surname }}">
 					</div>
-					<div class='col-md-2'>
-						<input type="submit" value="Vygenerovat XML" class="form-control btn btn-default">
+					<div class="col-md-4">
+						<input type="submit" value="Vygenerovat XML" class="form-control btn btn-default" style="text-align: center;">
 					</div>
-
 				</div>
 			</form>
 		</div>

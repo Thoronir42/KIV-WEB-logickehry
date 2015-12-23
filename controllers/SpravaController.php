@@ -154,6 +154,8 @@ class SpravaController extends Controller{
 	}
 	
 	public function renderOvladaciPanel(){
+		$this->addCss("sprava_ovladaciPanel.css");
+		
 		$this->template['xml_inventory'] = ['controller' => 'xml', 'action' => 'inventory'];
 		$this->template['xml_reservations'] = ['controller' => 'xml', 'action' => 'reservations'];
 	}
