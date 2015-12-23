@@ -55,13 +55,19 @@ class GameBoxManager {
 
 	/**
 	 * 
+	 * @param \libs\PDOwrapper $pw
 	 * @return GameBoxExtended[]
 	 */
-	public static function fetchAll($pw) {
+	public static function fetchAll($pw, $includeRetired = true) {
 		$sql = "SELECT * FROM game_box_extended";
-		$result = $pw->con->query($sql)
-				->fetchAll(\PDO::FETCH_CLASS, GameBoxExtended::class);
-		return $result;
+		if(!$includeRetired){
+			$sql .= " WHERE retired = 0";
+		}
+		$statement = $pw->con->prepare($sql);
+		if($statement->execute()){
+			return $statement->fetchAll(\PDO::FETCH_CLASS, GameBoxExtended::class);
+		}
+		return null;
 	}
 
 }

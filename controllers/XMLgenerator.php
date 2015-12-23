@@ -40,8 +40,8 @@ class XMLgenerator{
 	}
 	
 	public function renderInventory(){
-		$this->template["game_type"] = $this->pdoWrapper->getGameTypes();
-		$this->template["game_box"] = $this->pdoWrapper->getGameBoxes();
+		$this->template["game_type"] = \model\GameTypeManager::fetchAll($this->pdoWrapper);
+		$this->template["game_box"] = \model\GameBoxManager::fetchAll($this->pdoWrapper, false);
 	}
 	
 	public function renderReservations(){
