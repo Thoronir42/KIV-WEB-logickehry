@@ -4,7 +4,6 @@
 
 {% block bodyContent %}
 	
-	<p>Výpis inventářových entit seskupené podle herních druhů.</p>
 	{% set open_game_row = false %}
 	{% for g in games %}
 	{% if loop.index0 % gpr == 0 %}
@@ -35,7 +34,7 @@
 							<input type="text" class="form-control" value="{{ code.tracking_code }}" readonly>
 							{% if not code.retired %}
 							<span class="input-group-btn">
-								<button class="btn btn-default retire" type="button">Vyřadit</button>
+								<button class="btn btn-default retire" type="button" data-toggle="tooltip" data-placement="bottom" title="Vyřadit"><span class="glyphicon glyphicon-log-out"></span></button>
 							</span>
 							{% else %}
 								<span class="input-group-addon">Vyřazený</span>
@@ -51,11 +50,14 @@
 				{% if open_code_row %}
 				</div>
 				{% endif %}
-				<hr>
+			</div>
+			<div class="panel-footer">
 				<div class="row">
 					<div class="col-md-offset-3 col-md-6 input-group">
-						<label class="input-group-addon" for="addcode_{{g.game_type_id}}">+</label>
-						<input type="text" class="form-control" name="addcode_{{g.game_type_id}}" placeholder="G00001">
+						<label class="input-group-addon" for="addcode_{{g.game_type_id}}"><span class="glyphicon glyphicon-log-in"></span></label>
+						
+						<input type="text" class="form-control" name="addcode_{{g.game_type_id}}" placeholder="G00001" data-toggle="tooltip" title="Evidovat nový kód">
+						
 						<span class="input-group-btn">
 							<a tabindex="{{ loop.index0 }}" class="btn btn btn-default insert" id="ai_{{ g.game_type_id }}"
 							   role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content=" ? ? ? ">Ok</a>

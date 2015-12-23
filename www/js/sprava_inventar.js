@@ -37,5 +37,6 @@ $(document).ready(function() {
 		xmlhttp.send();
 	});
 	
-	$('[data-toggle="popover"]').popover()
+	$('[data-toggle="popover"]').popover();
+	$('[data-toggle="tooltip"]').tooltip();
 });

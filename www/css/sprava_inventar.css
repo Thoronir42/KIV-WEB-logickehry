@@ -3,3 +3,14 @@
     Author     : Stepan
 */
 
+.popover{
+	width: 160px;
+}
+
+.panel-body{
+	height: 129px;
+	overflow-y: auto;
+}
+.panel-body>.row{
+	margin-bottom: 8px;
+}
