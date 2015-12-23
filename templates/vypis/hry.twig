@@ -14,12 +14,12 @@
 			<div class="game panel {{ game_panel_class }}" id="gp_{{ g.game_type_id }}">
 				<div class="panel-heading">
 					<div class="row" style="height: 100%;">
-					<span class="col-lg-9 pull-left"><a href="{{ urlgen.gDet(g.game_type_id) }}">
+					<span class="col-xs-9"><a href="{{ urlgen.gDet(g.game_type_id) }}">
 						<div class="row game-title"><div class="col-xs-12">{{ g.game_name }}</div></div>
 						<div class="row game-subtitle"><div class="col-xs-12">{{ g.subtitle }}</div></div>
 					</a></span>
-					<span class="col-lg-3 image-frame pull-right">
-						<img src="{{ urlgen.gImg(g.game_type_id) }}" class="img-rounded img-responsive">
+					<span class="col-xs-3 image-frame">
+						<img src="{{ urlgen.gImg(g.game_type_id) }}" class="img-rounded img-responsive pull-right">
 					</span>
 					</div>
 				</div>

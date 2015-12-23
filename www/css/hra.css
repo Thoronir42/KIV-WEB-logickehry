@@ -16,12 +16,21 @@
 }
 
 
-.game img{
-	max-width: 100%; max-height: 60px;
+.game .image-frame{
+	height: 100%;
+	padding:0px;
+	padding-right: 10px;
 }
 
-.game ~ .panel-heading{
+.game .image-frame img{
+	max-height: 100%;
+}
+
+.game>.panel-heading{
 	height: 80px;
+}
+.game>.panel-heading>.row{
+	height: 62px;
 }
 
 .game .subscribe{ background: #bce8f1; }
