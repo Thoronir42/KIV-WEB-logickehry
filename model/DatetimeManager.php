@@ -31,6 +31,9 @@ class DatetimeManager {
 
 	public static function format($timePars, $format) {
 		$return = [];
+		if(!is_array($timePars)){
+			return date($format, $timePars);
+		}
 		foreach($timePars as $key => $val){
 			$return[$key] = date($format, $val);
 		}

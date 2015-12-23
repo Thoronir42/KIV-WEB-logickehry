@@ -27,6 +27,8 @@ class User extends \model\database\DB_Entity{
 	
 	var $role_id;
 	
+	var $last_active;
+	
 	
 	public function isSupervisor(){
 		return \model\UserManager::isSupervisor($this->role_id);

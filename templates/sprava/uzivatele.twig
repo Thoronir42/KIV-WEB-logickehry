@@ -3,31 +3,45 @@
 {% extends layout %}
 
 {% block bodyContent %}
-	<table class="table">
-		<thead>
-			<tr>
-				<td>Orion login</td>
-				<td>Role</td>
-				<td>Jméno</td>
-				<td colspan="{{ actions['count'] }}">Akce</td>
-			</tr>
-		</thead>
-		<tbody>
-		{% for u in users %}
-			{% set tmpUrl = tmpUrl|merge({'orion_login': u.orion_login}) %}
-			<tr>
-				<td>{{ u.orion_login }}</td>
-				<td>{{ u.role_label }}</td>
-				<td>{{ '%s %s'|format(u.name, u.surname)}}</td>
-				<td>
-					{% set item = (u.isSupervisor() ? actions['list']['supervisor']['remove'] : actions['list']['supervisor']['add']) %}
-					{% set tmpUrl = tmpUrl|merge({'action': item['url']}) %}
-					<a href="{{ urlgen.url(tmpUrl) }}" class="btn btn-default {{ item['class'] }}" data-toggle="tooltip" data-placement="bottom" title="{{ item['tooltip'] }}">
-						<span class="glyphicon {{ item['glyph'] }}"></span>
-					</a>
-				</td>
-			</tr>
-		{% endfor %}
-		</tbody>
-	</table>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Seznam uživatelů
+		</div>
+		<div class="panel-body">
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<td>Orion login</td>
+						<td>Role</td>
+						<td>Jméno</td>
+						<td>Poslední aktivita</td>
+						<td colspan="{{ actions['count'] }}">Akce</td>
+					</tr>
+				</thead>
+				<tbody>
+				{% for u in users %}
+					{% set tmpUrl = tmpUrl|merge({'orion_login': u.orion_login}) %}
+					<tr>
+						<td>{{ u.orion_login }}</td>
+						<td>{{ u.role_label }}</td>
+						<td>{{ '%s %s'|format(u.name, u.surname)}}</td>
+						<td>{% if u.last_active %}
+							{{ u.last_active }}
+							{% else %}
+							Žádná
+							{% endif %}
+						</td>
+						<td>
+							{% set item = (u.isSupervisor() ? actions['list']['supervisor']['remove'] : actions['list']['supervisor']['add']) %}
+							{% set tmpUrl = tmpUrl|merge({'action': item['url']}) %}
+							<a href="{{ urlgen.url(tmpUrl) }}" class="btn btn-default {{ item['class'] }}" data-toggle="tooltip" data-placement="bottom" title="{{ item['tooltip'] }}">
+								<span class="glyphicon {{ item['glyph'] }}"></span>
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 {% endblock %}

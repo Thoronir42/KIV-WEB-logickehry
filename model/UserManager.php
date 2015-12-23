@@ -29,7 +29,21 @@ class UserManager {
 		if(!isset($_SESSION['user'])){ return new UserExtended(); }
 		$orion_login = $_SESSION['user'];
 		$dbUser =  self::fetch($pw, $orion_login);
+		if(!$dbUser){
+			return new UserExtended();
+		}
+		self::updateActivity($pw, $orion_login);
 		return $dbUser;
+	}
+	
+	private static function updateActivity($pw, $orion_login){
+		$time = DatetimeManager::format(time(), DatetimeManager::DB_FORMAT);
+		$statement = $pw->con->prepare(
+			"UPDATE `web_logickehry_db`.`user` SET "
+				. "`last_active` = :time "
+				. "WHERE `user`.`orion_login` = :orion_login"
+				);
+		return $statement->execute(['time' => $time, 'orion_login' => $orion_login]);
 	}
 	
 	/**
