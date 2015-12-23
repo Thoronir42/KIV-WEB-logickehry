@@ -16,6 +16,11 @@ class UserManager {
 	const LOGIN_NEW = 2;
 	const LOGIN_FAILED = 0;
 	
+	const ROLE_USER = 1;
+	const ROLE_SUPERVISOR = 2;
+	const ROLE_ADMIN = 3;
+
+	
 	/**
 	 * @param \libs\PDOwrapper $pw
 	 * @return UserExtended
@@ -85,5 +90,37 @@ class UserManager {
 		$result = $pw->con->query("SELECT * FROM user_extended")
 				->fetchAll(\PDO::FETCH_CLASS, UserExtended::class);
 		return $result;
+	}
+	
+	
+	# Role related functions
+	
+	public static function isSupervisor($role) {
+		return $role >= self::ROLE_SUPERVISOR;
+	}
+
+	public static function isAdministrator($role) {
+		return $role >= self::ROLE_ADMIN;
+	}
+
+	public static function addSupervisor($pdo, $orion_login) {
+		return self::setUserRole($pdo, $orion_login, self::ROLE_SUPERVISOR);
+	}
+
+	public static function removeSupervisor($pdo, $orion_login) {
+		return self::setUserRole($pdo, $orion_login, self::ROLE_USER);
+	}
+
+	private static function setUserRole($pdo, $orion_login, $role_id) {
+		$statement = $pdo->con->prepare(
+			"UPDATE `web_logickehry_db`.`user` SET "
+				. "`role_id` = :role "
+				. "WHERE `user`.`orion_login` = :orion_login"
+				);
+		if($statement->execute(['role' => $role_id, 'orion_login' => $orion_login])){
+			return true;
+		}
+		var_dump($statement->errorInfo());
+		die;
 	}
 }

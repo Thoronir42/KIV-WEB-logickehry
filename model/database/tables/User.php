@@ -29,11 +29,11 @@ class User extends \model\database\DB_Entity{
 	
 	
 	public function isSupervisor(){
-		return $this->role_id > 1;
+		return \model\UserManager::isSupervisor($this->role_id);
 	}
 	
 	public function isAdministrator() {
-		return $this->isSupervisor();
+		return \model\UserManager::isAdministrator($this->role_id);
 	}
 	
 	public function isReady(){

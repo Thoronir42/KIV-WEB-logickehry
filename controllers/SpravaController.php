@@ -37,7 +37,6 @@ class SpravaController extends Controller{
 			$this->message("Do sekce Správa nemáte přístup", \libs\MessageBuffer::LVL_WAR);
 			$this->redirectPars(Controller::DEFAULT_CONTROLLER);
 		}
-		$this->layout = 'layout.twig';
 	}
 	
 	public function renderHry(){
@@ -86,12 +85,49 @@ class SpravaController extends Controller{
 	
 	public function renderUzivatele(){
 		if(!$this->user->isAdministrator()){
-			$this->message("Do správy uživatelů nemáte přístup.");
+			$this->message("Do správy uživatelů nemáte přístup.", \libs\MessageBuffer::LVL_WAR);
 			$this->redirectPars("sprava", $this->getDefaultAction());
 		}
+		
+		$this->addCss("sprava_uzivatele.css");
+		$this->addJs("sprava_uzivatele.js");
+		
 		$this->template['pageTitle'] = "Správa registrovaných uživatelů";
 		$this->template['users'] = \model\UserManager::fetchAll($this->pdoWrapper);
+		$this->template['actions'] = $this->buildUserActions();
+		$this->template['tmpUrl'] = ['controller' => 'sprava', 'action' => 'nan'];
 	}
+	
+	private function buildUserActions(){
+		$act = [];
+		$act['supervisor'] = [
+			'add'	 => ['url' => 'addSupervisor', 'glyph' => 'glyphicon-pencil', 'tooltip' => 'Povýšit na správce', 'class' => 'add'],
+			'remove' => ['url' => 'removeSupervisor', 'glyph' => 'glyphicon-pencil', 'tooltip' => 'Odebrat pravomoce správce', 'class' => 'remove']
+		];
+		
+		return ['count' => count($act), 'list' => $act];
+	}
+	
+	public function doAddSupervisor(){
+		$orion_login = $this->getParam("orion_login");
+		if(\model\UserManager::addSupervisor($this->pdoWrapper, $orion_login)){
+			$this->message("Uživateli $orion_login byl přidělen statut správce");
+		} else {
+			$this->message("Nastala chyba při úpravě statutu uživatele $orion_login", \libs\MessageBuffer::LVL_DNG);
+		}
+		$this->redirectPars('sprava', 'uzivatele');
+	}
+	
+	public function doRemoveSupervisor(){
+		$orion_login = $this->getParam("orion_login");
+		if(\model\UserManager::removeSupervisor($this->pdoWrapper, $orion_login)){
+			$this->message("Uživateli $orion_login byl odebrán statut správce");
+		} else {
+			$this->message("Nastala chyba při úpravě statutu uživatele $orion_login", \libs\MessageBuffer::LVL_DNG);
+		}
+		$this->redirectPars('sprava', 'uzivatele');
+	}
+	
 	
 	public function renderInventar(){
 		$retired = $this->getParam("retired");
