@@ -159,6 +159,7 @@ class SpravaController extends Controller{
 	}
 	
 	public function renderHromadnyMail(){
+		$this->template['default_subject'] = MailManager::getDefaultSubject();
 		$this->template['send_url'] = ['controller' => 'sprava', 'action' => 'poslatMail'];
 		$this->template['games'] = GameTypeManager::fetchAll($this->pdoWrapper);
 	}

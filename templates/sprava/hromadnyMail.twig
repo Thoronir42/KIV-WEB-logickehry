@@ -5,17 +5,21 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">Odesílání hromadných emailů</div>
 		<div class="panel-body">
-			<label for="game_type_id" class="control-label" >Katalog her a evidenčních čísel</label for>
 			<form class="form-horizontal" action="{{ urlgen.url(send_url) }}" method="post">
+				<label for="game_type_id" class="control-label" >Katalog her a evidenčních čísel</label>
 				<select name="game_type_id" class="form-control">
 					{% for g in games %}
 						<option value="{{ g.game_type_id }}">{{ '%s (%d)'|format(g.game_name, g.subscribed_users)}}</option>
 					{% endfor%}
 				</select>
-			<label for="text_body" class="control-label">Text mailu</label>
-			<textarea name="text_body" class="form-control" rows="6"></textarea>
-			<input type="submit" class="btn btn-primary" value="Rozeslat">
-			
+				
+				<label for="Předmět" class="control-label">Text mailu</label>
+				<input type="text" name="subject" class="form-control" placeholder="{{ default_subject }}">
+
+				<label for="text_body" class="control-label">Text mailu</label>
+				<textarea name="text_body" class="form-control" rows="6"></textarea>
+				
+				<input type="submit" class="btn btn-primary pull-right" value="Rozeslat">
 			</form>
 		</div>
 	</div>

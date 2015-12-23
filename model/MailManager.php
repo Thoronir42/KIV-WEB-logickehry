@@ -7,12 +7,14 @@ namespace model;
  */
 class MailManager {
 	
+	const MAIL_SERVER = "zcu.cz";
+	
 	/**
 	 * @param String[] $addressees
 	 * @param String $content
 	 * @return boolean
 	 */
-	public static function send($addressees, $content){
+	public static function send($addressees, $subject, $content){
 		if(empty($addressees)){
 			return ['result' => false, 'message' => "Pole adresátů bylo prázdné"];
 		}
@@ -28,4 +30,9 @@ class MailManager {
 	private function composeMail(){
 		
 	}
+
+	public static function getDefaultSubject() {
+		return "Oznámení aplikace ".\controllers\Controller::APP_NAME;
+	}
+
 }

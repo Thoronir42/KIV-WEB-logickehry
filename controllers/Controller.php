@@ -15,6 +15,7 @@ use model\UserManager;
 abstract class Controller{
 	
 	const DEFAULT_CONTROLLER = 'rezervace';
+	const APP_NAME = "Centrum Logických Her";
 	
 	public static function getDefaultAction(){ return null; }
 	
@@ -54,7 +55,7 @@ abstract class Controller{
 		$this->mb = $support['mb'];
 		$this->user = UserManager::getCurrentUser($this->pdoWrapper);
 		$this->navbar = [];
-		$this->navbar['app-name'] = "Centrum Logických Her";
+		$this->navbar['app-name'] = self::APP_NAME;
 		if($this->user->isLoggedIn()){
 			$this->navbar['user_actions'] = UzivatelController::buildUserActionsMenu($this->user);
 		} else {
@@ -65,7 +66,7 @@ abstract class Controller{
 		$this->template = [
 			'css' => [],
 			'js' => [],
-			'title' => $this->navbar['app-name'], 
+			'title' => self::APP_NAME, 
 			'user' => $this->user,
 		];
 		
