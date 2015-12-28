@@ -69,12 +69,16 @@ class RezervaceController extends Controller {
 
 	private function makeWeekLinks($week) {
 		$ret = [];
-		$ret['prev'] = [ 'url' => ['controller' => 'rezervace', 'action' => 'vypis', 'tyden' => ($week - 1)],
-			'glyph' => 'glyphicon glyphicon-chevron-left'];
-		$ret['curr'] = [ 'url' => ['controller' => 'rezervace', 'action' => 'vypis'],
-			'glyph' => 'glyphicon glyphicon-record'];
-		$ret['next'] = [ 'url' => ['controller' => 'rezervace', 'action' => 'vypis', 'tyden' => ($week + 1)],
-			'glyph' => 'glyphicon glyphicon-chevron-right'];
+		$ret['next'] = $ret['curr'] = $ret['prev'] = [ 'url' => ['controller' => 'rezervace', 'action' => 'vypis']];
+		$ret['prev']['glyph'] = 'glyphicon glyphicon-chevron-left';
+		$ret['curr']['glyph'] = 'glyphicon glyphicon-record';
+		$ret['next']['glyph'] = 'glyphicon glyphicon-chevron-right';
+		if($week - 1 != 0){
+			$ret['prev']['url']['tyden'] = $week - 1; 
+		}
+		if($week + 1 != 0){
+			$ret['next']['url']['tyden'] = $week + 1; 
+		}
 		return $ret;
 	}
 

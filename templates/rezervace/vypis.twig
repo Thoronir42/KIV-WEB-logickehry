@@ -5,10 +5,14 @@
 	<h4 class="date_bounds">
 		{{ "%s - %s"|format(timePars['time_from'], timePars['time_to'])  }}
 	</h4>
-	<h4>
+	<h4 class="row">
+		<div class="col-xs-3">
+			<span class="btn-group btn-group-justified">
 	{% for link in weekShift %}
 		<a href="{{ urlgen.url(link['url']) }}" class="btn btn-default {{ link['glyph'] }}"></a>
 	{% endfor %}
+			</span>
+		</div>
 	</h4>
 	<div class="panel panel-default">
 		<div class="panel-heading">
