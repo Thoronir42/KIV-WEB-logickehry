@@ -1,30 +1,55 @@
 {# empty Twig template #}
 <ul class="list-group">
 	<li class="list-group-item">
-		Hodnocení:{{ '%d (%d)'|format(g.average_score, g.rating_count) }}
-	</li>
-	<li class="list-group-item">
 		Hráčů:{{ "%d - %d"|format(g.min_players, g.max_players) }}
 	</li>
 	<li class="list-group-item">
 		Prům. Doba Hry: {{ g.avg_playtime }}
 	</li>
-{% if not user.isLoggedIn %}
-	<li class="list-group-item">
-		Odběratelů: {{ g.subscribed_users }}
-	</li>
-{% else %}
-	<li class="list-group-item" style="padding: 0px; border-width: 0px;">
-		<div class="input-group">
-			<span class="form-control">Odběratelů: <span class="sub_user_count">{{ g.subscribed_users }}</span></span>
-			<span class="input-group-btn" id="a_{{ g.game_type_id }}">
-				{% if not user.isSubscribedTo(g.game_type_id) %}
-					<a class="btn btn-default subscribe" type="button"><span class="glyphicon glyphicon-plus"></span></a>
-				{% else %}
-					<a class="btn btn-default unsubscribe" type="button"><span class="glyphicon glyphicon-minus"></span></a>
-				{% endif%}
-			</span>
-		</div>
-	</li>
-{% endif %}
 </ul>
+
+<ul class="list-group">
+	<li class="list-group-item" style="width: 100%">
+		<span>
+		{% if(g.average_score) or true%}
+		Průměrné hodnocení:{{ g.average_score }}<br/>
+		Počet hodnocení:{{ g.rating_count }}
+		{% else %}
+		Zatím nehodnoceno
+		{% endif %}
+		</span>
+	{% if review_link and user.isLoggedIn %}
+	<span class="pull-right">
+		<a href="{{ review_link }}" class="" style="height: 100%"><span class="glyphicon glyphicon-edit"></span></a>
+	</span>
+	{% endif %}
+	</li>
+</ul>
+	
+{% if not user.isLoggedIn %}
+	<ul class="list-group">
+		<li class="list-group-item" style="padding: 0px; border-width: 0px;">
+			<span class="form-control">Odběratelů: {{ g.subscribed_users }}</span>
+		</li>
+	</ul>
+{% else %}
+	<ul class="list-group">
+		<li class="list-group-item" style="padding: 0px; border-width: 0px;">
+			<div class="input-group">
+				<span class="form-control">Odběratelů: <span class="sub_user_count">{{ g.subscribed_users }}</span></span>
+				<span class="input-group-btn" id="a_{{ g.game_type_id }}">
+					{% if not user.isSubscribedTo(g.game_type_id) %}
+						<a class="btn btn-default subscribe" type="button"><span class="glyphicon glyphicon-plus"></span></a>
+					{% else %}
+						<a class="btn btn-default unsubscribe" type="button"><span class="glyphicon glyphicon-minus"></span></a>
+					{% endif%}
+				</span>
+			</div>
+		</li>
+	</ul>
+	
+	<div class="btn-group btn-group-justified">
+		<a href="{{ urlgen.urlReserve( g.game_type_id ) }}" class="btn btn-default rezervace">Rezervovat</a>
+		
+	</div>
+{% endif %}

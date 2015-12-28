@@ -26,6 +26,12 @@ class URLgen{
 		return $this->urlPrefix."webauth/";
 	}
 	
+	public function urlReserve($game_type_id){
+		$params = ['controller' => 'rezervace', 'action' => 'vypis', 'game_id' => $game_type_id];
+		return $this->url($params);
+	}
+	
+	
 	public function css($file){
 		return $this->urlPrefix."css/".$file;
 	}
