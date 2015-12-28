@@ -48,10 +48,14 @@ class URLgen{
 		return $this->img($path);
 	}
 	
-	public function gDet($game_type_id){
-		return $this->url([	'controller'=> 'vypis',
-							'action'	=> 'detailHry',
-							'id'		=> $game_type_id]);
+	public function gDet($game_type_id, $highlight = null){
+		$args = [	'controller'=> 'vypis',
+					'action'	=> 'detailHry',
+					'id'		=> $game_type_id];
+		if($highlight){
+			$args['highlight'] = $highlight;
+		}
+		return $this->url($args);
 	}
 }
 

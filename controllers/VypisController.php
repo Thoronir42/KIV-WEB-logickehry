@@ -41,6 +41,7 @@ class VypisController extends Controller{
 	
 	public function renderDetailHry(){
 		$id = $this->getParam("id");
+		
 		$gameType = GameTypeManager::fetchById($this->pdoWrapper, $id);
 		if(!$gameType){
 			$this->message("Požadovaná hra nebyla nalezena.", \libs\MessageBuffer::LVL_WAR);
@@ -56,6 +57,7 @@ class VypisController extends Controller{
 		$this->template['g'] = $gameType;
 		$this->template['ratings'] = $this->pdoWrapper->gameRatingsByGameType($id);
 		$this->template['rating'] = ['min' => 1, 'def' => 3, 'max' => 5];
+		$this->template['highlight'] = $this->getParam("highlight");
 	}
 	
 }
