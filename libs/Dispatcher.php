@@ -167,8 +167,6 @@ class Dispatcher {
 		$filename = $controller."_$action";
 		if(file_exists($this->CSS_DIR."$filename.css")){
 			$cont->addCss("$filename.css");
-		} else {
-			echo $this->CSS_DIR."$filename.css";
 		}
 		if(file_exists($this->JS_DIR."$filename.js")){
 			$cont->addCss("$filename.js");

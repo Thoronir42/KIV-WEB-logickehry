@@ -1,0 +1,9 @@
+.stats .panel-body{
+	height: 280px;
+	overflow-y: auto;
+}
+
+.reservations .panel-body{
+	height: 180px;
+	overflow-y: auto;
+}
