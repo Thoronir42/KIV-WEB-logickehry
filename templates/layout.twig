@@ -28,24 +28,26 @@
     </head>
     <body>
         {% include 'mini/top-navbar.twig' with {'navbar': navbar, 'user': user} %}
-		<div class="row">
-            <div class="bodyContainer col-sm-offset-2 col-sm-8">
-				{% if alert_messages %}
-					<div class="alerts">
-					{% for msg in alert_messages %}
-						<div class="alert alert-{{ msg['level'] }}">
-							{{ msg['text'] }}
-							{% if msg['link'] %}
-							<a href="{{ msg['link']['url'] }}" class="alert-link pull-right">{{ msg['link']['label'] }}</a>
-							{% endif %}
+		<div class="container-fluid">
+			<div class="row">
+				<div class="bodyContainer col-sm-offset-2 col-sm-8">
+					{% if alert_messages %}
+						<div class="alerts">
+						{% for msg in alert_messages %}
+							<div class="alert alert-{{ msg['level'] }}">
+								{{ msg['text'] }}
+								{% if msg['link'] %}
+								<a href="{{ msg['link']['url'] }}" class="alert-link pull-right">{{ msg['link']['label'] }}</a>
+								{% endif %}
+							</div>
+						{% endfor %}
 						</div>
-					{% endfor %}
-					</div>
-				{% endif %}
-				<h1>{{ pageTitle }}</h1>
-                {{ block('bodyContent') }}
-            </div>
-			
-        </div>
+					{% endif %}
+					<h1>{{ pageTitle }}</h1>
+					{{ block('bodyContent') }}
+				</div>
+
+			</div>
+		</div>
     </body>
 </html>
