@@ -18,7 +18,9 @@
 		<div class="panel-body">
 			<div class="row">
 				<div class="col-md-4">
-					{% include "vypis/mini_gameActions.twig" %}
+					<div class="well well-sm">
+						{% include "vypis/mini_gameActions.twig" %}
+					</div>
 				</div>
 				{% if user.isLoggedIn() %}
 					<div class="col-md-8">
@@ -34,7 +36,7 @@
 											<label class="control-label" for="rating">Hodnocení</label><br/>
 											<div class="btn-group" data-toggle="buttons">
 												{% for val in (rating['min'])..(rating['max']) %}
-													<label class="btn btn-default{% if val == rating['def'] %} active{% endif %}">
+													<label class="btn btn-warning{% if val == rating['def'] %} active{% endif %}">
 														<input type="radio" name="rating" id="rating{{ val }}" value="{{ val }}" {% if val == rating['def'] %}checked{% endif %}> {{ val }}
 													</label>
 												{% endfor %}
