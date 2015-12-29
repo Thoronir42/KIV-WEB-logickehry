@@ -150,6 +150,7 @@ abstract class Controller{
     public function redirect($location){
         \header("Location: $location");
 		\header("Connection: close");
+		die;
     }
 	
 	public function redirectPars($controller = null, $action = null) {
