@@ -14,8 +14,8 @@ class GameRating extends \model\database\DB_Entity {
 	const SCORE_MAX = 5;
 
 	public static function validate($val) {
-		$return = ($val >= self::RATING_MAX) ? self::RATING_MAX :
-				($val <= self::RATING_MIN ? self::RATING_MIN : round($val) );
+		$return = ($val >= self::SCORE_MAX) ? self::SCORE_MAX :
+				($val <= self::SCORE_MIN ? self::SCORE_MIN : round($val) );
 		return intval($return);
 	}
 

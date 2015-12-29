@@ -30,14 +30,14 @@ class Subscription{
 	/**
 	 * 
 	 * @param \libs\PDOwrapper $pw
-	 * @return database\views\GameTypeExtended[]
+	 * @return GameTypeExtended[]
 	 */
 	public static function fetchGamesDetailedByUser($pw, $uid) {
 		$statement = $pw->con->prepare("SELECT game_type_extended.* FROM game_type_extended "
 				. "JOIN subscription ON subscription.game_type_id = game_type_extended.game_type_id "
 				. "WHERE subscription.user_id = :uid");
 		if ($statement->execute(['uid' => $uid])) {
-			return $statement->fetchAll(\PDO::FETCH_CLASS, database\views\GameTypeExtended::class);
+			return $statement->fetchAll(\PDO::FETCH_CLASS, GameTypeExtended::class);
 		}
 		return null;
 	}

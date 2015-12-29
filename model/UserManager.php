@@ -108,15 +108,6 @@ class UserManager {
 	
 	
 	# Role related functions
-	
-	public static function isSupervisor($role) {
-		return $role >= self::ROLE_SUPERVISOR;
-	}
-
-	public static function isAdministrator($role) {
-		return $role >= self::ROLE_ADMIN;
-	}
-
 	public static function addSupervisor($pdo, $orion_login) {
 		return self::setUserRole($pdo, $orion_login, self::ROLE_SUPERVISOR);
 	}

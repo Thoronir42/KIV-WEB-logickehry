@@ -17,11 +17,10 @@ class GameRatingExtended extends \model\database\tables\GameRating {
 	 * @return GameRatingExtended
 	 */
 	public static function fetchOne($pw, $user_id, $game_type_id) {
-		$statement = $pw->con->prepare("SELECT * FROM `web_logickehry_db`.`game_rating` "
+		$statement = $pw->con->prepare("SELECT * FROM `web_logickehry_db`.`game_rating_extended` "
 				. "WHERE `game_type_id` = :gid AND `user_id` = :uid;");
 		if ($statement->execute(['gid' => $game_type_id, 'uid' => $user_id])) {
-			$return = $statement->fetchObject(self::class);
-			return $return;
+			return $statement->fetchObject(self::class);
 		}
 		var_dump($statement->errorInfo());
 		return false;

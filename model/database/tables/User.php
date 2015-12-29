@@ -31,11 +31,11 @@ class User extends \model\database\DB_Entity{
 	
 	
 	public function isSupervisor(){
-		return \model\UserManager::isSupervisor($this->role_id);
+		return $this->role_id >= \model\UserManager::ROLE_SUPERVISOR;
 	}
 	
 	public function isAdministrator() {
-		return \model\UserManager::isAdministrator($this->role_id);
+		return $this->role_id >= \model\UserManager::ROLE_ADMIN;
 	}
 	
 	public function isReady(){
