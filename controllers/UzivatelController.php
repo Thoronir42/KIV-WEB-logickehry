@@ -75,7 +75,7 @@ class UzivatelController extends Controller{
 					"name"		=> $this->getParam("name", INPUT_POST),
 					"surname"	=> $this->getParam("surname", INPUT_POST)
 			];
-		if (UserManager::update($this->pdoWrapper, $pars)) {
+		if (Tables\User::update($this->pdoWrapper, $pars)) {
 			$this->message("Vaše údaje byly zpracovány...", \libs\MessageBuffer::LVL_SUC);
 		} else {
 			$this->message("Při ukládání vašich údajů nastala chyba.", \libs\MessageBuffer::LVL_DNG);

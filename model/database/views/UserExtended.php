@@ -11,6 +11,21 @@ use \model\database\tables\User;
  */
 class UserExtended extends User {
 
+	public static function fetch($pw, $orion_login) {
+		$statement = $pw->con->prepare("SELECT * FROM user_extended
+			WHERE orion_login = :ol");
+		if ($statement->execute(['ol' => $orion_login])) {
+			return $statement->fetchObject(UserExtended::class);
+		}
+		return null;
+	}
+	
+	public static function fetchAll($pw){
+		$result = $pw->con->query("SELECT * FROM user_extended")
+				->fetchAll(\PDO::FETCH_CLASS, UserExtended::class);
+		return $result;
+	}
+
 	var $role_label;
 	var $ratings;
 
@@ -26,9 +41,5 @@ class UserExtended extends User {
 	public function setSubscribedItems($items) {
 		$this->subscribedGames = $items;
 	}
-	
-	
-	public function __sleep() {
-		return parent::__sleep();
-	}
+
 }

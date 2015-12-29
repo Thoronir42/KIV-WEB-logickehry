@@ -89,7 +89,7 @@ class SpravaController extends Controller{
 		}
 		
 		$this->template['pageTitle'] = "Správa registrovaných uživatelů";
-		$this->template['users'] = \model\UserManager::fetchAll($this->pdoWrapper);
+		$this->template['users'] = Views\UserExtended::fetchAll($this->pdoWrapper);
 		$this->template['actions'] = $this->buildUserActions();
 		$this->template['tmpUrl'] = ['controller' => 'sprava', 'action' => 'nan'];
 	}
@@ -106,7 +106,7 @@ class SpravaController extends Controller{
 	
 	public function doAddSupervisor(){
 		$orion_login = $this->getParam("orion_login");
-		if(\model\UserManager::addSupervisor($this->pdoWrapper, $orion_login)){
+		if(Tables\User::addSupervisor($this->pdoWrapper, $orion_login)){
 			$this->message("Uživateli $orion_login byl přidělen statut správce");
 		} else {
 			$this->message("Nastala chyba při úpravě statutu uživatele $orion_login", \libs\MessageBuffer::LVL_DNG);
@@ -116,7 +116,7 @@ class SpravaController extends Controller{
 	
 	public function doRemoveSupervisor(){
 		$orion_login = $this->getParam("orion_login");
-		if(\model\UserManager::removeSupervisor($this->pdoWrapper, $orion_login)){
+		if(Tables\User::removeSupervisor($this->pdoWrapper, $orion_login)){
 			$this->message("Uživateli $orion_login byl odebrán statut správce");
 		} else {
 			$this->message("Nastala chyba při úpravě statutu uživatele $orion_login", \libs\MessageBuffer::LVL_DNG);

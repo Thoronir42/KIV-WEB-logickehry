@@ -1,7 +1,8 @@
 <?php
 namespace model;
 
-use model\database\views\UserExtended;
+use model\database\tables\User,
+	model\database\views\UserExtended;
 
 /**
  * UserManager handles operations that regard currenly logged in user. 
@@ -16,11 +17,6 @@ class UserManager {
 	const LOGIN_NEW = 2;
 	const LOGIN_FAILED = 0;
 	
-	const ROLE_USER = 1;
-	const ROLE_SUPERVISOR = 2;
-	const ROLE_ADMIN = 3;
-
-	
 	/**
 	 * @param \libs\PDOwrapper $pw
 	 * @return UserExtended
@@ -28,23 +24,17 @@ class UserManager {
 	public static function getCurrentUser($pw){
 		if(!isset($_SESSION['user'])){ return new UserExtended(); }
 		$orion_login = $_SESSION['user'];
-		$dbUser =  self::fetch($pw, $orion_login);
+		$dbUser = UserExtended::fetch($pw, $orion_login);
 		if(!$dbUser){
 			return new UserExtended();
 		}
-		self::updateActivity($pw, $orion_login);
+		
+		$time = DatetimeManager::format(time(), DatetimeManager::DB_FORMAT);
+		User::updateActivity($pw, $orion_login, $time);
 		return $dbUser;
 	}
 	
-	private static function updateActivity($pw, $orion_login){
-		$time = DatetimeManager::format(time(), DatetimeManager::DB_FORMAT);
-		$statement = $pw->con->prepare(
-			"UPDATE `web_logickehry_db`.`user` SET "
-				. "`last_active` = :time "
-				. "WHERE `user`.`orion_login` = :orion_login"
-				);
-		return $statement->execute(['time' => $time, 'orion_login' => $orion_login]);
-	}
+	
 	
 	/**
 	 * 
@@ -54,12 +44,12 @@ class UserManager {
 	 * @return UserExtended
 	 */
 	public static function login($pw, $orion_login){
-		$user = self::fetch($pw, $orion_login);
+		$user = UserExtended::fetch($pw, $orion_login);
 		if(!$user){
-			if(!self::insert($pw, $orion_login)){
+			if(!User::insert($pw, $orion_login)){
 				return null;
 			} else {
-				$user = self::fetch($pw, $orion_login);
+				$user = UserExtended::fetch($pw, $orion_login);
 				$user->loginStatus = self::LOGIN_NEW;
 			}
 		} else {
@@ -72,60 +62,5 @@ class UserManager {
 	public static function logout() {
 		unset($_SESSION['user']);
 		return true;
-	}
-
-	public static function update($pw, $pars) {
-		$statement = $pw->con->prepare(
-			"UPDATE `web_logickehry_db`.`user` SET "
-				. "`name` = :name, "
-				. "`surname` = :surname "
-				. "WHERE `user`.`orion_login` = :orion_login"
-				);
-		return $statement->execute($pars);
-	}
-	
-	private static function fetch($pw, $orion_login){
-		$statement = $pw->con->prepare("SELECT * FROM user_extended
-			WHERE orion_login = :ol");
-		if($statement->execute(['ol' => $orion_login])){
-			return $statement->fetchObject(UserExtended::class);
-		}
-		return null;
-	}
-	
-	private static function insert($pw, $orion_login){
-		$statement = $pw->con->prepare(
-			"INSERT INTO `web_logickehry_db`.`user` (`orion_login`) VALUES (:ol)");
-		return ($statement->execute(['ol' => $orion_login]));
-	}
-	
-	
-	public static function fetchAll($pw){
-		$result = $pw->con->query("SELECT * FROM user_extended")
-				->fetchAll(\PDO::FETCH_CLASS, UserExtended::class);
-		return $result;
-	}
-	
-	
-	# Role related functions
-	public static function addSupervisor($pdo, $orion_login) {
-		return self::setUserRole($pdo, $orion_login, self::ROLE_SUPERVISOR);
-	}
-
-	public static function removeSupervisor($pdo, $orion_login) {
-		return self::setUserRole($pdo, $orion_login, self::ROLE_USER);
-	}
-
-	private static function setUserRole($pdo, $orion_login, $role_id) {
-		$statement = $pdo->con->prepare(
-			"UPDATE `web_logickehry_db`.`user` SET "
-				. "`role_id` = :role "
-				. "WHERE `user`.`orion_login` = :orion_login"
-				);
-		if($statement->execute(['role' => $role_id, 'orion_login' => $orion_login])){
-			return true;
-		}
-		var_dump($statement->errorInfo());
-		die;
 	}
 }
