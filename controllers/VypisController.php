@@ -50,6 +50,8 @@ class VypisController extends Controller{
 		$this->addCss("vypis_detailHry.css");
 		$this->addJs('odber_prepinac.js');
 		
+		$review = \model\RatingManager::fetchOne($this->pdoWrapper, $this->user->user_id, $id);
+		
 		// @todo: fetch single subscribed game only
 		$this->user->setSubscribedItems(SubscriptionManager::fetchGamesByUser($this->pdoWrapper, $this->user->user_id));
 		
@@ -58,6 +60,10 @@ class VypisController extends Controller{
 		$this->template['ratings'] = $this->pdoWrapper->gameRatingsByGameType($id);
 		$this->template['rating'] = ['min' => 1, 'def' => 3, 'max' => 5];
 		$this->template['highlight'] = $this->getParam("highlight");
+		if($review){
+			$this->template['rating']['def'] = $review->score;
+			$this->template['has_review'] = $review->review;
+		}
 	}
 	
 	public function doHodnotit(){
