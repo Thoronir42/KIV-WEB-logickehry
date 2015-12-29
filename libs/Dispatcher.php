@@ -9,6 +9,9 @@ use controllers\Controller,
  */
 class Dispatcher {
 	
+	var $JS_DIR = __DIR__."/../www/js/";
+	var $CSS_DIR = __DIR__."/../www/css/";
+	
     /** @var Twig_Environment */
 	var $twig;
 	
@@ -96,7 +99,8 @@ class Dispatcher {
 		$contResponse = $this->getControllerResponse($cont, $prepAction, $noSauce);
 		
 		if($cont instanceof \controllers\AjaxController){
-			$this->invokeAjaxResponse($cont, $contResponse['do']); return;
+			$this->invokeAjaxResponse($cont, $contResponse['do']);
+			return;
 		}
 		$this->invokeResponse($contResponse, $cont, $contName, $action);
 		
@@ -127,6 +131,9 @@ class Dispatcher {
 			}
 			$contResponse['render']->invoke($cont, null);
 			$contResponse['prerender']->invoke($cont, null);
+			
+			$this->addCssJs($cont, $contName, $action);
+			
 			$this->render($layoutBody, $cont->template, $cont->layout);
 		} else {
 			$this->error(ErrorController::NO_RENDER_OR_REDIRECT, $contName, $action);
@@ -146,7 +153,26 @@ class Dispatcher {
 	private function render($template, $vars, $layout){
 		$vars['layout'] = $this->twig->loadTemplate($layout);
 		$vars['urlgen'] = $this->urlGen;
+		
 		echo $this->twig->render($template, $vars);
+	}
+	
+	/**
+	 * 
+	 * @param Controller $cont
+	 * @param String $controller
+	 * @param String $action
+	 */
+	private function addCssJs($cont, $controller, $action){
+		$filename = $controller."_$action";
+		if(file_exists($this->CSS_DIR."$filename.css")){
+			$cont->addCss("$filename.css");
+		} else {
+			echo $this->CSS_DIR."$filename.css";
+		}
+		if(file_exists($this->JS_DIR."$filename.js")){
+			$cont->addCss("$filename.js");
+		}
 	}
 	
 	private function error($errType, $contName, $action = null){

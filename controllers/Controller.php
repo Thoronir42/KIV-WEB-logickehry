@@ -133,10 +133,10 @@ abstract class Controller{
 		}
 	}
 	
-	protected function addCss($css){
+	public function addCss($css){
 		$this->template['css'][] = $css;
 	}
-	protected function addJs($js){
+	public function addJs($js){
 		foreach($this->template['js'] as $scr){
 			if ($scr === $js){ return; }
 		}

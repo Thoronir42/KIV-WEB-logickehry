@@ -88,9 +88,6 @@ class SpravaController extends Controller{
 			$this->redirectPars("sprava", $this->getDefaultAction());
 		}
 		
-		$this->addCss("sprava_uzivatele.css");
-		$this->addJs("sprava_uzivatele.js");
-		
 		$this->template['pageTitle'] = "Správa registrovaných uživatelů";
 		$this->template['users'] = \model\UserManager::fetchAll($this->pdoWrapper);
 		$this->template['actions'] = $this->buildUserActions();
@@ -130,9 +127,7 @@ class SpravaController extends Controller{
 	
 	public function renderInventar(){
 		$retired = $this->getParam("retired");
-		$this->addCss("sprava_inventar.css");
 		$this->addCss("hra.css");
-		$this->addJs("sprava_inventar.js");
 		$this->template['pageTitle'] = "Správa evidovaných herních krabic";
 		$this->template['gpr'] = 2;
 		$this->template['ipr'] = 2;
@@ -153,8 +148,6 @@ class SpravaController extends Controller{
 	}
 	
 	public function renderOvladaciPanel(){
-		$this->addCss("sprava_ovladaciPanel.css");
-		
 		$this->template['xml_inventory'] = ['controller' => 'xml', 'action' => 'inventory'];
 		$this->template['xml_reservations'] = ['controller' => 'xml', 'action' => 'reservations'];
 	}

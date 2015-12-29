@@ -47,7 +47,6 @@ class VypisController extends Controller{
 			$this->redirectPars('vypis', 'hry');
 		}
 		$this->addCss("hra.css");
-		$this->addCss("vypis_detailHry.css");
 		$this->addJs('odber_prepinac.js');
 		
 		$review = Views\GameRatingExtended::fetchOne($this->pdoWrapper, $this->user->user_id, $id);
