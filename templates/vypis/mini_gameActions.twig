@@ -11,8 +11,8 @@
 <ul class="list-group">
 	<li class="list-group-item" style="width: 100%">
 		<span>
-		{% if(g.average_score) or true%}
-		Průměrné hodnocení:{{ g.average_score }}<br/>
+		{% if(g.average_score) %}
+		Průměrné hodnocení:{{ '%.02f'|format(g.average_score) }}<br/>
 		Počet hodnocení:{{ g.rating_count }}
 		{% else %}
 		Zatím nehodnoceno
@@ -50,6 +50,5 @@
 	
 	<div class="btn-group btn-group-justified">
 		<a href="{{ urlgen.urlReserve( g.game_type_id ) }}" class="btn btn-default rezervace">Rezervovat</a>
-		
 	</div>
 {% endif %}
