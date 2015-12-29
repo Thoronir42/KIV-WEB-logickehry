@@ -11,6 +11,12 @@ use \model\database\tables\User;
  */
 class UserExtended extends User {
 
+	/**
+	 * 
+	 * @param \libs\PDOwrapper $pw
+	 * @param string $orion_login
+	 * @return UserExtended
+	 */
 	public static function fetch($pw, $orion_login) {
 		$statement = $pw->con->prepare("SELECT * FROM user_extended
 			WHERE orion_login = :ol");

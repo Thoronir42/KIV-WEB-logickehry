@@ -105,20 +105,29 @@ class SpravaController extends Controller{
 	}
 	
 	public function doAddSupervisor(){
-		$orion_login = $this->getParam("orion_login");
-		if(Tables\User::addSupervisor($this->pdoWrapper, $orion_login)){
-			$this->message("Uživateli $orion_login byl přidělen statut správce");
-		} else {
-			$this->message("Nastala chyba při úpravě statutu uživatele $orion_login", \libs\MessageBuffer::LVL_DNG);
-		}
-		$this->redirectPars('sprava', 'uzivatele');
+		$this->setUserRole(Tables\User::ROLE_SUPERVISOR);
 	}
 	
 	public function doRemoveSupervisor(){
+		$this->setUserRole(Tables\User::ROLE_USER);
+	}
+	
+	private function setUserRole($role){
 		$orion_login = $this->getParam("orion_login");
-		if(Tables\User::removeSupervisor($this->pdoWrapper, $orion_login)){
-			$this->message("Uživateli $orion_login byl odebrán statut správce");
-		} else {
+		
+		$targetUser = Views\UserExtended::fetch($this->pdoWrapper, $orion_login);
+		if($targetUser->isAdministrator()){
+			$this->message("Administrátoři si vzájemně nemohou upravovat role. Pokud máte problém se svým kolegou, kontaktujte prosím CIV.", \libs\MessageBuffer::LVL_DNG);
+			$this->redirectPars('sprava', 'uzivatele');
+		}
+		
+		if(Tables\User::setUserRole($this->pdoWrapper, $orion_login, $role)){
+			if($role == Tables\User::ROLE_SUPERVISOR){
+				$this->message("Uživateli $orion_login byl přidělen statut správce");
+			} else {
+				$this->message("Uživateli $orion_login byl odebrán statut správce");
+			}
+		}else {
 			$this->message("Nastala chyba při úpravě statutu uživatele $orion_login", \libs\MessageBuffer::LVL_DNG);
 		}
 		$this->redirectPars('sprava', 'uzivatele');

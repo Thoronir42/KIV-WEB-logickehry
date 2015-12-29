@@ -38,15 +38,7 @@ class User extends \model\database\DB_Entity{
 		return $statement->execute(['time' => $time, 'orion_login' => $orion_login]);
 	}
 	
-	public static function addSupervisor($pdo, $orion_login) {
-		return self::setUserRole($pdo, $orion_login, self::ROLE_SUPERVISOR);
-	}
-
-	public static function removeSupervisor($pdo, $orion_login) {
-		return self::setUserRole($pdo, $orion_login, self::ROLE_USER);
-	}
-	
-	private static function setUserRole($pdo, $orion_login, $role_id) {
+	public static function setUserRole($pdo, $orion_login, $role_id) {
 		$statement = $pdo->con->prepare(
 			"UPDATE `web_logickehry_db`.`user` SET "
 				. "`role_id` = :role "
