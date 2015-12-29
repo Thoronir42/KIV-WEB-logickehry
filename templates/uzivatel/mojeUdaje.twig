@@ -44,21 +44,7 @@
 			{% include "uzivatel/mini_subscriptions.twig" %}
 		</div>
 		<div class="col-md-6">
-			<div class="panel panel-default myStats">
-				<div class="panel-heading">
-					<h2 class="panel-title">Má hodnocení</h2>
-				</div>
-				<div class="panel-body">
-					{% for r in ratings %}
-					<span>Res: {{ dump(r) }}</span>
-				{% else %}
-					<span>Zatím jsem nerecenzoval žádnou hru</span>
-				{% endfor %}
-				</div>
-				<div class="panel-footer">
-					Přejít na <a href="{{ urlgen.url(resLink) }}">Seznam her&hellip;</a>
-				</div>
-			</div>
+			{% include "uzivatel/mini_ratings.twig" %}
 		</div>
 	</div>
 {% endblock %}

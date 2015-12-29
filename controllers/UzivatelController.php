@@ -59,7 +59,8 @@ class UzivatelController extends Controller{
 	
 	private function buildRatings(){
 		$ret = [];
-		
+		$ret['list'] = Views\GameRatingExtended::fetchAllByUser($this->pdoWrapper, $this->user->user_id);
+		$ret['max_score'] = Tables\GameRating::SCORE_MAX;
 		return $ret;
 	}
 	
