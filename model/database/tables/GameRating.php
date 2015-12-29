@@ -13,6 +13,11 @@ class GameRating extends \model\database\DB_Entity {
 	const SCORE_DEF = 3;
 	const SCORE_MAX = 5;
 
+	/**
+	 * 
+	 * @param numeric $val
+	 * @return int
+	 */
 	public static function validate($val) {
 		$return = ($val >= self::SCORE_MAX) ? self::SCORE_MAX :
 				($val <= self::SCORE_MIN ? self::SCORE_MIN : round($val) );
@@ -21,11 +26,11 @@ class GameRating extends \model\database\DB_Entity {
 
 	/**
 	 * 
-	 * @param \libs\PDOwrapper $pw
-	 * @param type $pars
+	 * @param \PDO $pdo
+	 * @param mixed[] $pars
 	 */
-	public static function insert($pw, $pars) {
-		$statement = $pw->con->prepare("INSERT INTO `web_logickehry_db`.`game_rating` "
+	public static function insert($pdo, $pars) {
+		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`game_rating` "
 				. "(`game_type_id`, `user_id`, `score`, `review`) "
 				. "VALUES (:game_type_id,  :user_id,  :score,  :review);");
 		if ($statement->execute($pars)) {
@@ -35,8 +40,15 @@ class GameRating extends \model\database\DB_Entity {
 		return false;
 	}
 
-	public static function delete($pw, $user_id, $game_type_id) {
-		$statement = $pw->con->prepare("DELETE FROM `web_logickehry_db`.`game_rating` "
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param int $user_id
+	 * @param int $game_type_id
+	 * @return boolean
+	 */
+	public static function delete($pdo, $user_id, $game_type_id) {
+		$statement = $pdo->prepare("DELETE FROM `web_logickehry_db`.`game_rating` "
 				. "WHERE `game_type_id` = :gid AND `user_id` = :uid;");
 		if ($statement->execute(['gid' => $game_type_id, 'uid' => $user_id])) {
 			return true;

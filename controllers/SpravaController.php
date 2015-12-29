@@ -48,7 +48,7 @@ class SpravaController extends Controller{
 		$this->template['gpr'] = 3;
 		
 		
-		$games = Views\GameTypeExtended::fetchAll($this->pdoWrapper);
+		$games = Views\GameTypeExtended::fetchAll($this->pdo);
 		foreach($games as $key => $g){
 			$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d", $g->game_type_id)));
 			$games[$key]->picture_path = $path;
@@ -57,7 +57,7 @@ class SpravaController extends Controller{
 	}
 	
 	public function doPridatHru(){
-		$nextId = Tables\GameType::nextId($this->pdoWrapper);
+		$nextId = Tables\GameType::nextId($this->pdo);
 		$gameType = GameType::fromPOST();
 		if(!$gameType->readyForInsert()){
 			$this->message("Nebylo možné přidat hru, nebyla vyplněna následující pole: ".$gameType->getMissingParameters());
@@ -65,7 +65,7 @@ class SpravaController extends Controller{
 		}
 		$pars = $gameType->asArray();
 		$pars['game_type_id'] = $nextId;
-		if(!Tables\GameType::insert($this->pdoWrapper, $pars)){
+		if(!Tables\GameType::insert($this->pdo, $pars)){
 			$this->message("Nebylo možné přidat hru na úrovni databáze", \libs\MessageBuffer::LVL_WAR);
 			$this->redirectPars('sprava', 'hry');
 		} else {
@@ -89,7 +89,7 @@ class SpravaController extends Controller{
 		}
 		
 		$this->template['pageTitle'] = "Správa registrovaných uživatelů";
-		$this->template['users'] = Views\UserExtended::fetchAll($this->pdoWrapper);
+		$this->template['users'] = Views\UserExtended::fetchAll($this->pdo);
 		$this->template['actions'] = $this->buildUserActions();
 		$this->template['tmpUrl'] = ['controller' => 'sprava', 'action' => 'nan'];
 	}
@@ -115,13 +115,13 @@ class SpravaController extends Controller{
 	private function setUserRole($role){
 		$orion_login = $this->getParam("orion_login");
 		
-		$targetUser = Views\UserExtended::fetch($this->pdoWrapper, $orion_login);
+		$targetUser = Views\UserExtended::fetch($this->pdo, $orion_login);
 		if($targetUser->isAdministrator()){
 			$this->message("Administrátoři si vzájemně nemohou upravovat role. Pokud máte problém se svým kolegou, kontaktujte prosím CIV.", \libs\MessageBuffer::LVL_DNG);
 			$this->redirectPars('sprava', 'uzivatele');
 		}
 		
-		if(Tables\User::setUserRole($this->pdoWrapper, $orion_login, $role)){
+		if(Tables\User::setUserRole($this->pdo, $orion_login, $role)){
 			if($role == Tables\User::ROLE_SUPERVISOR){
 				$this->message("Uživateli $orion_login byl přidělen statut správce");
 			} else {
@@ -142,7 +142,7 @@ class SpravaController extends Controller{
 		$this->template['ipr'] = 2;
 		
 		
-		$games = Views\GameBoxExtended::fetchAll($this->pdoWrapper);
+		$games = Views\GameBoxExtended::fetchAll($this->pdo);
 		$gamesSrt = [];
 		foreach($games as $g){
 			if(!isset($gamesSrt[$g->game_type_id])){
@@ -164,13 +164,13 @@ class SpravaController extends Controller{
 	public function renderHromadnyMail(){
 		$this->template['default_subject'] = MailManager::getDefaultSubject();
 		$this->template['send_url'] = ['controller' => 'sprava', 'action' => 'poslatMail'];
-		$this->template['games'] = Views\GameTypeExtended::fetchAll($this->pdoWrapper);
+		$this->template['games'] = Views\GameTypeExtended::fetchAll($this->pdo);
 	}
 	
 	public function doPoslatMail(){
 		$gid = $this->getParam('game_type_id', INPUT_POST);
 		$content = $this->getParam('content', INPUT_POST);
-		$users = $this->pdoWrapper->subscribedUsersByGame($gid);
+		$users = $this->pdo->subscribedUsersByGame($gid);
 		var_dump($gid, $content, $users);
 		
 		$result = MailManager::send($users, $content);

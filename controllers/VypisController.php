@@ -34,14 +34,14 @@ class VypisController extends Controller{
 		$this->addJs('odber_prepinac.js');
 		$this->template['pageTitle'] = "Výpis her";
 		$this->template['gpr'] = 3; // games per row
-		$games = Views\GameTypeExtended::fetchAll($this->pdoWrapper);
-		$this->user->setSubscribedItems(Views\Subscription::fetchGamesByUser($this->pdoWrapper, $this->user->user_id));
+		$games = Views\GameTypeExtended::fetchAll($this->pdo);
+		$this->user->setSubscribedItems(Views\Subscription::fetchGamesByUser($this->pdo, $this->user->user_id));
         $this->template['hry'] = $games;
     }
 	
 	public function renderDetailHry(){
 		$id = $this->getParam("id");
-		$gameType = Views\GameTypeExtended::fetchById($this->pdoWrapper, $id);
+		$gameType = Views\GameTypeExtended::fetchById($this->pdo, $id);
 		if(!$gameType){
 			$this->message("Požadovaná hra nebyla nalezena.", \libs\MessageBuffer::LVL_WAR);
 			$this->redirectPars('vypis', 'hry');
@@ -49,14 +49,14 @@ class VypisController extends Controller{
 		$this->addCss("hra.css");
 		$this->addJs('odber_prepinac.js');
 		
-		$review = Views\GameRatingExtended::fetchOne($this->pdoWrapper, $this->user->user_id, $id);
+		$review = Views\GameRatingExtended::fetchOne($this->pdo, $this->user->user_id, $id);
 		
 		// @todo: fetch single subscribed game only
-		$this->user->setSubscribedItems(Views\Subscription::fetchGamesByUser($this->pdoWrapper, $this->user->user_id));
+		$this->user->setSubscribedItems(Views\Subscription::fetchGamesByUser($this->pdo, $this->user->user_id));
 		
 		$this->template['form_action'] = ['controller' => 'vypis', 'action' => 'hodnotit', 'id' => $id];
 		$this->template['g'] = $gameType;
-		$this->template['ratings'] = $this->pdoWrapper->gameRatingsByGameType($id);
+		$this->template['ratings'] = $this->pdo->gameRatingsByGameType($id);
 		$this->template['rating'] = ['min' => 1, 'def' => 3, 'max' => 5];
 		$this->template['highlight'] = $this->getParam("highlight");
 		if($review){
@@ -73,8 +73,8 @@ class VypisController extends Controller{
 			"review" => $this->getParam("review", INPUT_POST),
 			];
 		
-		if(Tables\GameRating::delete($this->pdoWrapper, $pars['user_id'], $pars['game_type_id'])
-				&& (Tables\GameRating::insert($this->pdoWrapper, $pars))){
+		if(Tables\GameRating::delete($this->pdo, $pars['user_id'], $pars['game_type_id'])
+				&& (Tables\GameRating::insert($this->pdo, $pars))){
 			$this->message($is_edit? "Vaše hodnocení bylo úspěšně upraveno." : "Hodnocení bylo přidáno.", \libs\MessageBuffer::LVL_SUC);
 		} else {
 			$this->message("Při ukládání vašeho hodnocení nastala chyba.", \libs\MessageBuffer::LVL_WAR);

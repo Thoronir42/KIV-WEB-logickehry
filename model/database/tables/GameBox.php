@@ -8,8 +8,14 @@ namespace model\database\tables;
  */
 class GameBox extends \model\database\DB_Entity{	
 	
-	public static function insert($pw, $pars) {
-		$statement = $pw->con->prepare("INSERT INTO `web_logickehry_db`.`game_box` "
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param mixed[] $pars
+	 * @return boolean
+	 */
+	public static function insert($pdo, $pars) {
+		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`game_box` "
 				. "(`tracking_code`, `game_type_id`) "
 				. "VALUES ( :tracking_code,  :game_type_id);");
 		if ($statement->execute($pars)) {
@@ -20,12 +26,18 @@ class GameBox extends \model\database\DB_Entity{
 		}
 	}
 	
-	public static function retire($pw, $code) {
-		$box = self::fetchByCode($pw, $code);
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param String $code
+	 * @return \model\database\views\GameBoxExtended
+	 */
+	public static function retire($pdo, $code) {
+		$box = \model\database\views\GameBoxExtended::fetchByCode($pdo, $code);
 		if (!$box) {
 			return null;
 		}
-		$statement = $pw->con->prepare(
+		$statement = $pdo->prepare(
 				"UPDATE `web_logickehry_db`.`game_box` SET "
 				. "`retired` = 1 "
 				. "WHERE `game_box`.`tracking_code` = :tracking_code"

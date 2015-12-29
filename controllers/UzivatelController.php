@@ -51,7 +51,7 @@ class UzivatelController extends Controller{
 	private function buildSubscriptions(){
 		$ret = [];
 		$ret['list'] = Views\Subscription::fetchGamesDetailedByUser(
-				$this->pdoWrapper,
+				$this->pdo,
 				$this->user->user_id);
 		$ret['gpr'] = 2;
 		return $ret;
@@ -59,7 +59,7 @@ class UzivatelController extends Controller{
 	
 	private function buildRatings(){
 		$ret = [];
-		$ret['list'] = Views\GameRatingExtended::fetchAllByUser($this->pdoWrapper, $this->user->user_id);
+		$ret['list'] = Views\GameRatingExtended::fetchAllByUser($this->pdo, $this->user->user_id);
 		$ret['max_score'] = Tables\GameRating::SCORE_MAX;
 		return $ret;
 	}
@@ -75,7 +75,7 @@ class UzivatelController extends Controller{
 					"name"		=> $this->getParam("name", INPUT_POST),
 					"surname"	=> $this->getParam("surname", INPUT_POST)
 			];
-		if (Tables\User::update($this->pdoWrapper, $pars)) {
+		if (Tables\User::update($this->pdo, $pars)) {
 			$this->message("Vaše údaje byly zpracovány...", \libs\MessageBuffer::LVL_SUC);
 		} else {
 			$this->message("Při ukládání vašich údajů nastala chyba.", \libs\MessageBuffer::LVL_DNG);
@@ -106,7 +106,7 @@ class UzivatelController extends Controller{
 		$orion_login = $_SESSION["orion_login"];
 		unset($_SESSION['orion_login']);
 		
-		$user = UserManager::login($this->pdoWrapper, $orion_login);
+		$user = UserManager::login($this->pdo, $orion_login);
 		if(!$user){
 			$this->message("Nepodařilo se pro vás vytvořit uživatelský účet", \libs\MessageBuffer::LVL_DNG);
 			$this->redirectPars();

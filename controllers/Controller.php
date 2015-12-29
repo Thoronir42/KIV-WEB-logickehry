@@ -22,8 +22,8 @@ abstract class Controller{
 	/** @var URLgen */
     var $urlGen;
 	
-	/** @var PDOwrapper */
-	var $pdoWrapper;
+	/** @var PDO */
+	var $pdo;
 	
 	/** @var MessageBuffer */
 	var $mb;
@@ -50,10 +50,10 @@ abstract class Controller{
 			$this->user = $support;
 			return;
 		}
-		$this->pdoWrapper = $support['pdo'];
+		$this->pdo = $support['pdo'];
 		$this->urlGen = $support['urlgen'];
 		$this->mb = $support['mb'];
-		$this->user = UserManager::getCurrentUser($this->pdoWrapper);
+		$this->user = UserManager::getCurrentUser($this->pdo);
 		$this->navbar = [];
 		$this->navbar['app-name'] = self::APP_NAME;
 		if($this->user->isLoggedIn()){
@@ -61,7 +61,7 @@ abstract class Controller{
 		} else {
 			$this->navbar['login_url'] = ['controller' => 'uzivatel', 'action' => 'PrihlasitSe'];	
 		}
-		$this->navbar['session_time'] = date("d/m/y H:i:s", $_SESSION['LAST_ACTIVITY']);
+		$this->navbar['session_time'] = date(\model\DatetimeManager::HUMAN_FORMAT, $_SESSION['LAST_ACTIVITY']);
 		$this->layout = "layout.twig";
 		$this->template = [
 			'css' => [],

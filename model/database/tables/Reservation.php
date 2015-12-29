@@ -13,13 +13,13 @@ class Reservation extends \model\database\DB_Entity{
 	
 	/**
 	 * 
-	 * @param \libs\PDOwrapper $pw
+	 * @param \PDO $pdo
 	 * @param mixed[] $pars
 	 */
-	public static function insert($pw, $pars){
+	public static function insert($pdo, $pars){
 		$pars['time_to'] = date(\model\DatetimeManager::DB_FORMAT, $pars['time_to']);
 		$pars['time_to'] = date(\model\DatetimeManager::DB_FORMAT, $pars['time_to']);
-		$statement = $pw->con->prepare("INSERT INTO `web_logickehry_db`.`reservation` "
+		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`reservation` "
 		. "(`reservation_id`, `game_box_id`, `reservee_user_id`, `open_reservation`, `time_from`, `time_to`, `desk_id`)
 		VALUES (NULL,		  :game_box_id , :reservee_user_id, '1', '2015-12-14 12:23:00', '2015-12-14 14:00:00', '1'");
 		if ($statement->execute($pars)){

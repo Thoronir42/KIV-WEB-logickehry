@@ -6,8 +6,9 @@ include __DIR__.'/libs/autoloader.php';
 
 //	Setup PDO connection
 $cfgFile = __DIR__.("/config/database.cfg.php");
-$pdoCfg = include "$cfgFile";
-$pdow = libs\PDOwrapper::getConnection($pdoCfg);
+$cfg = include "$cfgFile";
+$cfg['password'] = isset($cfg['password']) ? $cfg['password'] : null;
+$pdo = new PDO("mysql:host=$cfg[host];dbname=$cfg[db_name];charset=utf8", $cfg['user'], $cfg['password']);
 
 // Setup Twig templating
 $loader = new Twig_Loader_Filesystem(__DIR__.'/templates/');
@@ -27,7 +28,7 @@ $urlGen = new libs\URLgen($prefix);
 $buffer = libs\MessageBuffer::getInstance("CLH_alert_log");
 
 // Prepare dispatcher
-$dispatcher = new Dispatcher($pdow, $twig, $urlGen, $buffer);
+$dispatcher = new Dispatcher($pdo, $twig, $urlGen, $buffer);
 
 $controller = filter_input(INPUT_GET, 'controller');
 $action = filter_input(INPUT_GET, 'action');

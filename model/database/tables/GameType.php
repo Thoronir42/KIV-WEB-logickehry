@@ -10,11 +10,11 @@ class GameType extends \model\database\DB_Entity{
 	
 	/**
 	 * 
-	 * @param \libs\PDOwrapper $pw
+	 * @param \PDO $pdo
 	 * @param mixed[] $pars
 	 */
-	public static function insert($pw, $pars) {
-		$statement = $pw->con->prepare("INSERT INTO `web_logickehry_db`.`game_type` "
+	public static function insert($pdo, $pars) {
+		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`game_type` "
 			. "(`game_type_id`, `game_name`, `subtitle`, `avg_playtime`, `max_players`, `min_players`) "
 	. "VALUES ( :game_type_id,  :game_name,  :subtitle,  :avg_playtime,  :max_players,  :min_players )");
 		if($statement->execute($pars)){
@@ -25,8 +25,13 @@ class GameType extends \model\database\DB_Entity{
 		var_dump($statement->queryString);
 	}
 	
-	public static function nextId($pw){
-		 $result = $pw->con->query("SELECT game_type_id FROM game_type "
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @return type
+	 */
+	public static function nextId($pdo){
+		 $result = $pdo->query("SELECT game_type_id FROM game_type "
 				 . "ORDER BY game_type_id DESC")->fetchColumn();
 		 return $result + 1;
 	}

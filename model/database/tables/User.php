@@ -12,14 +12,26 @@ class User extends \model\database\DB_Entity{
 	const ROLE_SUPERVISOR = 2;
 	const ROLE_ADMIN = 3;
 	
-	public static function insert($pw, $orion_login){
-		$statement = $pw->con->prepare(
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param String $orion_login
+	 * @return boolean
+	 */
+	public static function insert($pdo, $orion_login){
+		$statement = $pdo->prepare(
 			"INSERT INTO `web_logickehry_db`.`user` (`orion_login`) VALUES (:ol)");
 		return ($statement->execute(['ol' => $orion_login]));
 	}
 	
-	public static function update($pw, $pars) {
-		$statement = $pw->con->prepare(
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param mixed[] $pars
+	 * @return boolean
+	 */
+	public static function update($pdo, $pars) {
+		$statement = $pdo->prepare(
 			"UPDATE `web_logickehry_db`.`user` SET "
 				. "`name` = :name, "
 				. "`surname` = :surname "
@@ -28,9 +40,16 @@ class User extends \model\database\DB_Entity{
 		return $statement->execute($pars);
 	}
 	
-	public static function updateActivity($pw, $orion_login, $time){
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param String $orion_login
+	 * @param DateTime $time
+	 * @return boolean
+	 */
+	public static function updateActivity($pdo, $orion_login, $time){
 		
-		$statement = $pw->con->prepare(
+		$statement = $pdo->prepare(
 			"UPDATE `web_logickehry_db`.`user` SET "
 				. "`last_active` = :time "
 				. "WHERE `user`.`orion_login` = :orion_login"
@@ -38,8 +57,15 @@ class User extends \model\database\DB_Entity{
 		return $statement->execute(['time' => $time, 'orion_login' => $orion_login]);
 	}
 	
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param String $orion_login
+	 * @param int $role_id
+	 * @return boolean
+	 */
 	public static function setUserRole($pdo, $orion_login, $role_id) {
-		$statement = $pdo->con->prepare(
+		$statement = $pdo->prepare(
 			"UPDATE `web_logickehry_db`.`user` SET "
 				. "`role_id` = :role "
 				. "WHERE `user`.`orion_login` = :orion_login"

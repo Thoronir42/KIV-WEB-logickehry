@@ -15,8 +15,8 @@ class Dispatcher {
     /** @var Twig_Environment */
 	var $twig;
 	
-	/** @var PDOwrapper */
-	var $pdoWrapper;
+	/** @var PDO */
+	var $pdo;
 	
 	/** @var libs\URLgen */
 	var $urlGen;
@@ -26,13 +26,13 @@ class Dispatcher {
 	
 	/**
 	 * 
-	 * @param PDOwrapper $pdoConnection
+	 * @param PDO $pdo
 	 * @param Twig_Environment $twig
 	 * @param \libs\URLgen
 	 * @param \libs\MessageBuffer;
 	 */
-    public function __construct($pdoConnection, $twig, $urlGen, $messageBuffer) {
-        $this->pdoWrapper = $pdoConnection;
+    public function __construct($pdo, $twig, $urlGen, $messageBuffer) {
+        $this->pdo = $pdo;
 		$this->twig = $twig;
 		$this->urlGen = $urlGen;
 		$this->messageBuffer = $messageBuffer;
@@ -59,7 +59,7 @@ class Dispatcher {
 	}
 	
 	private function packSupport(){
-		return ['pdo' => $this->pdoWrapper, 'urlgen' => $this->urlGen, 'mb' => $this->messageBuffer];
+		return ['pdo' => $this->pdo, 'urlgen' => $this->urlGen, 'mb' => $this->messageBuffer];
 	}
 	
 	private function getControllerInstance($controllerName){
@@ -72,7 +72,7 @@ class Dispatcher {
 			$cont->mb = $this->messageBuffer;
 			
 		}
-		$cont->pdoWrapper = $this->pdoWrapper;
+		$cont->pdo = $this->pdo;
 		return $cont;
     }
 	

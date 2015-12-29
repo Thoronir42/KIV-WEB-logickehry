@@ -13,12 +13,12 @@ class UserExtended extends User {
 
 	/**
 	 * 
-	 * @param \libs\PDOwrapper $pw
-	 * @param string $orion_login
+	 * @param \PDO $pdo
+	 * @param String $orion_login
 	 * @return UserExtended
 	 */
-	public static function fetch($pw, $orion_login) {
-		$statement = $pw->con->prepare("SELECT * FROM user_extended
+	public static function fetch($pdo, $orion_login) {
+		$statement = $pdo->prepare("SELECT * FROM user_extended
 			WHERE orion_login = :ol");
 		if ($statement->execute(['ol' => $orion_login])) {
 			return $statement->fetchObject(UserExtended::class);
@@ -26,8 +26,13 @@ class UserExtended extends User {
 		return null;
 	}
 	
-	public static function fetchAll($pw){
-		$result = $pw->con->query("SELECT * FROM user_extended")
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @return UserExtended[]
+	 */
+	public static function fetchAll($pdo){
+		$result = $pdo->query("SELECT * FROM user_extended")
 				->fetchAll(\PDO::FETCH_CLASS, UserExtended::class);
 		return $result;
 	}
