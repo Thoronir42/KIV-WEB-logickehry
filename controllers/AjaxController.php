@@ -1,10 +1,8 @@
 <?php
 namespace controllers;
 
-use model\GameBoxManager,
-	model\GameTypeManager,
-	model\ReservationManager,
-	model\SubscriptionManager;
+use \model\database\tables	as Tables,
+	\model\database\views	as Views;
 
 /**
  * Description of AjaxController
@@ -25,7 +23,7 @@ class AjaxController extends Controller{
 		if(!$this->user->isSupervisor()){ return 'false'; }
 		
 		$code = $this->getParam("code");
-		$box = GameBoxManager::retire($this->pdoWrapper, $code);
+		$box = Tables\GameBox::retire($this->pdoWrapper, $code);
 		$this->template['response'] = $box ? $code : 'false';
 	}
 	
@@ -35,7 +33,7 @@ class AjaxController extends Controller{
 		
 		$fail = $this->checkBoxBeforeInsert($code, $game_id);
 		if(!$fail){
-			$result = GameBoxManager::insert($this->pdoWrapper, ['game_type_id' => $game_id, 'tracking_code' => $code]);
+			$result = Tables\GameBox::insert($this->pdoWrapper, ['game_type_id' => $game_id, 'tracking_code' => $code]);
 			if(!$result){
 				$fail =  "Při ukládání do databáze nastala neočekávaná chyba";;
 			}
@@ -50,7 +48,7 @@ class AjaxController extends Controller{
 		if(strlen($code) < self::MIN_CODE_LENGTH){
 			return sprintf("Evidenční kód musí být alespoň %d znaků dlouhý.", self::MIN_CODE_LENGTH);
 		}
-		$gameBox = GameBoxManager::fetchByCode($this->pdoWrapper, $code);
+		$gameBox = Views\GameBoxExtended::fetchByCode($this->pdoWrapper, $code);
 		if($gameBox){
 			$response = "Kód $code je v databázi již veden, ";
 			$response .= ($gameBox->retired ? "je však vyřazený z oběhu" : "náleží hře ".$gameBox->game_name);
@@ -79,11 +77,11 @@ class AjaxController extends Controller{
 		}
 		$game_type_id = $this->getParam("id");
 		$user_id = $this->user->user_id;
-		SubscriptionManager::remove($this->pdoWrapper, $user_id, $game_type_id);
+		Views\Subscription::remove($this->pdoWrapper, $user_id, $game_type_id);
 		if($new_value){
-			SubscriptionManager::insert($this->pdoWrapper, $user_id, $game_type_id);
+			Views\Subscription::insert($this->pdoWrapper, $user_id, $game_type_id);
 		}
-		$new_sub_count = count(SubscriptionManager::fetchUsersByGame($this->pdoWrapper, $game_type_id));
+		$new_sub_count = count(Views\Subscription::fetchUsersByGame($this->pdoWrapper, $game_type_id));
 		
 		$this->template['response'] = $new_sub_count;
 	}

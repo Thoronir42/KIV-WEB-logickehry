@@ -1,12 +1,11 @@
 <?php
 namespace controllers;
 
-use \model\GameBoxManager,
-	\model\GameTypeManager,
-	\model\ImageManager,
+use \model\ImageManager,
 	\model\MailManager;
 
-use model\database\tables\GameType;
+use \model\database\tables	as Tables,
+	\model\database\views	as Views;
 
 class SpravaController extends Controller{
 	
@@ -49,7 +48,7 @@ class SpravaController extends Controller{
 		$this->template['gpr'] = 3;
 		
 		
-		$games = \model\GameTypeManager::fetchAll($this->pdoWrapper);
+		$games = Views\GameTypeExtended::fetchAll($this->pdoWrapper);
 		foreach($games as $key => $g){
 			$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d", $g->game_type_id)));
 			$games[$key]->picture_path = $path;
@@ -58,7 +57,7 @@ class SpravaController extends Controller{
 	}
 	
 	public function doPridatHru(){
-		$nextId = GameTypeManager::nextId($this->pdoWrapper);
+		$nextId = Tables\GameType::nextId($this->pdoWrapper);
 		$gameType = GameType::fromPOST();
 		if(!$gameType->readyForInsert()){
 			$this->message("Nebylo možné přidat hru, nebyla vyplněna následující pole: ".$gameType->getMissingParameters());
@@ -66,7 +65,7 @@ class SpravaController extends Controller{
 		}
 		$pars = $gameType->asArray();
 		$pars['game_type_id'] = $nextId;
-		if(!GameTypeManager::insert($this->pdoWrapper, $pars)){
+		if(!Tables\GameType::insert($this->pdoWrapper, $pars)){
 			$this->message("Nebylo možné přidat hru na úrovni databáze", \libs\MessageBuffer::LVL_WAR);
 			$this->redirectPars('sprava', 'hry');
 		} else {
@@ -139,7 +138,7 @@ class SpravaController extends Controller{
 		$this->template['ipr'] = 2;
 		
 		
-		$games = GameBoxManager::fetchAll($this->pdoWrapper);
+		$games = Views\GameBoxExtended::fetchAll($this->pdoWrapper);
 		$gamesSrt = [];
 		foreach($games as $g){
 			if(!isset($gamesSrt[$g->game_type_id])){
@@ -163,7 +162,7 @@ class SpravaController extends Controller{
 	public function renderHromadnyMail(){
 		$this->template['default_subject'] = MailManager::getDefaultSubject();
 		$this->template['send_url'] = ['controller' => 'sprava', 'action' => 'poslatMail'];
-		$this->template['games'] = GameTypeManager::fetchAll($this->pdoWrapper);
+		$this->template['games'] = Views\GameTypeExtended::fetchAll($this->pdoWrapper);
 	}
 	
 	public function doPoslatMail(){

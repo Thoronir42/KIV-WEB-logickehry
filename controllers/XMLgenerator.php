@@ -3,6 +3,8 @@ namespace controllers;
 
 use \libs\PDOwrapper;
 
+use \model\database\tables	as Tables,
+	\model\database\views	as Views;
 
 class XMLgenerator{
 	
@@ -40,8 +42,8 @@ class XMLgenerator{
 	}
 	
 	public function renderInventory(){
-		$this->template["game_type"] = \model\GameTypeManager::fetchAll($this->pdoWrapper);
-		$this->template["game_box"] = \model\GameBoxManager::fetchAll($this->pdoWrapper, false);
+		$this->template["game_type"] = Views\GameTypeExtended::fetchAll($this->pdoWrapper);
+		$this->template["game_box"] = Views\GameBoxExtended::fetchAll($this->pdoWrapper, false);
 	}
 	
 	public function renderReservations(){

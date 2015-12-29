@@ -3,6 +3,9 @@ namespace controllers;
 
 use model\UserManager;
 
+use \model\database\tables	as Tables,
+	\model\database\views	as Views;
+
 /**
  * Description of UzivatelControler
  *
@@ -47,7 +50,7 @@ class UzivatelController extends Controller{
 	
 	private function buildSubscriptions(){
 		$ret = [];
-		$ret['list'] = \model\SubscriptionManager::fetchGamesDetailedByUser(
+		$ret['list'] = Views\Subscription::fetchGamesDetailedByUser(
 				$this->pdoWrapper,
 				$this->user->user_id);
 		$ret['gpr'] = 2;

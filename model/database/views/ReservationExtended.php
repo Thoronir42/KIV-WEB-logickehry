@@ -10,6 +10,21 @@ use \model\database\tables\Reservation;
  */
 class ReservationExtended extends Reservation{
 	
+	/**
+	 * 
+	 * @param type $pars
+	 * @return ReservationExtended[]
+	 */
+	public static function fetchWithinTimespan($pw, $pars){
+		$statement = $pw->con->prepare("SELECT * FROM `reservation_extended` "
+				. "WHERE time_from > :time_from AND time_to < :time_to "
+				. "ORDER BY time_from ASC");
+		if($statement->execute($pars)){
+			return $statement->fetchAll(\PDO::FETCH_CLASS, ReservationExtended::class);
+		}
+		return null;
+	}
+	
 	var $borrower_name;
 	
 	var $tracking_code;

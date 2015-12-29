@@ -2,9 +2,10 @@
 
 namespace controllers;
 
-use model\DatetimeManager,
-	model\GameTypeManager,
-	model\ReservationManager;
+use model\DatetimeManager;
+
+use \model\database\tables	as Tables,
+	\model\database\views	as Views;
 
 class RezervaceController extends Controller {
 
@@ -32,7 +33,7 @@ class RezervaceController extends Controller {
 			$week = 0;
 		}
 		$timePars = DatetimeManager::getWeeksBounds($week, DatetimeManager::DB_FORMAT);
-		$reservations = ReservationManager::fetchWithinTimespan(
+		$reservations = Views\ReservationExtended::fetchWithinTimespan(
 						$this->pdoWrapper, DatetimeManager::format($timePars, DatetimeManager::DB_FORMAT));
 		$reservationDays = [];
 		foreach ($reservations as $r) {
@@ -45,7 +46,7 @@ class RezervaceController extends Controller {
 
 		$this->template["pageTitle"] = $this->makeVypisTitle($week);
 		$this->template["timePars"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY_FORMAT);
-		$this->template['games'] = GameTypeManager::fetchAll($this->pdoWrapper);
+		$this->template['games'] = Views\GameTypeExtended::fetchAll($this->pdoWrapper);
 		$this->template['desks'] = $this->pdoWrapper->getDesks();
 		$this->template["reservationDays"] = $reservationDays;
 		$this->template['weekShift'] = $this->makeWeekLinks($week);
