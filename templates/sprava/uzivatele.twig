@@ -32,7 +32,7 @@
 							{% endif %}
 						</td>
 						<td>
-							{% if u.user_id != user.user_id or not u.isAdministrator %}
+							{% if u.user_id != user.user_id and not u.isAdministrator %}
 								{% set item = (u.isSupervisor() ? actions['list']['supervisor']['remove'] : actions['list']['supervisor']['add']) %}
 								{% set tmpUrl = tmpUrl|merge({'action': item['url']}) %}
 								<a href="{{ urlgen.url(tmpUrl) }}" class="btn btn-default {{ item['class'] }}" data-toggle="tooltip" data-placement="bottom" title="{{ item['tooltip'] }}">

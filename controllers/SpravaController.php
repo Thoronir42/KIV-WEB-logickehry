@@ -117,7 +117,7 @@ class SpravaController extends Controller{
 		
 		$targetUser = Views\UserExtended::fetch($this->pdo, $orion_login);
 		if($targetUser->isAdministrator()){
-			$this->message("Administrátoři si vzájemně nemohou upravovat role. Pokud máte problém se svým kolegou, kontaktujte prosím CIV.", \libs\MessageBuffer::LVL_DNG);
+			$this->message("Administrátoři si vzájemně nemohou upravovat role. Pokud máte problém s $orion_login, kontaktujte prosím CIV.", \libs\MessageBuffer::LVL_DNG);
 			$this->redirectPars('sprava', 'uzivatele');
 		}
 		
