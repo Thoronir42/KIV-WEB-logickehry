@@ -1,0 +1,56 @@
+{# uzivatel/zobrazitProfil.twig  #}
+
+{% extends layout %}
+
+{% block bodyContent %}
+	<div class="panel panel-default myDetails">
+		<div class="panel-heading"><h2 class="panel-title">Mé osobní údaje</h2></div>
+		<div class="panel-body">
+			{% block mojeUdajePanelBody %}
+				<div class="row">
+					<div class="col-md-6">
+						<label class="control-label" for="name">Jméno</label>
+						<input class="form-control" value="{{ rUser.name }}" readonly="true">
+					</div>
+					<div class="col-md-6">
+						<label class="control-label" for="surname">Příjmení</label>
+						<input class="form-control" value="{{ rUser.surname }}" readonly="true">
+					</div>
+				</div>
+			{% endblock%}
+		</div>
+	</div>
+					
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default reservations">
+				<div class="panel-heading">
+					<h2 class="panel-title">Mé rezervace tento týden</h2>
+				</div>
+				<div class="panel-body">
+					{% for r in reservations %}
+						<span>Res: {{ dump(r) }}</span>
+						{% if not loop.last %}
+							<hr/>
+						{% endif %}
+					{% else %}
+						<span>Žádné rezervace</span>
+					{% endfor %}
+				</div>
+				<div class="panel-footer">
+					Přejít na <a href="{{ urlgen.url(resLink) }}">Rezervace&hellip;</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-md-6">
+			{% include "uzivatel/mini_subscriptions.twig" %}
+		</div>
+		<div class="col-md-6">
+			{% include "uzivatel/mini_ratings.twig" %}
+		</div>
+	</div>
+{% endblock %}

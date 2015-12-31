@@ -32,39 +32,61 @@ class UzivatelController extends Controller{
 	
 	public function startUp() {
 		parent::startUp();
+		if(!$this->user->isLoggedIn()){
+			$check = strtolower(substr($this->action, 0, 7));
+			if($check == 'prihlas'){
+				return;
+			}
+			$this->message("Do uživatelské sekce mají přístup jen přihlášení uživatelé.");
+			$this->redirectPars(Controller::DEFAULT_CONTROLLER);
+		}
 	}
 	
 	public function renderMojeUdaje(){
-		if(!$this->user->isLoggedIn()){
-			$this->redirectPars(Controller::DEFAULT_CONTROLLER);
-		}
 		$this->template['form_action'] = ["controller" => "uzivatel", "action" => "ulozitUdaje"];
+		$this->template['myDetails'] = true;
+		$this->addCss("uzivatel_zobrazitProfil.css");
+		$this->renderProfile($this->user);
+	}
+	
+	public function renderZobrazitProfil(){
+		$orion_login = $this->getParam('login');
+		$user = Views\UserExtended::fetch($this->pdo, $orion_login);
+		if(!$user){
+			$this->message("Uživatel s loginem $orion_login není veden.");
+			$this->redirectPars();
+		}
+		$this->renderProfile($user);
+	}
+	
+	private function renderProfile($user){
+		$this->template['rUser'] = $user;
 		
-		$this->template['subscriptions'] = $this->buildSubscriptions();
-		$this->template['ratings'] = $this->buildRatings();
-		$this->template['reservations'] = $this->buildReservations();
+		$this->template['subscriptions'] = $this->buildSubscriptions($user->user_id);
+		$this->template['ratings'] = $this->buildRatings($user->user_id);
+		$this->template['reservations'] = $this->buildReservations($user->user_id);
 		
 		$this->template['resLink'] = ['controller' => 'rezervace', 'action' => 'vypis'];
 		$this->template['gameListLink'] = ['controller' => 'vypis', 'action' => 'hry'];
 	}
 	
-	private function buildSubscriptions(){
+	private function buildSubscriptions($user_id){
 		$ret = [];
 		$ret['list'] = Views\Subscription::fetchGamesDetailedByUser(
 				$this->pdo,
-				$this->user->user_id);
+				$user_id);
 		$ret['gpr'] = 2;
 		return $ret;
 	}
 	
-	private function buildRatings(){
+	private function buildRatings($user_id){
 		$ret = [];
-		$ret['list'] = Views\GameRatingExtended::fetchAllByUser($this->pdo, $this->user->user_id);
+		$ret['list'] = Views\GameRatingExtended::fetchAllByUser($this->pdo, $user_id);
 		$ret['max_score'] = Tables\GameRating::SCORE_MAX;
 		return $ret;
 	}
 	
-	private function buildReservations(){
+	private function buildReservations($user_id){
 		$ret = [];
 		
 		return $ret;
