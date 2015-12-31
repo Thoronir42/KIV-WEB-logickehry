@@ -3,10 +3,14 @@
 {% extends layout %}
 
 {% block bodyContent %}
-	<div class="panel panel-default myDetails">
-		<div class="panel-heading"><h2 class="panel-title">Mé osobní údaje</h2></div>
-		<div class="panel-body">
-			{% block mojeUdajePanelBody %}
+	{% block mojeUdajePanel %}
+		<div class="panel panel-default myDetails">
+			<div class="panel-heading">
+				<h2 class="panel-title">
+					Osobní údaje uživatele {{ rUser.orion_login }}
+				</h2>
+			</div>
+			<div class="panel-body">
 				<div class="row">
 					<div class="col-md-6">
 						<label class="control-label" for="name">Jméno</label>
@@ -17,15 +21,20 @@
 						<input class="form-control" value="{{ rUser.surname }}" readonly="true">
 					</div>
 				</div>
-			{% endblock%}
+
+			</div>
 		</div>
-	</div>
-					
+	{% endblock%}
+
 	<div class="row">
 		<div class="col-md-12">
 			<div class="panel panel-default reservations">
 				<div class="panel-heading">
-					<h2 class="panel-title">Mé rezervace tento týden</h2>
+					<h2 class="panel-title">
+						{% block reservationsTitle %}
+							Rezervace uživatele {{ rUser.orion_login }} pro tento týden
+						{% endblock %}
+					</h2>
 				</div>
 				<div class="panel-body">
 					{% for r in reservations %}
@@ -47,10 +56,38 @@
 
 	<div class="row">
 		<div class="col-md-6">
-			{% include "uzivatel/mini_subscriptions.twig" %}
+			<div class="panel panel-default stats subscriptions">
+				<div class="panel-heading">
+					<h2 class="panel-title">
+						{% block subscriptionsTitle %}
+							Hry, které uživatel {{ rUser.orion_login }} sleduje
+						{% endblock %}
+					</h2>
+				</div>
+				<div class="panel-body">
+					{% include "uzivatel/mini_subscriptions.twig" %}
+				</div>
+				<div class="panel-footer">
+					Přejít na <a href="{{ urlgen.url(gameListLink) }}">Seznam her&hellip;</a>
+				</div>
+			</div>
 		</div>
 		<div class="col-md-6">
-			{% include "uzivatel/mini_ratings.twig" %}
+			<div class="panel panel-default stats ratings">
+				<div class="panel-heading">
+					<h2 class="panel-title">
+						{% block ratingsTitle %}
+							Hry zhodnocené uživatelem {{ rUser.orion_login }}
+						{% endblock %}
+					</h2>
+				</div>
+				<div class="panel-body">
+					{% include "uzivatel/mini_ratings.twig" %}
+				</div>
+				<div class="panel-footer">
+					Přejít na <a href="{{ urlgen.url(resLink) }}">Seznam her&hellip;</a>
+				</div>
+			</div>
 		</div>
 	</div>
 {% endblock %}

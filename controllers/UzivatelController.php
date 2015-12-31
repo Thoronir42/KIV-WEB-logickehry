@@ -44,7 +44,6 @@ class UzivatelController extends Controller{
 	
 	public function renderMojeUdaje(){
 		$this->template['form_action'] = ["controller" => "uzivatel", "action" => "ulozitUdaje"];
-		$this->template['myDetails'] = true;
 		$this->addCss("uzivatel_zobrazitProfil.css");
 		$this->renderProfile($this->user);
 	}

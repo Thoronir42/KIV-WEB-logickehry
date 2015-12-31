@@ -2,21 +2,42 @@
 
 {% extends "uzivatel/zobrazitProfil.twig" %}
 
-{% block mojeUdajePanelBody %}
-	<form class="form-horizontal" action="{{ urlgen.url(form_action) }}" method="post">
-		<div class="row">
-			<div class="col-md-5">
-				<label class="control-label" for="name">Jméno</label>
-				<input type="text" name ="name" class="form-control" value="{{ user.name }}">
-			</div>
-			<div class="col-md-5">
-				<label class="control-label" for="surname">Příjmení</label>
-				<input type="text" name="surname" class="form-control" value="{{ user.surname }}">
-			</div>
-			<div class="col-md-2">
-				<label class="control-label" for="submit"> </label>
-				<input type="submit" class="form-control btn btn-primary" value="Uložit detaily">
-			</div>
+{% block mojeUdajePanel %}
+	<div class="panel panel-default myDetails">
+		<div class="panel-heading">
+			<h2 class="panel-title">
+				Mé osobní údaje
+			</h2>
 		</div>
-	</form>
+		<div class="panel-body">
+			<form class="form-horizontal" action="{{ urlgen.url(form_action) }}" method="post">
+				<div class="row">
+					<div class="col-md-5">
+						<label class="control-label" for="name">Jméno</label>
+						<input type="text" name ="name" class="form-control" value="{{ user.name }}">
+					</div>
+					<div class="col-md-5">
+						<label class="control-label" for="surname">Příjmení</label>
+						<input type="text" name="surname" class="form-control" value="{{ user.surname }}">
+					</div>
+					<div class="col-md-2">
+						<label class="control-label" for="submit"> </label>
+						<input type="submit" class="form-control btn btn-primary" value="Nastavit jméno">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+{% block reservationsTitle %}
+	Mé rezervace tento týden
+{% endblock %}
+
+{% block subscriptionsTitle %}
+	Hry, které sleduji
+{% endblock %}
+
+{% block ratingsTitle %}
+	Mnou zhodnocené hry
 {% endblock %}

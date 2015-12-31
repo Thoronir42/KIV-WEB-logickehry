@@ -1,16 +1,7 @@
 {# uzivatel/mini_reviews.twig #}
-<div class="panel panel-default stats ratings">
-	<div class="panel-heading">
-		<h2 class="panel-title">Má hodnocení</h2>
-	</div>
-	<div class="panel-body">
-		{% for r in ratings['list'] %}
-			{% include "mini/game_rating.twig" with {'r': r, 'link':'game'} %}
-		{% else %}
-			<span>Zatím jsem nerecenzoval žádnou hru</span>
-		{% endfor %}
-	</div>
-	<div class="panel-footer">
-		Přejít na <a href="{{ urlgen.url(resLink) }}">Seznam her&hellip;</a>
-	</div>
-</div>
+{% for r in ratings['list'] %}
+	{% include "mini/game_rating.twig" with {'r': r, 'link':'game'} %}
+{% else %}
+	<span>Zatím jsem nerecenzoval žádnou hru</span>
+{% endfor %}
+	
