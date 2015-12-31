@@ -65,4 +65,11 @@ class GameRatingExtended extends \model\database\tables\GameRating {
 	var $game_name;
 	var $subtitle;
 
+	public function getFullUserName(){
+		if( strlen($this->name) >= \model\database\tables\User::MIN_NAME_LENGTH){
+			return "$this->name $this->surname";
+		}
+		return $this->orion_login;
+	}
+	
 }

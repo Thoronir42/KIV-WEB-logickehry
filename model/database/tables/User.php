@@ -12,6 +12,8 @@ class User extends \model\database\DB_Entity{
 	const ROLE_SUPERVISOR = 2;
 	const ROLE_ADMIN = 3;
 	
+	const MIN_NAME_LENGTH = 3;
+	
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -106,7 +108,7 @@ class User extends \model\database\DB_Entity{
 	}
 	
 	public function isReady(){
-		$params = ['name' => 3, 'surname' => 3];
+		$params = ['name' => self::MIN_NAME_LENGTH, 'surname' => self::MIN_NAME_LENGTH];
 		foreach($params as $par => $length){
 			if(strlen($this->$par) < $length){ return false; }
 		}
@@ -121,5 +123,12 @@ class User extends \model\database\DB_Entity{
 		$ret = [];
 		$ret[] = 'orion_login';
 		return $ret;
+	}
+	
+	public function getFullName(){
+		if(strlen($this->name) >= self::MIN_NAME_LENGTH || strlen($this->surname) >= self::MIN_NAME_LENGTH){
+			return "$this->name $this->surname";
+		}
+		return $this->orion_login;
 	}
 }

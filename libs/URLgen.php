@@ -57,5 +57,12 @@ class URLgen{
 		}
 		return $this->url($args);
 	}
+	
+	public function uProfile($orion_login){
+		$args = [	'controller'=> 'uzivatel',
+					'action'	=> 'zobrazitProfil',
+					'login'		=> $orion_login];
+		return $this->url($args);
+	}
 }
 
