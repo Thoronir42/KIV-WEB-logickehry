@@ -56,13 +56,18 @@ class VypisController extends Controller{
 		
 		$this->template['form_action'] = ['controller' => 'vypis', 'action' => 'hodnotit', 'id' => $id];
 		$this->template['g'] = $gameType;
-		$this->template['ratings'] = $this->pdo->gameRatingsByGameType($id);
+		$this->template['ratings'] = $this->buildRatings($id);
 		$this->template['rating'] = ['min' => 1, 'def' => 3, 'max' => 5];
 		$this->template['highlight'] = $this->getParam("highlight");
 		if($review){
 			$this->template['rating']['def'] = $review->score;
 			$this->template['has_review'] = $review->review;
 		}
+	}
+	
+	private function buildRatings($id){
+		return ['list' => Views\GameRatingExtended::fetchAllByGameType($this->pdo, $id),
+				'max_score' => Tables\GameRating::SCORE_MAX];
 	}
 	
 	public function doHodnotit(){

@@ -5,13 +5,7 @@
 	</div>
 	<div class="panel-body">
 		{% for r in ratings['list'] %}
-			<blockquote>
-				<p>{{ r.review }}</p>
-				<footer>
-					{{ r.name }} na hru <a href="{{ urlgen.gDet(r.game_type_id) }}">{{ r.game_name }} <i>{{ r.subtitle }}</i></a>
-				</footer>
-				<footer>Hodnocení: {{ "%d/%d"|format(r.score, ratings['max_score']) }}</footer>
-			</blockquote>
+			{% include "mini/game_rating.twig" with {'r': r, 'link':'game'} %}
 		{% else %}
 			<span>Zatím jsem nerecenzoval žádnou hru</span>
 		{% endfor %}

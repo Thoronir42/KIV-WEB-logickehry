@@ -49,7 +49,7 @@ class GameRatingExtended extends \model\database\tables\GameRating {
 	 * @param int $game_type_id
 	 * @return GameRatingExtended[]
 	 */
-	public function fetchAllByGame($pdo, $game_type_id) {
+	public static function fetchAllByGameType($pdo, $game_type_id) {
 		$statement = $pdo->prepare("SELECT * FROM `web_logickehry_db`.`game_rating_extended` "
 				. "WHERE `game_type_id` = :gid;");
 		if ($statement->execute(['gid' => $game_type_id])) {

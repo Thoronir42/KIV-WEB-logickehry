@@ -53,27 +53,11 @@
 					</div>
 				{% endif %}
 			</div>
-			<div class="panel panel-default reviews">
+			<div class="panel panel-default ratings">
 				<div class="panel-heading">Uživatelské recenze</div>
 				<div class="panel-body">
-					{% for r in ratings %}
-						<div class="panel review">
-							<div class="panel-heading">
-								<div class="row">
-									{% if not r.review %}
-										<div class="col-md-8">{{ r.orion_login}}</div>
-										<div class="col-md-4">{{ r.score }}</div>
-									{% else %}
-										<div class="col-md-7">{{ r.orion_login}}</div>
-										<div class="col-md-4">{{ r.score }}</div>
-										<div class="col-md-1 rwSlideToggle">&hellip;</div>
-									{% endif %}
-								</div>
-								<div class="panel-body panel-collapse">
-									{{ r.review }}
-								</div>
-							</div>
-						</div>
+					{% for r in ratings['list'] %}
+						{% include "mini/game_rating.twig" with {'r': r, 'link':'user'} %}
 					{% else %}
 						Tuto hru nikdo nezrecenzoval
 					{% endfor %}

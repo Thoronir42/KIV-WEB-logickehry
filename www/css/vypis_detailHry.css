@@ -22,3 +22,8 @@
 .game .game-subtitle{
 	font-size: 2.00em;
 }
+
+.game .ratings .panel-body{
+	max-height: 240px;
+	overflow-y: auto;
+}
