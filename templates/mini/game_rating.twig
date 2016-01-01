@@ -1,9 +1,12 @@
 {# mini/game_rating.twig #}
 <blockquote>
+	{% if r.hasReview %}
 	<p>
 		{{ r.review }}
 		<br/>
+		{% if r.hasScore %}
 		<span class="label label-warning">{{ "%d/%d"|format(r.score, ratings['max_score']) }}</span>
+		{% endif %}
 	</p>
 	<footer>
 		{%if link == 'user' and user.isLoggedIn %}
@@ -18,24 +21,19 @@
 			{{ r.game_name }} <i>{{ r.subtitle }}</i>
 		{% endif%}
 	</footer>
+	{% else %}
+		Hodnocení uživatele {%if link == 'user' and user.isLoggedIn %}
+			<a href="{{ urlgen.uProfile(r.orion_login) }}">{{ r.getFullUserName() }}</a>
+		{% else %}
+			{{ r.getFullUserName }}
+		{% endif %}
+		na hru
+		{% if link == 'game' %}
+			<a href="{{ urlgen.gDet(r.game_type_id) }}">{{ r.game_name }} <i>{{ r.subtitle }}</i></a>
+		{% else %}
+			{{ r.game_name }} <i>{{ r.subtitle }}</i>
+		{% endif%}
+		:
+		<span class="label label-warning">{{ "%d/%d"|format(r.score, ratings['max_score']) }}</span>
+	{% endif %}
 </blockquote>
-
-{#
-<div class="panel panel-default review">
-	<div class="panel-heading">
-		<div class="row">
-			{% if not r.review %}
-				<div class="col-md-8">{{ r.orion_login}}</div>
-				<div class="col-md-4">{{ r.score }}</div>
-			{% else %}
-				<div class="col-md-7">{{ r.orion_login}}</div>
-				<div class="col-md-4">{{ r.score }}</div>
-				<div class="col-md-1 rwSlideToggle">&hellip;</div>
-			{% endif %}
-		</div>
-	</div>
-	<div class="panel-body">
-		{{ r.review }}
-	</div>
-</div>
-#}

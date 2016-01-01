@@ -13,6 +13,8 @@ class GameRating extends \model\database\DB_Entity {
 	const SCORE_DEF = 3;
 	const SCORE_MAX = 5;
 
+	const MIN_REVIEW_LENGTH = 1;
+	
 	/**
 	 * 
 	 * @param numeric $val
@@ -65,5 +67,17 @@ class GameRating extends \model\database\DB_Entity {
 	var $game_type_id;
 	var $score;
 	var $review;
+
+	public function fullRating() {
+		return ($this->hasScore() && $this->hasReview());
+	}
+	
+	public function hasScore(){
+		return !is_null($this->score);
+	}
+	
+	public function hasReview(){
+		return strlen($this->review) >= self::MIN_REVIEW_LENGTH;
+	}
 
 }
