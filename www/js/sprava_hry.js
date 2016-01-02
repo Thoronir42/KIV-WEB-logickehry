@@ -5,6 +5,18 @@ function showEdit(id, showEdit) {
 	var info = $(id).find('.grp-info');
 
 	edit.html($("#edit_form").html());
+	edit.find("input[type=checkbox]").tooltip();
+
+
+	edit.find("input").each(function () {
+		var name = $(this).attr("name");
+		if (name === "picture") {
+			return false;
+		}
+		$(this).attr("value", $(id).find("."+name).html());
+		
+
+	});
 
 	if (showEdit) {
 		edit.animate({
