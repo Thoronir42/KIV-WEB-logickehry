@@ -45,6 +45,7 @@ class GameBoxExtended extends GameBox {
 	}
 
 	var $game_name;
+	var $game_subtitle;
 	var $picture_path;
 
 }

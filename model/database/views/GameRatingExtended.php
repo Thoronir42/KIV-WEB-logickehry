@@ -37,7 +37,6 @@ class GameRatingExtended extends \model\database\tables\GameRating {
 				. "WHERE `user_id` = :uid;");
 		if ($statement->execute(['uid' => $user_id])) {
 			return $statement->fetchAll(\PDO::FETCH_CLASS, self::class);
-			
 		}
 		var_dump($statement->errorInfo());
 		return false;
@@ -54,22 +53,21 @@ class GameRatingExtended extends \model\database\tables\GameRating {
 				. "WHERE `game_type_id` = :gid;");
 		if ($statement->execute(['gid' => $game_type_id])) {
 			return $statement->fetchAll(\PDO::FETCH_CLASS, self::class);
-			
 		}
 		var_dump($statement->errorInfo());
 		return false;
 	}
-	
+
 	var $name;
 	var $orion_login;
 	var $game_name;
-	var $subtitle;
+	var $game_subtitle;
 
-	public function getFullUserName(){
-		if( strlen($this->name) >= \model\database\tables\User::MIN_NAME_LENGTH){
+	public function getFullUserName() {
+		if (strlen($this->name) >= \model\database\tables\User::MIN_NAME_LENGTH) {
 			return "$this->name $this->surname";
 		}
 		return $this->orion_login;
 	}
-	
+
 }

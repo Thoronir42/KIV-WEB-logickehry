@@ -1,14 +1,14 @@
 <?php
-namespace model\database\views;
 
+namespace model\database\views;
 
 /**
  * Description of Subscription
  *
  * @author Stepan
  */
-class Subscription{
-	
+class Subscription {
+
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -81,38 +81,29 @@ class Subscription{
 	public static function insert($pdo, $user_id, $game_type_id) {
 		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`subscription` "
 				. "(`user_id`, `game_type_id`) "
-		. "VALUES (:uid, :gid)");
+				. "VALUES (:uid, :gid)");
 		if ($statement->execute(['uid' => $user_id, 'gid' => $game_type_id])) {
 			return true;
 		} else {
 			var_dump($statement->errorInfo());
 		}
 	}
-	
-	
+
 #	Mirror of model\database\tables\User
+
 	var $user_id;
-	
 	var $orion_login;
-	
 	var $name;
-	
 	var $surname;
-	
 	var $role_id;
-	
-	
-# Mirror of model\database\tables\User
+
+
+# Mirror of model\database\tables\GameType
 	var $game_type_id = false;
-	
 	var $game_name;
-	
-	var $subtitle = false;
-	
+	var $game_subtitle = false;
 	var $avg_playtime;
-	
 	var $min_players;
-	
 	var $max_players;
-	
+
 }

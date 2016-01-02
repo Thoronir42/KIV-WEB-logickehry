@@ -49,7 +49,7 @@ class GameType extends \model\database\DB_Entity{
 	
 	var $game_name;
 	
-	var $subtitle = false;
+	var $game_subtitle = false;
 	
 	var $avg_playtime;
 	
