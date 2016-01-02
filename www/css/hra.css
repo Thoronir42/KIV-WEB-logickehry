@@ -2,11 +2,6 @@
     Created on : 2.12.2015, 17:01:05
     Author     : Stepan
 */
-
-.game{
-	border: black 1px solid;
-}
-
 .game .game-title{
 	font-size: 1.72em;
 }
