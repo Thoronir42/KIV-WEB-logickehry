@@ -169,7 +169,7 @@ class Dispatcher {
 			$cont->addCss("$filename.css");
 		}
 		if(file_exists($this->JS_DIR."$filename.js")){
-			$cont->addCss("$filename.js");
+			$cont->addJs("$filename.js");
 		}
 	}
 	
