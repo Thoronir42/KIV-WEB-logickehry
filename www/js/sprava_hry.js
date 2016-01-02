@@ -3,34 +3,36 @@ $duration = 350;
 function showEdit(id, showEdit) {
 	var edit = $(id).find('.grp-edit');
 	var info = $(id).find('.grp-info');
-	
+
+	edit.html($("#edit_form").html());
+
 	if (showEdit) {
 		edit.animate({
 			left: 0
-		}, $duration );
+		}, $duration);
 		info.animate({
 			left: parseInt(-info.outerWidth()),
-		}, $duration );
+		}, $duration);
 	} else {
 		edit.animate({
 			left: parseInt(edit.outerWidth()),
-		}, $duration );
+		}, $duration);
 		info.animate({
 			left: parseInt(0),
-		}, $duration );
+		}, $duration);
 	}
 }
 
 $(document).ready(function () {
-	var edit = $(".grp-info");
-	edit.css("left", parseInt(-edit.outerWidth()));
+	var edit = $(".grp-edit");
+	edit.css("left", parseInt(edit.outerWidth()));
 
-	$(".butt-edit").click(function () {
+	$(".game").on('click', ".butt-edit", function () {
 		var id = "#" + $(this).parents(".game").attr("id");
 		showEdit(id, true);
 	});
 
-	$(".butt-cancel").click(function () {
+	$(".game").on('click', ".butt-cancel", function () {
 		var id = "#" + $(this).parents(".game").attr("id");
 		showEdit(id, false);
 	});
