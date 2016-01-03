@@ -50,6 +50,7 @@ class RezervaceController extends Controller {
 			$this->template['defaultGame'] = $game_type_id;
 		}
 
+		$this->template["reservationTypes"] = Tables\Reservation::getTypes($this->user->isSupervisor());
 		$this->template["pageTitle"] = $this->makeVypisTitle($week);
 		$this->template["timeSpan"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY_FORMAT);
 		$this->template['games'] = $this->prepareGames($dbTimePars);

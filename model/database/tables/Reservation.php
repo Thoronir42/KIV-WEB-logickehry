@@ -11,6 +11,21 @@ class Reservation extends \model\database\DB_Entity{
 	const EARLY_RESERVATION = 7;
 	const LATE_RESERVATION = 19;
 	
+	
+	const RES_TYPE_OPEN = ['type' => 1, 'label' => 'Rezervace otevřená pro přihlášení ostatním členů'];
+	const RES_TYPE_CLOSED = ['type' => 2, 'label' => 'Pouze rezervace'];
+	const RES_TYPE_EVENT = ['type' => 3, 'label' => 'Celodenní událost'];
+	
+	public static function getTypes($includeEvent = false){
+		$return = [
+			self::RES_TYPE_OPEN,
+			self::RES_TYPE_CLOSED,
+		];
+		if($includeEvent){
+			$return[] = self::RES_TYPE_EVENT;
+		}
+		return $return;
+	}
 	/**
 	 * 
 	 * @param \PDO $pdo

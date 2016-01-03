@@ -47,17 +47,25 @@
 									</select>
 								</div>
 								<div class="col-sm-6">
+									<label class="control-label" for="reservation_date">Typ rezervace</label>
+									<select name="desk_id" class="form-control">
+										{% for r in reservationTypes %}
+											<option value="{{ r.type}}">{{ r.label }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
 									<label class="control-label" for="reservation_date">Datum rezervace</label>
 									<input type="date" name="reservation_date" class="form-control">
 								</div>
-							</div>
-							<div>
-								<div class="col-sm-6">
-									<label class="control-label" for="time_from">Čas rezervace</label>
+								<div class="col-sm-4">
+									<label class="control-label" for="time_from">Začátek rezervace</label>
 									<input class="form-control" type="time" name="time_from" id="time_from">
 								</div>
-								<div class="col-sm-6">
-									<label class="control-label" for="time_from">Čas rezervace</label>
+								<div class="col-sm-4">
+									<label class="control-label" for="time_from">Konec rezervace</label>
 									<input class="form-control" type="time" name="time_to" id="time_to">
 								</div>
 							</div>
