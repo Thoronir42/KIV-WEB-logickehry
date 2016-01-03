@@ -1,13 +1,29 @@
 {# mini/rezervace_graficky.twig #}
-{% for i in 1..7 %}
-	{% if reservationDays[i] %}
-		{% set rd = reservationDays[i] %}
-		{{ dump(rd) }}
-		<br>
-	{% else %}
-		Day {{ i }} is empty.
- 	{% endif %}
-	{% if not loop.last %}
-	<hr>
-	{% endif %}
+{% for i in 0..7 %}
+	<div class="list-group-item">
+		<div class="row">
+			{% set rd = reservationDays[i] %}
+			{% if rd.date is empty %}
+				<div class="col-sm-offset-2 col-sm-10">
+					<div class="btn-group btn-group-justified time-buttons">
+						{% for h in (resRend.dayStart)..(resRend.dayEnd - 1) %}
+							<span class="btn btn-default{% if not user.isLoggedIn %} disabled{% endif %}">{{ '%02d:00'|format(h) }}</span>
+						{% endfor %}
+					</div>
+				</div>
+			{% else%}
+
+				<div class="col-sm-2">
+					{{ rd['date'] }}
+				</div>
+				<div class="col-sm-10">
+					{% for res in rd['reservations'] %}
+						{{ resRend.getStartPct(res) }}
+					{% else %}
+						Day {{ i }} is empty.
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
+	</div>
 {% endfor %}

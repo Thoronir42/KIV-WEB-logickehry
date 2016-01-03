@@ -34,29 +34,41 @@ class RezervaceController extends Controller {
 		
 		$timePars = DatetimeManager::getWeeksBounds($week);
 		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FORMAT);
-		$reservations = Views\ReservationExtended::fetchWithinTimespan(
-						$this->pdo, $dbTimePars);
-		$reservationDays = [];
-		foreach ($reservations as $r) {
-			$day = date("w", strtotime($reservations[0]->time_from));
-			if (!isset($reservationDays[$day])) {
-				$reservationDays[$day] = [];
-			}
-			$reservationDays[$day][] = $r;
-		}
+		
 		
 		$game_type_id = $this->getParam("game_id");
 		if(Views\GameTypeExtended::fetchById($this->pdo, $game_type_id)){
 			$this->template['defaultGame'] = $game_type_id;
 		}
-
+		
+		$this->template["reservationDays"] = $this->prepareReservationDays($timePars['time_from'], $dbTimePars);
 		$this->template["reservationTypes"] = Tables\Reservation::getTypes($this->user->isSupervisor());
+		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);
+		
 		$this->template["pageTitle"] = $this->makeVypisTitle($week);
 		$this->template["timeSpan"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY_FORMAT);
 		$this->template['games'] = $this->prepareGames($dbTimePars);
 		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
-		$this->template["reservationDays"] = $reservationDays;
 		$this->template['weekShift'] = $this->makeWeekLinks($week);
+	}
+	
+	private function prepareReservationDays($timeFrom, $dbTimePars){
+		$reservations = Views\ReservationExtended::fetchWithinTimespan(
+						$this->pdo, $dbTimePars);
+		$reservationDays = [0 => ['date' => null]];
+		
+		for($i = 0; $i < 7; $i++){
+			$reservationDays[$i+1] = [
+				'date' => date('d.m.', strtotime(("+ $i days"), $timeFrom)),
+				'reservations' => [],
+			];
+		}
+		
+		foreach ($reservations as $r) {
+			$day = date("w", strtotime($reservations[0]->time_from));
+			$reservationDays[$day]['reservations'][] = $r;
+		}
+		return $reservationDays;
 	}
 
 	private function makeVypisTitle($week) {
