@@ -8,9 +8,9 @@
 	<h4 class="row">
 		<div class="col-xs-3">
 			<span class="btn-group btn-group-justified">
-	{% for link in weekShift %}
-		<a href="{{ urlgen.url(link['url']) }}" class="btn btn-default {{ link['glyph'] }}"></a>
-	{% endfor %}
+				{% for link in weekShift %}
+					<a href="{{ urlgen.url(link['url']) }}" class="btn btn-default {{ link['glyph'] }}"></a>
+				{% endfor %}
 			</span>
 		</div>
 	</h4>
@@ -22,30 +22,71 @@
 			{% include "mini/rezervace_graficky.twig" with {'reservationDays': reservationDays} %}
 		</div>
 	</div>
-	
+
 	{% if user.isLoggedIn() %}
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h2 class="panel-title">Přidat rezervaci</h2>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2 class="panel-title">Přidat rezervaci</h2>
+			</div>
+			<div class="panel-body">
+
+				<form class="form-horizontal">
+					<div class="row">
+						<div class="col-sm-4">
+							{% include "mini/game_type_list_group.twig" with {'games':games, 'active':defaultGame, 'showReservationCountBadges': true} %}
+						</div>
+						<div class="col-sm-8">
+							<div class="row">
+								<div class="col-sm-6">
+									<label for="desk_id" class="control-label">Stůl</label>
+									<select name="desk_id" class="form-control">
+										<option value="0">Nerezervovat stůl</option>
+										{% for d in desks %}
+											<option value="{{ d.desk_id}}">{{ 'Stůl číslo %02d (míst: %d)'|format(d.desk_id, d.capacity) }}</option>
+										{% endfor %}
+									</select>
+								</div>
+								<div class="col-sm-6">
+									<label class="control-label" for="reservation_date">Datum rezervace</label>
+									<input type="date" name="reservation_date" class="form-control">
+								</div>
+							</div>
+							<div>
+								<div class="col-sm-6">
+									<label class="control-label" for="time_from">Čas rezervace</label>
+									<input class="form-control" type="time" name="time_from" id="time_from">
+								</div>
+								<div class="col-sm-6">
+									<label class="control-label" for="time_from">Čas rezervace</label>
+									<input class="form-control" type="time" name="time_to" id="time_to">
+								</div>
+							</div>
+							<br/>
+							<div class="row">
+								<div class="col-sm-offset-3 col-sm-6">
+									<input type="submit" class="form-control btn btn-primary" value="Zarezervovat">
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+
+			</div>
 		</div>
-		<div class="panel-body">
-			{% include "mini/rezervace_form.twig" %}
-		</div>
-	</div>
 	{% endif %}
-	
-{% for r in rezervace %}
-    <div class="reservation">
-        <div class="res-head row">
-            <span>Rezervace #{{ "%04d"|format(r.reservation_id) }} - {{ r.game_name }}</span>
-            <span>Hráčů: {{ r.signed_players}}</span>
-            <span> z {{ "%d-%d"|format(r.min_players, r.max_players) }}</span>
-            <span>{{ "%s - %s"|format(r.time_from, r.time_to) }}</span>
-        </div>
-        <div class="res-body row">
-            <span></span>
-        </div>
-    </div>
-{% endfor %}
+
+	{% for r in rezervace %}
+		<div class="reservation">
+			<div class="res-head row">
+				<span>Rezervace #{{ "%04d"|format(r.reservation_id) }} - {{ r.game_name }}</span>
+				<span>Hráčů: {{ r.signed_players}}</span>
+				<span> z {{ "%d-%d"|format(r.min_players, r.max_players) }}</span>
+				<span>{{ "%s - %s"|format(r.time_from, r.time_to) }}</span>
+			</div>
+			<div class="res-body row">
+				<span></span>
+			</div>
+		</div>
+	{% endfor %}
 
 {% endblock %}

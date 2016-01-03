@@ -27,6 +27,16 @@ class ReservationExtended extends Reservation {
 		return null;
 	}
 
+	public static function countByGametypeWithinTimespan($pdo, $pars) {
+		$statement = $pdo->prepare("SELECT game_type_id, count(reservation_id) as count FROM `reservation_extended` "
+				. "WHERE time_from > :time_from AND time_to < :time_to "
+				. "GROUP BY game_type_id");
+		if ($statement->execute($pars)) {
+			return $statement->fetchAll(\PDO::FETCH_ASSOC);
+		}
+		return null;
+	}
+
 	var $borrower_name;
 	var $tracking_code;
 	var $game_name;

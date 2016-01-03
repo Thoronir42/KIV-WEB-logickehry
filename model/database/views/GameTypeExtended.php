@@ -19,7 +19,11 @@ class GameTypeExtended extends GameType {
 	public static function fetchAll($pdo) {
 		$result = $pdo->query("SELECT * FROM `game_type_extended`")
 				->fetchAll(\PDO::FETCH_CLASS, GameTypeExtended::class);
-		return $result;
+		$games = [];
+		foreach ($result as $r) {
+			$games[$r->game_type_id] = $r;
+		}
+		return $games;
 	}
 
 	/**
@@ -41,5 +45,6 @@ class GameTypeExtended extends GameType {
 	var $rating_count;
 	var $subscribed_users;
 	var $box_count;
+	var $reservationCount;
 
 }

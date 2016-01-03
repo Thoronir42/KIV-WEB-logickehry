@@ -3,9 +3,8 @@
 namespace controllers;
 
 use model\DatetimeManager;
-
-use \model\database\tables	as Tables,
-	\model\database\views	as Views;
+use \model\database\tables as Tables,
+	\model\database\views as Views;
 
 class RezervaceController extends Controller {
 
@@ -32,9 +31,11 @@ class RezervaceController extends Controller {
 		if (!is_numeric($week)) {
 			$week = 0;
 		}
-		$timePars = DatetimeManager::getWeeksBounds($week, DatetimeManager::DB_FORMAT);
+		
+		$timePars = DatetimeManager::getWeeksBounds($week);
+		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FORMAT);
 		$reservations = Views\ReservationExtended::fetchWithinTimespan(
-						$this->pdo, DatetimeManager::format($timePars, DatetimeManager::DB_FORMAT));
+						$this->pdo, $dbTimePars);
 		$reservationDays = [];
 		foreach ($reservations as $r) {
 			$day = date("w", strtotime($reservations[0]->time_from));
@@ -43,10 +44,15 @@ class RezervaceController extends Controller {
 			}
 			$reservationDays[$day][] = $r;
 		}
+		
+		$game_type_id = $this->getParam("game_id");
+		if(Views\GameTypeExtended::fetchById($this->pdo, $game_type_id)){
+			$this->template['defaultGame'] = $game_type_id;
+		}
 
 		$this->template["pageTitle"] = $this->makeVypisTitle($week);
 		$this->template["timePars"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY_FORMAT);
-		$this->template['games'] = Views\GameTypeExtended::fetchAll($this->pdo);
+		$this->template['games'] = $this->prepareGames($dbTimePars);
 		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
 		$this->template["reservationDays"] = $reservationDays;
 		$this->template['weekShift'] = $this->makeWeekLinks($week);
@@ -74,13 +80,22 @@ class RezervaceController extends Controller {
 		$ret['prev']['glyph'] = 'glyphicon glyphicon-chevron-left';
 		$ret['curr']['glyph'] = 'glyphicon glyphicon-record';
 		$ret['next']['glyph'] = 'glyphicon glyphicon-chevron-right';
-		if($week - 1 != 0){
-			$ret['prev']['url']['tyden'] = $week - 1; 
+		if ($week - 1 != 0) {
+			$ret['prev']['url']['tyden'] = $week - 1;
 		}
-		if($week + 1 != 0){
-			$ret['next']['url']['tyden'] = $week + 1; 
+		if ($week + 1 != 0) {
+			$ret['next']['url']['tyden'] = $week + 1;
 		}
 		return $ret;
+	}
+	
+	private function prepareGames($timePars){
+		$games = Views\GameTypeExtended::fetchAll($this->pdo);
+		$resCounts = Views\ReservationExtended::countByGametypeWithinTimespan($this->pdo, $timePars);
+		foreach($resCounts as $count){
+			$games[$count['game_type_id']]->reservationCount = $count['count'];
+		}
+		return $games;
 	}
 
 	public function doRezervovat() {

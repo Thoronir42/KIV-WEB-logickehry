@@ -1,0 +1,18 @@
+{# mini/game_type_list_group.twig #}
+{% if active is empty %}
+	{% set active = (games|first).game_type_id %}
+{% endif %}
+<label for="game_type_id" class="control-label">Výběr hry</label>
+<input type="hidden" name="game_type_id">
+<div class="list-group">	
+	{% for g in games %}
+		<a value="{{ g.game_type_id }}" class="list-group-item{% if g.game_type_id == active %} active{%endif %}">
+			{% if showReservationCountBadges and g.reservationCount is not empty %}
+				<span class="badge">{{ g.reservationCount }} </span>
+			{% endif %}
+			<h4>{{ g.game_name }}{% if g.game_subtitle is not empty %}<small> {{ g.game_subtitle }}</small>{% endif %}</h4>
+			
+		</a>
+	{% endfor %}
+</div>
+
