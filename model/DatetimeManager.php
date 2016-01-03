@@ -13,9 +13,7 @@ class DatetimeManager {
 	const HUMAN_FORMAT = "d/m/y H:i:s";
 	const HUMAN_DATE_ONLY_FORMAT = "d. m. y";
 
-	public static function getWeeksBounds($weekOffset = 0) {
-
-
+	public static function getWeeksBounds($weekOffset = 0, $format = null) {
 		if ($weekOffset == 0) {
 			$looseWeek = time();
 		} else {
@@ -31,7 +29,11 @@ class DatetimeManager {
 
 		$end = strtotime(($isMonday ? 'next' : 'this') . ' Monday', $looseWeek);
 
-		return ['time_from' => $start, 'time_to' => $end];
+		$return = ['time_from' => $start, 'time_to' => $end];
+		if ($format == null) {
+			return $return;
+		}
+		return self::format($return, $format);
 	}
 
 	public static function format($timePars, $format) {
