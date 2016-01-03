@@ -6,9 +6,13 @@ function setTimeTo(timeStart) {
 		endHour = $(".time-buttons").attr('data-end-hour');
 
 	if(hrStart + hrs >= endHour){
-		time =  ? endHour+":00:00"
+		var time = endHour+":00:00";
 	} else {
-		var :(hrStart + hrs)+':'+mins+':00';
+		var time = (hrStart + hrs)+':';
+		if(mins < 10){
+			time += '0';
+		}
+		time += mins+':00';
 	}
 	
 	$('input[name=time_to]').val(time);
