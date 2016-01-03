@@ -3,7 +3,7 @@
 
 {% block bodyContent %}
 	<h4 class="date_bounds">
-		{{ "%s - %s"|format(timePars['time_from'], timePars['time_to'])  }}
+		{{ "%s - %s"|format(timeSpan['time_from'], timeSpan['time_to'])  }}
 	</h4>
 	<h4 class="row">
 		<div class="col-xs-3">
@@ -14,7 +14,7 @@
 			</span>
 		</div>
 	</h4>
-	<div class="panel panel-default">
+	<div class="panel panel-default reservations">
 		<div class="panel-heading">
 			<span class="panel-title">Grafické zobrazení rezervací</span>
 		</div>

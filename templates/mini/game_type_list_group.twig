@@ -3,10 +3,10 @@
 	{% set active = (games|first).game_type_id %}
 {% endif %}
 <label for="game_type_id" class="control-label">Výběr hry</label>
-<input type="hidden" name="game_type_id">
-<div class="list-group">	
+<input type="hidden" name="game_type_id" value="{{ active }}">
+<div class="list-group game-type-list-group	">	
 	{% for g in games %}
-		<a value="{{ g.game_type_id }}" class="list-group-item{% if g.game_type_id == active %} active{%endif %}">
+		<a data-value="{{ g.game_type_id }}" data-avg-time="{{ g.avg_playtime }}" class="list-group-item{% if g.game_type_id == active %} active{%endif %}">
 			{% if showReservationCountBadges and g.reservationCount is not empty %}
 				<span class="badge">{{ g.reservationCount }} </span>
 			{% endif %}

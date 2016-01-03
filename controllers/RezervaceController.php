@@ -51,7 +51,7 @@ class RezervaceController extends Controller {
 		}
 
 		$this->template["pageTitle"] = $this->makeVypisTitle($week);
-		$this->template["timePars"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY_FORMAT);
+		$this->template["timeSpan"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY_FORMAT);
 		$this->template['games'] = $this->prepareGames($dbTimePars);
 		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
 		$this->template["reservationDays"] = $reservationDays;
