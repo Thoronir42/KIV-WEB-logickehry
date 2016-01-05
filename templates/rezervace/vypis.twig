@@ -2,21 +2,22 @@
 {% extends layout %}
 
 {% block bodyContent %}
-	<h4 class="date_bounds">
-		{{ "%s - %s"|format(timeSpan['time_from'], timeSpan['time_to'])  }}
-	</h4>
-	<h4 class="row">
-		<div class="col-xs-3">
-			<span class="btn-group btn-group-justified">
-				{% for link in weekShift %}
-					<a href="{{ urlgen.url(link['url']) }}" class="btn btn-default {{ link['glyph'] }}"></a>
-				{% endfor %}
-			</span>
-		</div>
-	</h4>
 	<div class="panel panel-default reservations">
 		<div class="panel-heading">
-			<span class="panel-title">Grafické zobrazení rezervací</span>
+			<div class="row">
+				<div class="col-xs-9">
+					<h4 class="date_bounds">
+						{{ "%s - %s"|format(timeSpan['time_from'], timeSpan['time_to'])  }}
+					</h4>
+				</div>
+				<div class="col-xs-3">
+					<span class="btn-group btn-group-justified">
+						{% for link in weekShift %}
+							<a href="{{ urlgen.url(link['url']) }}" class="btn btn-default {{ link['glyph'] }}"></a>
+						{% endfor %}
+					</span>
+				</div>
+			</div>
 		</div>
 		<div class="panel-body">
 			{% include "mini/rezervace_graficky.twig" with {'reservationDays': reservationDays} %}
@@ -37,16 +38,16 @@
 						</div>
 						<div class="col-sm-8">
 							<div class="row">
-								<div class="col-sm-6">
+								<div class="col-sm-4">
 									<label for="desk_id" class="control-label">Stůl</label>
 									<select name="desk_id" class="form-control">
 										<option value="0">Nerezervovat stůl</option>
 										{% for d in desks %}
-											<option value="{{ d.desk_id}}">{{ 'Stůl číslo %02d (míst: %d)'|format(d.desk_id, d.capacity) }}</option>
+											<option value="{{ d.desk_id}}">{{ 'Stůl %02d (míst: %d)'|format(d.desk_id, d.capacity) }}</option>
 										{% endfor %}
 									</select>
 								</div>
-								<div class="col-sm-6">
+								<div class="col-sm-8">
 									<label class="control-label" for="reservation_date">Typ rezervace</label>
 									<select name="desk_id" class="form-control">
 										{% for r in reservationTypes %}

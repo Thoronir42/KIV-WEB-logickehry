@@ -11,7 +11,7 @@ class DatetimeManager {
 
 	const DB_FORMAT = "y-m-d H:i:s";
 	const HUMAN_FORMAT = "d/m/y H:i:s";
-	const HUMAN_DATE_ONLY_FORMAT = "d. m. y";
+	const HUMAN_DATE_ONLY_FORMAT = "d.m.Y";//"d. m. y";
 	const HUMAN_TIME_ONLY_FORMAT = 'H:i';
 
 	public static function getWeeksBounds($weekOffset = 0, $format = null) {
