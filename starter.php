@@ -2,13 +2,10 @@
 include __DIR__.'/libs/autoloader.php';
 
 use config\Config;
+use libs\SessionManager;
 
-// Prepare session
-\libs\SessionManager::run();
-$_SESSION['demo'] = true;
+
+SessionManager::run();
 
 $dispatcher = Config::createDispatcher();
-$controller = filter_input(INPUT_GET, 'controller');
-$action = filter_input(INPUT_GET, 'action');
-
-$dispatcher->dispatch($controller, $action);
+$dispatcher->dispatch();

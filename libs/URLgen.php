@@ -11,6 +11,12 @@ class URLgen{
 		$this->urlPrefix =  $prefix;
 	}
 	
+	public function getContAct(){
+		return ['controller'=> filter_input(INPUT_GET, 'controller'),
+				'action'	=> filter_input(INPUT_GET, 'action') ];
+	}
+	
+	
 	public function url($params){
 		$return = $this->urlPrefix;
 		if(!$params){ return $return; }

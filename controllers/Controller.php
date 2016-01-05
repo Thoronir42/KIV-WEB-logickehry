@@ -53,6 +53,12 @@ abstract class Controller{
 		$this->pdo = $support['pdo'];
 		$this->urlGen = $support['urlgen'];
 		$this->mb = $support['mb'];
+		
+		if(isset($support['url'])){
+			$this->controller = $support['url']['controller'];
+			$this->action = $support['url']['action']; 
+		}
+		
 		$this->user = UserManager::getCurrentUser($this->pdo);
 		$this->navbar = [];
 		$this->navbar['app-name'] = self::APP_NAME;
@@ -102,11 +108,7 @@ abstract class Controller{
 		$this->template['navbar'] = $this->navbar;
 		$this->addCss("default.css");	
 	}
-    
-	public function setActiveMenuItem($controller = null, $action = null){
-		$this->controller = $controller;
-		$this->action = $action; 
-	}
+	
 	private function activeMenuParse($menu, $checkKey, $checkVal, $continue = false){
 		if(!$menu){ return $menu; }
 		foreach($menu as $key => $val){
