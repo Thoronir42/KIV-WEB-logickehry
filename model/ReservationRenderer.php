@@ -26,11 +26,28 @@ class ReservationRenderer {
 	 * @param ReservationExtended $res
 	 */
 	public function getStartPct($res) {
-		echo ($rStart = strtotime($res->time_from))."<br>";
-		$h = date('H', $rStart); $m = date('i', $rStart);
-		echo"$h:$m<br>";
-		echo ($dayMin = 60*($h - $this->dayStart)+$m)."/$this->dayLength = ";
-		echo $dayMin / $this->dayLength;
+		$rStart = strtotime($res->time_from);
+		$h = date('H', $rStart);
+		$m = date('i', $rStart);
+		$dayMin = 60 * ($h - $this->dayStart) + $m;
+		return $dayMin * 100 / $this->dayLength;
 	}
 
+	/**
+	 * 
+	 * @param ReservationExtended $res
+	 * @return double
+	 */
+	public function getWidthPct($res) {
+		$rLength = strtotime($res->time_to) - strtotime($res->time_from);
+		$h = date('H', $rLength);
+		$m = date('i', $rLength);
+		$rTime = 60 * $h + $m;
+		return $rTime * 100 / $this->dayLength;
+	}
+	
+	public function time($time){
+		$iTime = strtotime($time);
+		return DatetimeManager::format($iTime, DatetimeManager::HUMAN_TIME_ONLY_FORMAT);
+	}
 }

@@ -3,4 +3,18 @@
 }
 .reservations .panel-body .list-group-item{
 	border-width: 0px;
+	padding:0;
+	height:48px;
+}
+.reservations .list-group-item .row,
+.reservations .list-group-item .row>*{
+	height:100%;
+}
+
+.reservation{
+	position:absolute;
+	top:0px;
+	height:100%;
+	background:dodgerblue;
+	display:inline-block;
 }
