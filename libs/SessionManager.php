@@ -30,4 +30,12 @@ class SessionManager {
 			$_SESSION['CREATED'] = $time;  // update creation time
 		}
 	}
+	
+	public static function setDemonstrationMode($val = false){
+		if($val){
+			$_SESSION['demo'] = true;
+		} else {
+			unset($_SESSION['demo']);
+		}
+	}
 }

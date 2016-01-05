@@ -6,6 +6,7 @@ use libs\SessionManager;
 
 
 SessionManager::run();
+SessionManager::setDemonstrationMode(false);
 
 $dispatcher = Config::createDispatcher();
 $dispatcher->dispatch();
