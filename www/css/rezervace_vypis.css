@@ -14,7 +14,8 @@
 .reservation{
 	position:absolute;
 	top:0px;
-	height:100%;
-	background:dodgerblue;
+	height:44px;
+	background:skyblue;
 	display:inline-block;
+	border:2px solid transparent;
 }

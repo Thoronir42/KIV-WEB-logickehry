@@ -25,6 +25,9 @@
         {% endfor %}
 		
         <title>{{ title }}</title>
+		
+		{% block pageStyle %}{% endblock %}
+		
     </head>
     <body>
         {% include 'mini/top-navbar.twig' with {'navbar': navbar, 'user': user} %}

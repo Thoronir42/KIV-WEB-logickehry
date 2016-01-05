@@ -98,3 +98,10 @@
 	{% endfor %}
 
 {% endblock %}
+
+{% block pageStyle %}
+	<style>
+		{% for g in games %}.game{{ g.game_type_id }}{ border-color: #{{ g.getColor() }} }
+		{% endfor %}
+	</style>
+{% endblock %}

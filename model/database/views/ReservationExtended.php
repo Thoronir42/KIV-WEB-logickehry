@@ -40,6 +40,7 @@ class ReservationExtended extends Reservation {
 	var $borrower_name;
 	var $tracking_code;
 	var $reservation_type;
+	var $game_type_id;
 	var $game_name;
 	var $min_players;
 	var $signed_players;
