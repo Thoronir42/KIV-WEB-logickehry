@@ -58,7 +58,7 @@ class Config {
 	 */
 	public static function createDispatcher() {
 		$pdo = Config::getPDO();
-		$twig = Config::getTwig(__DIR__ . '/templates/');
+		$twig = Config::getTwig(__DIR__ . '/../templates/');
 		$urlGen = Config::getURLgen();
 		$buffer = Config::getMessageBuffer();
 		
