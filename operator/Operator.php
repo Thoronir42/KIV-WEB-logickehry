@@ -9,13 +9,18 @@ namespace operator;
  */
 class Operator {
 
+	const DEFAULT_SQL_FILE = 'db_logickehry';
+	
 	/**
 	 * 
-	 * @param type $filename
 	 * @param \PDO $pdo
+	 * @param String $filename
 	 * @return string
 	 */
-	public static function injectSQL($filename, $pdo) {
+	public static function injectSQL($pdo, $filename = null) {
+		if(!$filename){
+			$filename = self::DEFAULT_SQL_FILE;
+		}
 		if (!file_exists($filename)) {
 			return 'Soubor SQL injekce nebyl nalezen';
 		}
