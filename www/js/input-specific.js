@@ -16,3 +16,9 @@ $(document).ready( function() {
         }
     });
 });
+
+$(document).on("click", '.game-type-list-group .list-group-item', function () {
+		$(this).addClass('active');
+		$(this).siblings('.list-group-item').removeClass('active');
+		$('input[name=game_type_id]').attr('value', $(this).attr('data-value'));
+});

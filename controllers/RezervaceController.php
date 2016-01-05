@@ -27,43 +27,45 @@ class RezervaceController extends Controller {
 	}
 
 	public function renderVypis() {
+		$this->addCss('input-specific.css');
+		$this->addJs('input-specific.js');
 		$week = $this->getParam("tyden");
 		if (!is_numeric($week)) {
 			$week = 0;
 		}
-		
+
 		$timePars = DatetimeManager::getWeeksBounds($week);
 		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FORMAT);
-		
-		
+
+
 		$game_type_id = $this->getParam("game_id");
-		if(Views\GameTypeExtended::fetchById($this->pdo, $game_type_id)){
+		if (Views\GameTypeExtended::fetchById($this->pdo, $game_type_id)) {
 			$this->template['defaultGame'] = $game_type_id;
 		}
-		
+
 		$this->template["reservationDays"] = $this->prepareReservationDays($timePars['time_from'], $dbTimePars);
 		$this->template["reservationTypes"] = Tables\Reservation::getTypes($this->user->isSupervisor());
 		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);
-		
+
 		$this->template["pageTitle"] = $this->makeVypisTitle($week);
 		$this->template["timeSpan"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY_FORMAT);
 		$this->template['games'] = $this->prepareGames($dbTimePars);
 		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
 		$this->template['weekShift'] = $this->makeWeekLinks($week);
 	}
-	
-	private function prepareReservationDays($timeFrom, $dbTimePars){
+
+	private function prepareReservationDays($timeFrom, $dbTimePars) {
 		$reservations = Views\ReservationExtended::fetchWithinTimespan(
 						$this->pdo, $dbTimePars);
 		$reservationDays = [0 => ['date' => null]];
-		
-		for($i = 0; $i < 7; $i++){
-			$reservationDays[$i+1] = [
+
+		for ($i = 0; $i < 7; $i++) {
+			$reservationDays[$i + 1] = [
 				'date' => date('d.m.', strtotime(("+ $i days"), $timeFrom)),
 				'reservations' => [],
 			];
 		}
-		
+
 		foreach ($reservations as $r) {
 			$day = date("w", strtotime($reservations[0]->time_from));
 			$reservationDays[$day]['reservations'][] = $r;
@@ -101,11 +103,11 @@ class RezervaceController extends Controller {
 		}
 		return $ret;
 	}
-	
-	private function prepareGames($timePars){
+
+	private function prepareGames($timePars) {
 		$games = Views\GameTypeExtended::fetchAll($this->pdo);
 		$resCounts = Views\ReservationExtended::countByGametypeWithinTimespan($this->pdo, $timePars);
-		foreach($resCounts as $count){
+		foreach ($resCounts as $count) {
 			$games[$count['game_type_id']]->reservationCount = $count['count'];
 		}
 		return $games;

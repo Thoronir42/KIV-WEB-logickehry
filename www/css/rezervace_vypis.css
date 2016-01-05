@@ -4,9 +4,3 @@
 .reservations .panel-body .list-group-item{
 	border-width: 0px;
 }
-
-
-.list-group{
-	max-height: 180px;
-	overflow-y: scroll;
-}

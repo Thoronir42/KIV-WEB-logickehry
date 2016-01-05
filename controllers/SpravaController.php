@@ -40,8 +40,8 @@ class SpravaController extends Controller{
 	
 	public function renderHry(){
 		$this->addCss("hra.css");
-		$this->addCss('input-file.css');
-		$this->addJs('input-file.js');
+		$this->addCss('input-specific.css');
+		$this->addJs ('input-specific.js');
 		
 		$this->template['pageTitle'] = "Správa her";
 		$this->template['insert_game_form_action'] = ['controller' => 'sprava', 'action' => 'pridatHru'];
