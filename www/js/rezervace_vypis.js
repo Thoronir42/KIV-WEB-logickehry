@@ -1,35 +1,45 @@
-function setReservationTimes() {
+function setReservationTimes(checkStartTime) {
 	var length = $(".game-type-list-group .active").attr('data-avg-time'),
-		timeStart = $('input[name=time_from]').val();
+		time_from = ($('input[name=time_from]').val()+"").split(':')[0]*1,
+		dayStartHour = $(".time-buttons").attr('data-start-hour'),
+		dayEndHour = $(".time-buttons").attr('data-end-hour');
 
-	var hrStart = timeStart.split(':')[0]*1.0,
-		hrs = Math.floor(length / 60),
-		mins = length % 60,
-		endHour = $(".time-buttons").attr('data-end-hour');
+	if(checkStartTime && time_from < dayStartHour){
+		alert(time_from+"<"+dayStartHour);
+		time_from = dayStartHour;
+	}
+	
+	var hrs = Math.floor(length / 60),
+		mins = length % 60;
 
 	//alert('('+length+')'+hrStart+"+"+hrs+">="+endHour);
 	
-	if(hrStart + hrs >= endHour){
-		var time = endHour+":00:00";
+	if(time_from + hrs >= dayEndHour){
+		var time = dayEndHour+":00:00";
 		
 	} else {
-		var time = (hrStart + hrs)+':';
+		var time = (time_from + hrs);
+		if(time < 10){
+			time = '0' + time;
+		}
+		time += ':';
 		if(mins < 10){
 			time += '0';
 		}
 		time += mins+':00';
 	}
+	if(time_from < 10){
+		time_from = '0'+time_from;
+	}
 	
+	$('input[name=time_from]').val(time_from+":00:00");
 	$('input[name=time_to]').val(time);
 	
 }
 
 $(document).ready(function () {
 	$(document).on("click", '.game-type-list-group .list-group-item', function () {
-		$(this).addClass('active');
-		$(this).siblings('.list-group-item').removeClass('active');
-		$('input[name=game_type_id]').attr('value', $(this).attr('data-value'));
-		setReservationTimes();
+		setReservationTimes(true);
 	});
 
 	$(document).on("click", '.time-buttons .btn', function () {
@@ -38,7 +48,7 @@ $(document).ready(function () {
 		}
 		var timeStart = $(this).html() + ":00";
 		$('input[name=time_from]').val(timeStart);
-		setReservationTimes();
+		setReservationTimes(false);
 	});
 
 });
