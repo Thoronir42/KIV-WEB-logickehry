@@ -1,6 +1,6 @@
 <?php
 
-namespace operator;
+namespace libs;
 
 /**
  * Description of Operator
@@ -10,7 +10,8 @@ namespace operator;
 class Operator {
 
 	const DEFAULT_SQL_FILE = 'db_logickehry';
-	
+	const SQL_FOLDER = '/../operator/';
+
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -18,15 +19,16 @@ class Operator {
 	 * @return string
 	 */
 	public static function injectSQL($pdo, $filename = null) {
-		if(!$filename){
+		if (!$filename) {
 			$filename = self::DEFAULT_SQL_FILE;
 		}
-		if (!file_exists($filename)) {
+		$path = self::SQL_FOLDER . $filename . ".sql";
+		if (!file_exists($path)) {
 			return 'Soubor SQL injekce nebyl nalezen';
 		}
-		$statement = file_get_contents($filename);
-		if(!$pdo->exec($statement)){
-			return 'Při vykonávání SQL souboru nastala chyba #'.$pdo->errorCode();
+		$statement = file_get_contents($path);
+		if (!$pdo->exec($statement)) {
+			return 'Při vykonávání SQL souboru nastala chyba #' . $pdo->errorCode();
 		}
 		return false;
 	}

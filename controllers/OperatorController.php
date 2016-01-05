@@ -2,6 +2,8 @@
 
 namespace controllers;
 
+use \libs\Operator;
+
 /**
  * Description of OperatorController
  *
@@ -24,7 +26,7 @@ class OperatorController extends Controller {
 
 	public function doSQL() {
 		$filename = $this->getParam('filename');
-		$result = operator\Operator::injectSQL($this->pdo, $filename);
+		$result = Operator::injectSQL($this->pdo, $filename);
 		if (!$result) {
 			$this->message("SQL injekce proběhla úspěšně", \libs\MessageBuffer::LVL_SUC);
 			$this->redirectPars();
