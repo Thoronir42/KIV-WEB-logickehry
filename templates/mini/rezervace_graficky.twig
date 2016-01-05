@@ -5,7 +5,7 @@
 			{% set rd = reservationDays[i] %}
 			{% if rd.date is empty %}
 				<div class="col-sm-offset-2 col-sm-10">
-					<div class="btn-group btn-group-justified time-buttons" data-end-hour="{{ resRend.dayEnd }}">
+					<div class="btn-group btn-group-justified time-buttons" data-start-hour="{{ resRend.dayStart }}" data-end-hour="{{ resRend.dayEnd }}">
 						{% for h in (resRend.dayStart)..(resRend.dayEnd - 1) %}
 							<span class="btn btn-default{% if not user.isLoggedIn %} disabled{% endif %}">{{ '%02d:00'|format(h) }}</span>
 						{% endfor %}
