@@ -15,25 +15,25 @@ function setReservationTimes(checkStartTime) {
 	//alert('('+length+')'+hrStart+"+"+hrs+">="+endHour);
 	
 	if(time_from + hrs >= dayEndHour){
-		var time_to = dayEndHour+":00:00";
+		var time = dayEndHour+":00:00";
 		
 	} else {
-		var time_to = (time_from + hrs);
-		if(time_to < 10){
-			time_to = '0' + time_to;
+		var time = (time_from + hrs);
+		if(time < 10){
+			time = '0' + time;
 		}
-		time_to += ':';
+		time += ':';
 		if(mins < 10){
-			time_to += '0';
+			time += '0';
 		}
-		time_to += mins+':00';
+		time += mins+':00';
 	}
 	if(time_from < 10){
 		time_from = '0'+time_from;
 	}
 	
 	$('input[name=time_from]').val(time_from+":00:00");
-	$('input[name=time_to]').val(time_to);
+	$('input[name=time_to]').val(time);
 	
 }
 
