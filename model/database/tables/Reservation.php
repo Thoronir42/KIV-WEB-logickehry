@@ -11,6 +11,8 @@ class Reservation extends \model\database\DB_Entity{
 	const EARLY_RESERVATION = 7;
 	const LATE_RESERVATION = 19;
 	
+	const WEEK_START_DAY = 1;
+	const WEEK_END_DAY = 7;
 	
 	const RES_TYPE_OPEN = ['type' => 1, 'label' => 'Rezervace otevřená pro přihlášení ostatním členů'];
 	const RES_TYPE_CLOSED = ['type' => 2, 'label' => 'Pouze rezervace'];

@@ -11,6 +11,8 @@ use model\database\views\ReservationExtended;
  */
 class ReservationRenderer {
 
+	private static $DAY_NAMES = [ 1 => 'V Pondělí', 'V Úterý', 'Ve Středu', 'Ve Čtvrtek',
+		'V Pátek', 'V Sobotu', 'V Neděli'];
 	public $dayStart,
 			$dayEnd;
 
@@ -45,9 +47,25 @@ class ReservationRenderer {
 		$rTime = 60 * $h + $m;
 		return $rTime * 100 / $this->dayLength;
 	}
-	
-	public function time($time){
+
+	public function time($time) {
 		$iTime = strtotime($time);
 		return DatetimeManager::format($iTime, DatetimeManager::HUMAN_TIME_ONLY_FORMAT);
 	}
+
+	public function getDuringDayString($n) {
+		if(isset(self::$DAY_NAMES[$n])){
+			return self::$DAY_NAMES[$n];
+		}
+		return "V den $n";
+	}
+
+	public function getWeekStartDay() {
+		return database\tables\Reservation::WEEK_START_DAY;
+	}
+
+	public function getWeekEndDay() {
+		return database\tables\Reservation::WEEK_END_DAY;
+	}
+
 }

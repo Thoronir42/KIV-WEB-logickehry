@@ -1,11 +1,38 @@
 .reservations .panel-body{
 	padding:0px;
+	border:0px;
 }
 .reservations .panel-body .list-group-item{
-	border-width: 0px;
-	padding:0;
-	height:48px;
+	padding:0px;
+	border-width:0px
 }
+.time-buttons .btn-default{
+	border-top-width: 0;
+	border-bottom-width: 0;
+}
+
+.btnCol, .resCol{
+	padding-left: 0;
+	text-align: center;
+}
+.reservations .panel-body .list-group-item.reservationRow{
+	height:48px;
+	border-width:1px;
+}
+
+.dateCol{
+	border-right: 1px solid lightgray;
+	height:100%;
+	padding-right: 0px;
+}
+
+.dateCol>.btn-default{
+	border:0px;
+	width: 100%;
+	height: 100%;
+}
+
+
 .reservations .list-group-item .row,
 .reservations .list-group-item .row>*{
 	height:100%;
