@@ -8,49 +8,50 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>  
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		#}
-        
+
 		<!-- Style includes -->
 		<link href="css/bootstrap.css" rel="stylesheet">
-		
+
         {% for style in css %}
-        <link href="{{ urlgen.css(style) }}" rel="stylesheet">
+			<link href="{{ urlgen.css(style) }}" rel="stylesheet">
         {% endfor %}
-		
+
         <!-- Javascript includes -->
         <script src="js/jquery-2.1.4.min.js"></script>  
         <script src="js/bootstrap.js"></script>
-		
+
         {% for script in js %}
-        <script src="{{ urlgen.js(script) }}" rel="stylesheet"></script>
+			<script src="{{ urlgen.js(script) }}" rel="stylesheet"></script>
         {% endfor %}
-		
+
         <title>{{ title }}</title>
-		
-		{% block pageStyle %}{% endblock %}
-		
-    </head>
-    <body>
+
+	{% block pageStyle %}{% endblock %}
+
+</head>
+<body>
+	{% block layoutBody %}
         {% include 'mini/top-navbar.twig' with {'navbar': navbar, 'user': user} %}
 		<div class="container-fluid">
 			<div class="row">
 				<div class="bodyContainer col-sm-offset-2 col-sm-8">
 					{% if alert_messages %}
 						<div class="alerts">
-						{% for msg in alert_messages %}
-							<div class="alert alert-{{ msg['level'] }}">
-								{{ msg['text'] }}
-								{% if msg['link'] %}
-								<a href="{{ msg['link']['url'] }}" class="alert-link pull-right">{{ msg['link']['label'] }}</a>
-								{% endif %}
-							</div>
-						{% endfor %}
+							{% for msg in alert_messages %}
+								<div class="alert alert-{{ msg['level'] }}">
+									{{ msg['text'] }}
+									{% if msg['link'] %}
+										<a href="{{ msg['link']['url'] }}" class="alert-link pull-right">{{ msg['link']['label'] }}</a>
+									{% endif %}
+								</div>
+							{% endfor %}
 						</div>
 					{% endif %}
 					<h1>{{ pageTitle }}</h1>
 					{{ block('bodyContent') }}
 				</div>
-
 			</div>
 		</div>
-    </body>
+	{% endblock %}
+</body>
 </html>

@@ -162,6 +162,13 @@ class SpravaController extends Controller{
 		$this->template['operator_enabled'] = \Dispatcher::ENABLE_OPERATOR;
 		$this->template['SQL_files'] = \libs\Operator::getSQLfiles();
 		$this->template['SQL_action'] = ['controller' => 'operator', 'action' => 'SQL'];
+		$this->template['letiste_links'] = $this->makeLetisteLinks();
+	}
+	
+	private function makeLetisteLinks(){
+		$return = [];
+			$return[] = ['label' => 'Rezervace' ,'url' => ['controller'=>'letiste', 'action'=>'rezervace']];
+		return $return;
 	}
 	
 	public function renderHromadnyMail(){

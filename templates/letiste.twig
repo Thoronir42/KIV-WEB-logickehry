@@ -1,0 +1,14 @@
+{% extends "layout.twig" %}
+{% block layoutBody %}
+<div class="container-fluid">
+	<div class="row">
+		<div class="bodyContainer col-sm-offset-1 col-sm-10">
+			<h1>{{ pageTitle }}</h1>
+			{{ block('bodyContent') }}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block pageStyle %}
+{% endblock %}
