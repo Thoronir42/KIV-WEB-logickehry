@@ -159,6 +159,9 @@ class SpravaController extends Controller{
 	public function renderOvladaciPanel(){
 		$this->template['xml_inventory'] = ['controller' => 'xml', 'action' => 'inventory'];
 		$this->template['xml_reservations'] = ['controller' => 'xml', 'action' => 'reservations'];
+		$this->template['operator_enabled'] = \Dispatcher::ENABLE_OPERATOR;
+		$this->template['SQL_files'] = \libs\Operator::getSQLfiles();
+		$this->template['SQL_action'] = ['controller' => 'operator', 'action' => 'SQL'];
 	}
 	
 	public function renderHromadnyMail(){

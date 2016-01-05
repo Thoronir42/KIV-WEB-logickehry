@@ -10,7 +10,7 @@ namespace libs;
 class Operator {
 
 	const DEFAULT_SQL_FILE = 'db_logickehry';
-	const SQL_FOLDER = '/../operator/';
+	const SQL_FOLDER = '../operator/';
 
 	/**
 	 * 
@@ -31,6 +31,17 @@ class Operator {
 			return 'Při vykonávání SQL souboru nastala chyba #' . $pdo->errorCode();
 		}
 		return false;
+	}
+
+	public static function getSQLfiles() {
+		$files = scandir(self::SQL_FOLDER);
+		$return = [];
+		foreach ($files as $f) {
+			if (strtolower(explode('.', $f)[1]) === 'sql') {
+				$return[] = $f;
+			}
+		}
+		return $return;
 	}
 
 }

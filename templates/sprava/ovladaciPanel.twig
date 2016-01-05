@@ -2,6 +2,7 @@
 {% extends layout %}
 
 {% block bodyContent %}
+
 	<div class="panel panel-default">
 		<div class="panel-heading"><h2 class="panel-title">XML export</h2></div>
 		<div class="panel-body">
@@ -11,13 +12,13 @@
 					<span>Parametry</span>
 					<span>Export</span>
 				</div>
-				
+
 				<form class="form-inline" action="{{ urlgen.url(xml_inventory) }}" method="post">
 					<span>Katalog her a evidenčních čísel</span>
 					<span><span class="glyphicon glyphicon-remove-sign"></span></span>
 					<span> <button type="submit" class="form-control btn btn-default"><span class="glyphicon glyphicon-share"></span></button></span>
 				</form>
-					
+
 				<form class="form-inline" action="{{ urlgen.url(xml_reservations) }}" method="post">
 					<span>Rezervace za období</span>
 					<span>
@@ -33,38 +34,43 @@
 			</div>
 		</div>
 	</div>
-	
-	
-	<div class="panel panel-default">
-		<div class="panel-heading"><h2 class="panel-title">XML export</h2></div>
-		<div class="panel-body">
-			<h3>Katalog her a evidenčních čísel</h3>
-			<form class="form-inline" action="{{ urlgen.url(xml_inventory) }}" method="post">
-				<input type="submit" value="Vygenerovat XML" class="form-control btn btn-default">
-			</form>
-			<h3>Rezervace za období</h3>
-			<form action="{{ urlgen.url(xml_reservations) }}" method="post">
-				<div class='row'>
-					<div class='col-md-4'>
-					<label class="control-label" for="date_from">Od</label>
-					<input type="date" name ="date_from" id='date_from' class="form-control" value="{{ user.name }}">
-					</div>
-					<div class='col-md-4'>
-					<label class="control-label" for="date_to">Do</label>
-					<input type="date" name="date_to" id='date_from' class="form-control" value="{{ user.surname }}">
-					</div>
-					<div class="col-md-4">
-						<input type="submit" value="Vygenerovat XML" class="form-control btn btn-default" style="text-align: center;">
-					</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading"><h2 class="panel-title">Odkazy na letiště</h2></div>
+				<div class="panel-body">
+
 				</div>
-			</form>
+			</div>
+		</div>
+		<div class="col-lg-8">
+			<div class="panel panel-default">
+				<div class="panel-heading"><h2 class="panel-title">Operátorský koutek</h2></div>
+				<div class="panel-body">
+					{% if not operator_enabled %}
+						<div class="alert alert-warning">
+							Operátorský režim je vypnutý
+						</div>
+					{% endif %} 
+					<h3>SQL import</h3>
+					<p>Vykoná SQL skript uložený ve složce /operator/</p>
+					<form action="{{ urlgen.url(SQL_action) }}" method="post">
+						<div class="row">
+							<div class="col-sm-7">
+						<select class="form-control" name="filename">
+							{% for file in SQL_files %}
+								<option class="list-group-item">{{ file }}</option>
+							{% endfor %}
+						</select>
+							</div>
+						<div class="col-sm-5">
+							<input type="submit" class="form-control btn btn-warning" value="Spustit">
+						</div>
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
 	</div>
-					
-<div class="panel panel-default">
-	<div class="panel-heading"><h2 class="panel-title">Odkazy na letiště</h2></div>
-	<div class="panel-body">
-
-	</div>
-</div>
 {% endblock %}
