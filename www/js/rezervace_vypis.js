@@ -50,5 +50,15 @@ $(document).ready(function () {
 		$('input[name=time_from]').val(timeStart);
 		setReservationTimes(false);
 	});
+	
+	$(document).on("click", '.dateCol .btn', function () {
+		var year = $(this).attr('data-year'),
+			split = ($(this).html()).split('.');
+		var month = split[1],
+			day = split[0];
+		
+		$('input[name=reservation_date]').val(year+'-'+month+'-'+day);
+		setReservationTimes(false);
+	});
 
 });

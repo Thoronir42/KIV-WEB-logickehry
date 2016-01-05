@@ -14,7 +14,7 @@
 		<div class="row">
 			{% set rd = reservationDays[i] %}
 			<div class="col-sm-1 dateCol">
-				<span class="btn btn-default">{{ rd['date'] }}</span>
+				<span class="btn btn-default" data-year="{{ rd['year'] }}">{{ rd['date'] }}</span>
 			</div>
 			<div class="col-sm-11 resCol">
 				{% for res in rd['reservations'] %}

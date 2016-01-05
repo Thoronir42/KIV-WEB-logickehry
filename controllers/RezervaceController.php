@@ -60,9 +60,11 @@ class RezervaceController extends Controller {
 		$reservationDays = [0 => ['date' => null]];
 
 		for ($i = 0; $i < 7; $i++) {
+			$day = strtotime(("+ $i days"), $timeFrom);
 			$reservationDays[$i + 1] = [
-				'date' => date('d.m.', strtotime(("+ $i days"), $timeFrom)),
+				'date' => date('d.m.', $day),
 				'reservations' => [],
+				'year' => date('Y', $day),
 			];
 		}
 
