@@ -10,6 +10,9 @@ use controllers\Controller,
  */
 class Dispatcher {
 
+	const ENABLE_OPERATOR = true;
+	
+	
 	var $JS_DIR = __DIR__ . "/../www/js/";
 	var $CSS_DIR = __DIR__ . "/../www/css/";
 
@@ -63,7 +66,7 @@ class Dispatcher {
 		return ['pdo' => $this->pdo, 'urlgen' => $this->urlGen, 'mb' => $this->messageBuffer];
 	}
 
-	private function getControllerInstance($controllerName, $url) {
+	public function getControllerInstance($controllerName, $url = null) {
 		$support = $this->packSupport();
 		if($url){
 			$support['url'] = $url;

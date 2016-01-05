@@ -2,7 +2,6 @@
 namespace controllers;
 
 use libs\URLgen,
-	libs\PDOwrapper,
 	libs\MessageBuffer;
 use model\database\views\UserExtended;
 use model\UserManager;
@@ -22,7 +21,7 @@ abstract class Controller{
 	/** @var URLgen */
     var $urlGen;
 	
-	/** @var PDO */
+	/** @var \PDO */
 	var $pdo;
 	
 	/** @var MessageBuffer */
@@ -145,7 +144,7 @@ abstract class Controller{
 		$this->template['js'][] = $js;
 	}
 	
-	protected function message($text, $level = MessageBuffer::LVL_INF, $link = null){
+	public function message($text, $level = MessageBuffer::LVL_INF, $link = null){
 		$this->mb->log($text, $level, $link);
 	}
 	
