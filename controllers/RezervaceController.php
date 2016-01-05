@@ -35,7 +35,7 @@ class RezervaceController extends Controller {
 		}
 
 		$timePars = DatetimeManager::getWeeksBounds($week);
-		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FORMAT);
+		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FULL);
 
 
 		$game_type_id = $this->getParam("game_id");
@@ -48,7 +48,7 @@ class RezervaceController extends Controller {
 		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);
 
 		$this->template["pageTitle"] = $this->makeVypisTitle($week);
-		$this->template["timeSpan"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY_FORMAT);
+		$this->template["timeSpan"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY);
 		$this->template['games'] = $this->prepareGames($dbTimePars);
 		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
 		$this->template['weekShift'] = $this->makeWeekLinks($week);
@@ -69,7 +69,7 @@ class RezervaceController extends Controller {
 		}
 
 		foreach ($reservations as $r) {
-			$day = date("w", strtotime($reservations[0]->time_from));
+			$day = date("w", strtotime($reservations[0]->reservation_date));
 			$reservationDays[$day]['reservations'][] = $r;
 		}
 		return $reservationDays;

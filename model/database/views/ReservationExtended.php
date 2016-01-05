@@ -19,7 +19,7 @@ class ReservationExtended extends Reservation {
 	 */
 	public static function fetchWithinTimespan($pdo, $pars) {
 		$statement = $pdo->prepare("SELECT * FROM `reservation_extended` "
-				. "WHERE time_from > :time_from AND time_to < :time_to "
+				. "WHERE reservation_date >= :time_from AND reservation_date < :time_to "
 				. "ORDER BY time_from ASC");
 		if ($statement->execute($pars)) {
 			return $statement->fetchAll(\PDO::FETCH_CLASS, ReservationExtended::class);

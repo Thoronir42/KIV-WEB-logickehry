@@ -50,7 +50,7 @@ class ReservationRenderer {
 
 	public function time($time) {
 		$iTime = strtotime($time);
-		return DatetimeManager::format($iTime, DatetimeManager::HUMAN_TIME_ONLY_FORMAT);
+		return DatetimeManager::format($iTime, DatetimeManager::HUMAN_TIME_ONLY);
 	}
 
 	public function getDuringDayString($n) {

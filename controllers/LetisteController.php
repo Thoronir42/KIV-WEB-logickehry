@@ -28,7 +28,7 @@ class LetisteController extends Controller {
 		}
 
 		$timePars = DatetimeManager::getWeeksBounds($week);
-		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FORMAT);
+		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FULL);
 
 
 		$game_type_id = $this->getParam("game_id");
@@ -41,7 +41,7 @@ class LetisteController extends Controller {
 		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);
 		$this->template['games'] = Views\GameTypeExtended::fetchAll($this->pdo);
 		$this->template["pageTitle"] = $this->makeVypisTitle($week);
-		$this->template["timeSpan"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY_FORMAT);
+		$this->template["timeSpan"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY);
 	}
 
 	private function prepareReservationDays($timeFrom, $dbTimePars) {

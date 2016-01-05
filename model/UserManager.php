@@ -29,7 +29,7 @@ class UserManager {
 			return new UserExtended();
 		}
 		
-		$time = DatetimeManager::format(time(), DatetimeManager::DB_FORMAT);
+		$time = DatetimeManager::format(time(), DatetimeManager::DB_FULL);
 		User::updateActivity($pdo, $orion_login, $time);
 		return $dbUser;
 	}

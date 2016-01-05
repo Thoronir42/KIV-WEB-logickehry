@@ -66,7 +66,7 @@ abstract class Controller{
 		} else {
 			$this->navbar['login_url'] = ['controller' => 'uzivatel', 'action' => 'PrihlasitSe'];	
 		}
-		$this->navbar['session_time'] = date(\model\DatetimeManager::HUMAN_FORMAT, $_SESSION['LAST_ACTIVITY']);
+		$this->navbar['session_time'] = date(\model\DatetimeManager::HUMAN_FULL, $_SESSION['LAST_ACTIVITY']);
 		$this->layout = "layout.twig";
 		$this->template = [
 			'css' => [],

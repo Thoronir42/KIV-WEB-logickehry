@@ -9,10 +9,13 @@ namespace model;
  */
 class DatetimeManager {
 
-	const DB_FORMAT = "y-m-d H:i:s";
-	const HUMAN_FORMAT = "d/m/y H:i:s";
-	const HUMAN_DATE_ONLY_FORMAT = "d.m.Y";//"d. m. y";
-	const HUMAN_TIME_ONLY_FORMAT = 'H:i';
+	const DB_FULL = "y-m-d H:i:s";
+	const DB_DATE_ONLY = 'y-m-d';
+	const DB_TIME_ONLY = 'H:i:s';
+	
+	const HUMAN_FULL = "d/m/y H:i:s";
+	const HUMAN_DATE_ONLY = "d.m.Y";
+	const HUMAN_TIME_ONLY = 'H:i';
 
 	public static function getWeeksBounds($weekOffset = 0, $format = null) {
 		if ($weekOffset == 0) {
