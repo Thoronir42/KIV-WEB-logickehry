@@ -49,17 +49,12 @@ class Dispatcher {
 	 * @return Controller
 	 */
 	public static function getControler($controllerName, $support) {
-		switch ($controllerName) {
-			default: return new controllers\ErrorController($support);
-			case "vypis": return new controllers\VypisController($support);
-			case "sprava": return new controllers\SpravaController($support);
-			case "rezervace":return new controllers\RezervaceController($support);
-			case "letiste": return new controllers\LetisteController($support);
-			case "login": return new controllers\LoginController($support);
-			case "xml": return new controllers\XMLgenerator($support);
-			case "ajax": return new controllers\AjaxController($support);
-			case "uzivatel":return new controllers\UzivatelController($support);
+		$className = 'controllers\\'.strtoupper(substr($controllerName, 0, 1)).substr($controllerName, 1).'Controller';
+		if(class_exists($className)){
+			$class = new ReflectionClass($className);
+			return $class->newInstance($support);
 		}
+		return new controllers\ErrorController($support);
 	}
 
 	private function packSupport() {
@@ -206,9 +201,9 @@ class Dispatcher {
 			if ($contClass->hasMethod($methodName)) {
 				$method = $contClass->getMethod($methodName);
 				$return[$mt] = $method;
-			}
+			} 
 		}
-
+		
 		return $return;
 	}
 
