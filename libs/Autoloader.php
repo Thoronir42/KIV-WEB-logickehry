@@ -3,6 +3,8 @@
 include __DIR__ . '/Twig/Autoloader.php';
 Twig_Autoloader::register(true);
 
+include '/PHPMailer/PHPMailerAutoload.php';
+
 spl_autoload_register('Autoloader::NamespaceLoader');
 spl_autoload_register('Autoloader::LibsLoader');
 

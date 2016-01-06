@@ -10,27 +10,43 @@ namespace model;
 class MailManager {
 
 	const MAIL_SERVER = "zcu.cz";
+	const FROM_NAME = "Deskař";
+	const FROM_ADDRESS = "deskar@logickehry.zcu.cz";
 
 	/**
-	 * @param String[] $addressees
-	 * @param String $content
-	 * @return boolean
+	 * 
+	 * @return \PHPMailer
 	 */
-	public static function send($addressees, $subject, $content) {
-		if (empty($addressees)) {
-			return ['result' => false, 'message' => "Pole adresátů bylo prázdné"];
-		}
-		if (time() % 2 == 0) {
-			return ['result' => true, 'message' => sprintf("Mail(%d) byl odeslán následujícím uživatelům: %s", strlen($content), implode($addressees, ", "))];
-		} else {
-			return ['result' => false, 'message' => sprintf("Mail(%d) byl odeslán následujícím uživatelům: %s", strlen($content), implode($addressees, ", "))];
-		}
-
-		return ['result' => false, 'message' => 'Při odesílání hromadného mailu nastala neočekávaná chyba'];
+	private static function getMailBoner() {
+		$mail = new \PHPMailer();
+		$mail->setLanguage('cz');
+		$mail->setFrom(self::FROM_ADDRESS, self::FROM_NAME);
+		return $mail;
 	}
 
-	private function composeMail() {
-		
+	/**
+	 * @param String[] $users
+	 * @param String $body
+	 * @return boolean
+	 */
+	public static function send($users, $body, $subject = null) {
+		if (empty($users)) {
+			return ['result' => false, 'message' => "Pole adresátů bylo prázdné"];
+		}
+
+		$mail = self::getMailBoner();
+
+		foreach ($users as $u) {
+			$mail->addAddress("$u@" . self::MAIL_SERVER);
+		}
+
+		$mail->Subject = $subject ? : self::getDefaultSubject();
+		$mail->Body = $mail->AltBody = $body;
+
+		if (!$mail->send()) {
+			return ['result' => false, 'message' => sprintf("Mail se nepodařilo odeslat: " . $mail->ErrorInfo)];
+		}
+		return ['result' => true, 'message' => sprintf("Mail byl odeslán následujícím uživatelům: %s", implode($users, ", "))];
 	}
 
 	public static function getDefaultSubject() {

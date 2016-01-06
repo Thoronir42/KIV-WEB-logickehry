@@ -206,11 +206,12 @@ class SpravaController extends Controller {
 
 	public function doPoslatMail() {
 		$gid = $this->getParam('game_type_id', INPUT_POST);
-		$content = $this->getParam('content', INPUT_POST);
-		$users = $this->pdo->subscribedUsersByGame($gid);
-		var_dump($gid, $content, $users);
+		$subject = $this->getParam('subject', INPUT_POST);
+		$body = $this->getParam('mail_body', INPUT_POST);
 
-		$result = MailManager::send($users, $content);
+		$users = Views\Subscription::fetchUsersByGame($this->pdo, $gid);
+
+		$result = MailManager::send($users, $body, $subject);
 		if ($result['result']) {
 			$this->message($result['message'], \libs\MessageBuffer::LVL_SUC);
 		} else {
