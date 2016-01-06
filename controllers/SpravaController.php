@@ -48,6 +48,7 @@ class SpravaController extends Controller {
 		$this->template['insert_game_form_action'] = ['controller' => 'sprava', 'action' => 'pridatHru'];
 		$this->template['gpr'] = 3;
 		$this->template['game_edit_form_action'] = ['controller' => 'sprava', 'action' => 'upravitHru'];
+		$this->template['mailLink'] = ['controller' => 'sprava', 'action' => 'hromadnyMail', 'id' => 0];
 
 
 		$games = Views\GameTypeExtended::fetchAll($this->pdo);
@@ -180,6 +181,7 @@ class SpravaController extends Controller {
 		$this->template['default_subject'] = MailManager::getDefaultSubject();
 		$this->template['send_url'] = ['controller' => 'sprava', 'action' => 'poslatMail'];
 		$this->template['games'] = Views\GameTypeExtended::fetchAll($this->pdo);
+		$this->template['active'] = $this->getParam('id');
 	}
 
 	public function doPoslatMail() {

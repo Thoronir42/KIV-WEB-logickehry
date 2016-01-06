@@ -52,6 +52,8 @@
 								</li>
 							</ul>
 							<div class="btn-group btn-group-justified pull-down">
+								{% set mailLink = mailLink|merge({ 'id': g.game_type_id }) %}
+								<a href="{{ urlgen.url(mailLink) }}" class="btn btn-primary butt-mail"><span class="glyphicon glyphicon-send"></span></a>
 								<a class="btn btn-warning butt-edit"><span class="glyphicon glyphicon-edit"></span></a>
 							</div>
 						</div>
