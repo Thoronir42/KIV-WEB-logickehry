@@ -11,8 +11,8 @@ class XMLgenerator {
 	/** @var boolean */
 	var $blockSauce = true;
 
-	/** @var PDOwrapper */
-	var $pdoWrapper;
+	/** @var \PDO */
+	var $pdo;
 
 	/** @var string */
 	var $layout;
@@ -33,9 +33,10 @@ class XMLgenerator {
 		return false;
 	}
 
-	public function __construct() {
+	public function __construct($support) {
 		$this->template = [];
 		$this->layout = "xml.twig";
+		$this->pdo = $support['pdo'];
 	}
 
 	public function startUp() {
@@ -46,8 +47,8 @@ class XMLgenerator {
 	}
 
 	public function renderInventory() {
-		$this->template["game_type"] = Views\GameTypeExtended::fetchAll($this->pdoWrapper);
-		$this->template["game_box"] = Views\GameBoxExtended::fetchAll($this->pdoWrapper, false);
+		$this->template["game_type"] = Views\GameTypeExtended::fetchAll($this->pdo);
+		$this->template["game_box"] = Views\GameBoxExtended::fetchAll($this->pdo, false);
 	}
 
 	public function renderReservations() {

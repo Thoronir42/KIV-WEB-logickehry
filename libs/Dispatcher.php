@@ -49,6 +49,9 @@ class Dispatcher {
 	 */
 	public static function getControler($controllerName, $support) {
 		$className = 'controllers\\' . strtoupper(substr($controllerName, 0, 1)) . substr($controllerName, 1) . 'Controller';
+		if(strtoupper($controllerName) == 'XML'){
+			return new \controllers\XMLgenerator($support);
+		}
 		if (class_exists($className)) {
 			$class = new ReflectionClass($className);
 			return $class->newInstance($support);
