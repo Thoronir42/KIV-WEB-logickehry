@@ -50,7 +50,7 @@ class GameType extends \model\database\DB_Entity {
 	var $game_subtitle = false;
 	var $avg_playtime;
 	var $min_players;
-	var $max_players;
+	var $max_players = false;
 
 	protected function checkRequiredProperties() {
 		return parent::checkRequiredProperties(self::class);
@@ -58,6 +58,17 @@ class GameType extends \model\database\DB_Entity {
 
 	public function getColor() {
 		return \model\ColorManager::numberToColor($this->game_type_id);
+	}
+
+	public function getPlayerCount($separator = ' - ') {
+		$reverse = ($this->min_players > $this->max_players);
+		$less = $reverse ? $this->max_players : $this->min_players;
+		$more = $reverse ? $this->min_players : $this->max_players;
+		if($less < 1 || $less == $more){
+			return $more;
+		}
+		return "$less$separator$more";
+		
 	}
 
 }
