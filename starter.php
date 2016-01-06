@@ -1,12 +1,11 @@
 <?php
-include __DIR__.'/libs/autoloader.php';
+
+include __DIR__ . '/libs/autoloader.php';
 
 use config\Config;
 use libs\SessionManager;
 
-
-SessionManager::run();
-SessionManager::setDemonstrationMode(false);
+SessionManager::run($demo = false);
 
 $dispatcher = Config::createDispatcher();
 $dispatcher->dispatch();

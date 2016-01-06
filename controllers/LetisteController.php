@@ -4,7 +4,6 @@ namespace controllers;
 
 use \model\database\views as Views,
 	\model\database\tables as Tables;
-
 use model\DatetimeManager;
 
 class LetisteController extends Controller {

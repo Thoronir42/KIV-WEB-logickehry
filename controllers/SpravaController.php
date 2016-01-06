@@ -57,7 +57,11 @@ class SpravaController extends Controller {
 		}
 		$this->template['games'] = $games;
 	}
-	
+
+	public function doUpravitHru() {
+		
+	}
+
 	public function doPridatHru() {
 		$nextId = Tables\GameType::nextId($this->pdo);
 		$gameType = Tables\GameType::fromPOST();

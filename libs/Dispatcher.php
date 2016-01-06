@@ -11,8 +11,7 @@ use controllers\Controller,
 class Dispatcher {
 
 	const ENABLE_OPERATOR = true;
-	
-	
+
 	var $JS_DIR = __DIR__ . "/../www/js/";
 	var $CSS_DIR = __DIR__ . "/../www/css/";
 
@@ -49,8 +48,8 @@ class Dispatcher {
 	 * @return Controller
 	 */
 	public static function getControler($controllerName, $support) {
-		$className = 'controllers\\'.strtoupper(substr($controllerName, 0, 1)).substr($controllerName, 1).'Controller';
-		if(class_exists($className)){
+		$className = 'controllers\\' . strtoupper(substr($controllerName, 0, 1)) . substr($controllerName, 1) . 'Controller';
+		if (class_exists($className)) {
 			$class = new ReflectionClass($className);
 			return $class->newInstance($support);
 		}
@@ -63,7 +62,7 @@ class Dispatcher {
 
 	public function getControllerInstance($controllerName, $url = null) {
 		$support = $this->packSupport();
-		if($url){
+		if ($url) {
 			$support['url'] = $url;
 		}
 		$cont = self::getControler($controllerName, $support);
@@ -201,9 +200,9 @@ class Dispatcher {
 			if ($contClass->hasMethod($methodName)) {
 				$method = $contClass->getMethod($methodName);
 				$return[$mt] = $method;
-			} 
+			}
 		}
-		
+
 		return $return;
 	}
 

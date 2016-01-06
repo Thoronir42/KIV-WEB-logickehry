@@ -31,7 +31,7 @@ class ReservationRenderer {
 		$rStart = strtotime($res->time_from);
 		$h = date('H', $rStart);
 		$m = date('i', $rStart);
-		$dayMin = 60 * ($h - $this->dayStart) + $m;
+		$dayMin = 60 * ($h - $this->dayStart) + $m - 5;
 		return $dayMin * 100 / $this->dayLength;
 	}
 
@@ -54,7 +54,7 @@ class ReservationRenderer {
 	}
 
 	public function getDuringDayString($n) {
-		if(isset(self::$DAY_NAMES[$n])){
+		if (isset(self::$DAY_NAMES[$n])) {
 			return self::$DAY_NAMES[$n];
 		}
 		return "V den $n";

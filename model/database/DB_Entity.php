@@ -1,4 +1,5 @@
 <?php
+
 namespace model\database;
 
 /**
@@ -6,45 +7,51 @@ namespace model\database;
  *
  * @author Stepan
  */
-abstract class DB_Entity{
-	
+abstract class DB_Entity {
+
 	/**
 	 * 
 	 * @param String $class required DB_Entity class to be instantiated
 	 * @return DB_Entity
 	 */
-	public static function fromPOST($class = null){
-		if($class == null){ return null; }
+	public static function fromPOST($class = null) {
+		if ($class == null) {
+			return null;
+		}
 		$rc = new \ReflectionClass($class);
-		
+
 		$properties = $rc->getProperties();
 		$instance = $rc->newInstanceArgs();
 		$missing = [];
-		foreach($properties as $prp){
+		foreach ($properties as $prp) {
 			$prpName = $prp->name;
 			$val = filter_input(INPUT_POST, $prpName);
-			if($prpName === "misc"){ continue; }
-			if(!$val){ $missing[$prpName] = true; }
-			$instance->$prpName = $val; 
+			if ($prpName === "misc") {
+				continue;
+			}
+			if (!$val) {
+				$missing[$prpName] = true;
+			}
+			$instance->$prpName = $val;
 		}
-		if(!empty($missing)){
+		if (!empty($missing)) {
 			$instance->missing = $missing;
 		}
 		return $instance;
 	}
-	
+
 	var $misc;
-	
+
 	public function __construct() {
 		$this->misc = [];
 	}
-	
+
 	public function __isset($name) {
 		return array_key_exists($name, $this->misc);
 	}
-	
+
 	public function __get($name) {
-		if(isset($this->misc[$name])){
+		if (isset($this->misc[$name])) {
 			return $this->misc[$name];
 		}
 	}
@@ -52,50 +59,52 @@ abstract class DB_Entity{
 	public function __set($name, $value) {
 		$this->misc[$name] = $value;
 	}
-	
-	public function asArray($includeMissing = false){
+
+	public function asArray($includeMissing = false) {
 		$ret = [];
-		foreach($this as $prpKey => $prpVal){
-			if($prpKey === "misc"){ continue; }
+		foreach ($this as $prpKey => $prpVal) {
+			if ($prpKey === "misc") {
+				continue;
+			}
 			$ret[$prpKey] = $prpVal;
 		}
-		if($includeMissing && isset($this->missing)){
+		if ($includeMissing && isset($this->missing)) {
 			$ret['missing'] = $this->missing;
 		}
-		
+
 		return $ret;
 	}
+
 	/**
 	 * 
 	 */
-	public function readyForInsert(){
-		if(!isset($this->missing)){
+	public function readyForInsert() {
+		if (!isset($this->missing)) {
 			return true;
 		}
 		return $this->checkRequiredProperties();
 	}
-	
-	protected function checkRequiredProperties($class = null){
-		if($class == null){
+
+	protected function checkRequiredProperties($class = null) {
+		if ($class == null) {
 			return false;
 		}
 		$rc = new \ReflectionClass($class);
-		
+
 		$properties = $rc->getProperties();
 		$instance = $rc->newInstanceArgs();
-		foreach($properties as $prp){
+		foreach ($properties as $prp) {
 			$prpName = $prp->name;
-			if($instance->$prpName === false || !isset($this->missing[$prpName])){
+			if ($instance->$prpName === false || !isset($this->missing[$prpName])) {
 				continue;
 			}
 			return false;
 		}
 		return true;
 	}
-	
-	public function getMissingParameters(){
+
+	public function getMissingParameters() {
 		return implode(", ", array_keys($this->missing));
 	}
 
-	
 }

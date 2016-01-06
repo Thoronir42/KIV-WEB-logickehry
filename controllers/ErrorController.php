@@ -1,4 +1,5 @@
 <?php
+
 namespace controllers;
 
 /**
@@ -6,20 +7,20 @@ namespace controllers;
  *
  * @author Stepan
  */
-class ErrorController extends Controller{
-    
+class ErrorController extends Controller {
+
 	const NO_CONTROLLER_FOUND = 1;
 	const NOT_RECOGNISED_ACTION = 2;
 	const NO_TEMPLATE = 3;
 	const NO_RENDER_OR_REDIRECT = 4;
-	
-	public function startUp(){
+
+	public function startUp() {
 		parent::startUp();
 		$this->layout = 'layout.twig';
 	}
-	
-	public function renderError($errType, $c, $a){
-		switch($errType){
+
+	public function renderError($errType, $c, $a) {
+		switch ($errType) {
 			default:
 				$this->template['nadpis'] = "Chyba";
 				$this->template['zprava'] = "V aplikaci nastala chyba, která nebyla rozpoznána.";
@@ -39,8 +40,8 @@ class ErrorController extends Controller{
 				$this->template['nadpis'] = "Akce nemohla být zobrazena";
 				$this->template['zprava'] = "Byla provedena akce $a kontroleru $c ale nebyla nalezena metoda pro její zobrazení, respektive nebylo provedeno přesměrování.";
 				break;
-		break;
+				break;
 		}
 	}
-	
+
 }

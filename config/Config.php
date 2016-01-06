@@ -61,7 +61,7 @@ class Config {
 		$twig = Config::getTwig(__DIR__ . '/../templates/');
 		$urlGen = Config::getURLgen();
 		$buffer = Config::getMessageBuffer();
-		
+
 		return new \Dispatcher($pdo, $twig, $urlGen, $buffer);
 	}
 

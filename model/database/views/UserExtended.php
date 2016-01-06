@@ -25,13 +25,13 @@ class UserExtended extends User {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * @param \PDO $pdo
 	 * @return UserExtended[]
 	 */
-	public static function fetchAll($pdo){
+	public static function fetchAll($pdo) {
 		$result = $pdo->query("SELECT * FROM user_extended")
 				->fetchAll(\PDO::FETCH_CLASS, UserExtended::class);
 		return $result;

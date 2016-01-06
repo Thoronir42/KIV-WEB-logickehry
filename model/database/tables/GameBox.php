@@ -1,4 +1,5 @@
 <?php
+
 namespace model\database\tables;
 
 /**
@@ -6,8 +7,8 @@ namespace model\database\tables;
  *
  * @author Stepan
  */
-class GameBox extends \model\database\DB_Entity{	
-	
+class GameBox extends \model\database\DB_Entity {
+
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -25,7 +26,7 @@ class GameBox extends \model\database\DB_Entity{
 			echo "<br>" . $statement->queryString;
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -47,15 +48,11 @@ class GameBox extends \model\database\DB_Entity{
 		}
 		return null;
 	}
-	
+
 	var $game_box_id;
-	
 	var $game_type_id;
-	
 	var $tracking_code;
-	
 	var $add_note;
-	
 	var $retired;
-	
+
 }

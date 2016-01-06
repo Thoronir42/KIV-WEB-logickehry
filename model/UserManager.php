@@ -1,4 +1,5 @@
 <?php
+
 namespace model;
 
 use model\database\tables\User,
@@ -12,30 +13,30 @@ use model\database\tables\User,
  * @author Stepan
  */
 class UserManager {
-	
+
 	const LOGIN_SUCCESS = 1;
 	const LOGIN_NEW = 2;
 	const LOGIN_FAILED = 0;
-	
+
 	/**
 	 * @param \PDO $pdo
 	 * @return UserExtended
 	 */
-	public static function getCurrentUser($pdo){
-		if(!isset($_SESSION['user'])){ return new UserExtended(); }
-		$orion_login = $_SESSION['user'];
-		$dbUser = UserExtended::fetch($pdo, $orion_login);
-		if(!$dbUser){
+	public static function getCurrentUser($pdo) {
+		if (!isset($_SESSION['user'])) {
 			return new UserExtended();
 		}
-		
+		$orion_login = $_SESSION['user'];
+		$dbUser = UserExtended::fetch($pdo, $orion_login);
+		if (!$dbUser) {
+			return new UserExtended();
+		}
+
 		$time = DatetimeManager::format(time(), DatetimeManager::DB_FULL);
 		User::updateActivity($pdo, $orion_login, $time);
 		return $dbUser;
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -43,10 +44,10 @@ class UserManager {
 	 * 
 	 * @return UserExtended
 	 */
-	public static function login($pdo, $orion_login){
+	public static function login($pdo, $orion_login) {
 		$user = UserExtended::fetch($pdo, $orion_login);
-		if(!$user){
-			if(!User::insert($pdo, $orion_login)){
+		if (!$user) {
+			if (!User::insert($pdo, $orion_login)) {
 				return null;
 			} else {
 				$user = UserExtended::fetch($pdo, $orion_login);
@@ -63,4 +64,5 @@ class UserManager {
 		unset($_SESSION['user']);
 		return true;
 	}
+
 }
