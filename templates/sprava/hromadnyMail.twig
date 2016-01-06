@@ -6,22 +6,22 @@
 		<div class="panel-heading">Odesílání hromadných emailů</div>
 		<div class="panel-body">
 			<form class="form-horizontal" action="{{ urlgen.url(send_url) }}" method="post">
-				<label for="game_type_id" class="control-label" >Katalog her a evidenčních čísel</label>
-				<select name="game_type_id" class="form-control">
-					{% for g in games %}
-						<option value="{{ g.game_type_id }}">{{ '%s (%d)'|format(g.game_name, g.subscribed_users)}}</option>
-					{% endfor%}
-				</select>
-				
-				<label for="Předmět" class="control-label">Text mailu</label>
-				<input type="text" name="subject" class="form-control" placeholder="{{ default_subject }}">
+				<div class="row">
+					<div class="col-sm-4">
+						<label for="game_type_id" class="control-label" >Katalog her a evidenčních čísel</label>
+						{% include 'mini/game_type_list_group.twig' with{'count':'subscribed'}%}
+					</div>
+					<div class="col-sm-8">
+						<label for="Předmět" class="control-label">Text mailu</label>
+						<input type="text" name="subject" class="form-control" placeholder="{{ default_subject }}">
 
-				<label for="text_body" class="control-label">Text mailu</label>
-				<textarea name="text_body" class="form-control" rows="6"></textarea>
-				
-				<input type="submit" class="btn btn-primary pull-right" value="Rozeslat">
+						<label for="text_body" class="control-label">Text mailu</label>
+						<textarea name="text_body" class="form-control" rows="6"></textarea>
+						<br>
+						<input type="submit" class="btn btn-primary pull-right" value="Rozeslat">
+					</div>
+				</div>
 			</form>
 		</div>
 	</div>
-</div>
 {% endblock %}

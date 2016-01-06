@@ -34,7 +34,7 @@
 				<form class="form-horizontal">
 					<div class="row">
 						<div class="col-sm-4">
-							{% include "mini/game_type_list_group.twig" with {'games':games, 'active':defaultGame, 'showReservationCountBadges': true} %}
+							{% include "mini/game_type_list_group.twig" with {'games':games, 'active':defaultGame, 'count': 'reservations'} %}
 						</div>
 						<div class="col-sm-8">
 							<div class="row">

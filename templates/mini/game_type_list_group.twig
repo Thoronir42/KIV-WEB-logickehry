@@ -7,8 +7,10 @@
 <div class="list-group game-type-list-group	">	
 	{% for g in games %}
 		<a data-value="{{ g.game_type_id }}" data-avg-time="{{ g.avg_playtime }}" class="list-group-item{% if g.game_type_id == active %} active{%endif %}">
-			{% if showReservationCountBadges and g.reservationCount is not empty %}
+			{% if count == 'reservations' and g.reservationCount is not empty %}
 				<span class="badge">{{ g.reservationCount }} </span>
+			{% elseif count == 'subscribed' %}
+				<span class="badge">{{ '%d'|format(g.subscribed_users) }} </span>
 			{% endif %}
 			<h4>{{ g.game_name }}{% if g.game_subtitle is not empty %}<small> {{ g.game_subtitle }}</small>{% endif %}</h4>
 			

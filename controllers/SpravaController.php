@@ -172,6 +172,9 @@ class SpravaController extends Controller{
 	}
 	
 	public function renderHromadnyMail(){
+		$this->addCss('input-specific.css');
+		$this->addJs ('input-specific.js');
+		
 		$this->template['default_subject'] = MailManager::getDefaultSubject();
 		$this->template['send_url'] = ['controller' => 'sprava', 'action' => 'poslatMail'];
 		$this->template['games'] = Views\GameTypeExtended::fetchAll($this->pdo);

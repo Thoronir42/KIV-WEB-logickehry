@@ -5,7 +5,6 @@ function setReservationTimes(checkStartTime) {
 		dayEndHour = $(".time-buttons").attr('data-end-hour');
 
 	if(checkStartTime && time_from < dayStartHour){
-		alert(time_from+"<"+dayStartHour);
 		time_from = dayStartHour;
 	}
 	
