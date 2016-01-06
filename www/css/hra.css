@@ -23,6 +23,8 @@
 
 .game>.panel-heading{
 	height: 80px;
+	border: 2px solid transparent;
+	border-width: 2px 6px 1px;
 }
 .game>.panel-heading>.row{
 	height: 62px;

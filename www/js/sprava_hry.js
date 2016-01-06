@@ -13,8 +13,8 @@ function showEdit(id, showEdit) {
 		if (name === "picture") {
 			return false;
 		}
-		$(this).attr("value", $(id).find("."+name).html());
-		
+		$(this).attr("value", $(id).find("." + name).html());
+
 
 	});
 
@@ -73,6 +73,11 @@ $(document).ready(function () {
 		xmlhttp.open("GET", "?controller=ajax&action=insertBox&code=" + game_code + "&gameId=" + game_id, true);
 		xmlhttp.send();
 	});
+
+	$(document).on('fileselect', '.btn-file :file', function (event, numFiles, label) {
+		$(this).parents('.input-group').find(':checkbox').prop('checked', false);
+	});
+
 
 	$('[data-toggle="popover"]').popover();
 	$('[data-toggle="tooltip"]').tooltip();

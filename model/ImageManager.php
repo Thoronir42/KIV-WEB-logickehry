@@ -40,6 +40,12 @@ class ImageManager {
 
 	public static function put($sourceKey, $destFile) {
 		// Allow certain file formats
+		if(!isset($_FILES[$sourceKey])){
+			var_dump($_FILES);
+			return ['result' => false, 'message' => "V poli $sourceKey nebyl nahrán žádný obrázek"];
+		}
+		
+		
 		$fileType = self::checkFileType(basename($_FILES[$sourceKey]["name"]));
 		if (!$fileType) {
 			return ['result' => false, 'message' => "Nahraný soubor " . $_FILES[$sourceKey]["name"] . " není jedním z povolených typů: " . implode(", ", self::ALLOWED_FILE_TYPES)];

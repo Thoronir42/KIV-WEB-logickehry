@@ -60,7 +60,27 @@ class SpravaController extends Controller {
 	}
 
 	public function doUpravitHru() {
-		
+		$keepPicture = $this->getParam('keepPicture', INPUT_POST);
+		$gameType = Tables\GameType::fromPOST();
+		if (!$gameType->readyForInsert()) {
+			$this->message("Nebylo možné přidat hru, nebyla vyplněna následující pole: " . $gameType->getMissingParameters());
+			$this->redirectPars('sprava', 'hry');
+		}
+		var_dump($gameType);
+
+		if (Tables\GameType::update($this->pdo, $gameType->asArray())) {
+			$this->message("Úpravy na hře $gameType->game_name $gameType->game_subtitle byly úspěšně uloženy", \libs\MessageBuffer::LVL_SUC);
+		} else {
+			$this->message("Úpravy na hře $gameType->game_name $gameType->game_subtitle se nepodařilo uložit", \libs\MessageBuffer::LVL_WAR);
+		}
+
+		if (!$keepPicture) {
+			$imgRes = ImageManager::put("picture", sprintf("game_%03d", $gameType->game_type_id));
+			if (!$imgRes['result']) {
+				$this->message($imgRes['message'], \libs\MessageBuffer::LVL_WAR);
+			}
+		}
+		$this->redirectPars('sprava', 'hry');
 	}
 
 	public function doPridatHru() {

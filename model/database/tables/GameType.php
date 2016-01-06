@@ -29,6 +29,28 @@ class GameType extends \model\database\DB_Entity {
 	/**
 	 * 
 	 * @param \PDO $pdo
+	 * @param mixed[] $pars
+	 * @return boolean
+	 */
+	public static function update($pdo, $pars) {
+		$statement = $pdo->prepare("UPDATE `web_logickehry_db`.`game_type` SET "
+				. "`game_name` = :game_name, "
+				. "`game_subtitle` = :game_subtitle, "
+				. "`avg_playtime` = :avg_playtime, "
+				. "`max_players` = :max_players, "
+				. "`min_players` = :min_players "
+				. "WHERE `game_type_id` = :game_type_id ");
+		if ($statement->execute($pars)) {
+			return true;
+		}
+		var_dump($pars);
+		echo '<br/>';
+		var_dump($statement->queryString);
+	}
+
+	/**
+	 * 
+	 * @param \PDO $pdo
 	 * @return type
 	 */
 	public static function nextId($pdo) {
@@ -64,11 +86,10 @@ class GameType extends \model\database\DB_Entity {
 		$reverse = ($this->min_players > $this->max_players);
 		$less = $reverse ? $this->max_players : $this->min_players;
 		$more = $reverse ? $this->min_players : $this->max_players;
-		if($less < 1 || $less == $more){
+		if ($less < 1 || $less == $more) {
 			return $more;
 		}
 		return "$less$separator$more";
-		
 	}
 
 }

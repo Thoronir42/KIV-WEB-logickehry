@@ -6,7 +6,7 @@ $(document).on('change', '.btn-file :file', function() {
 });
 
 $(document).ready( function() {
-    $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+    $(document).on('fileselect', '.btn-file :file', function(event, numFiles, label) {
         
         var input = $(this).parents('.input-group').find(':text'),
             log = numFiles > 1 ? numFiles + ' files selected' : label;

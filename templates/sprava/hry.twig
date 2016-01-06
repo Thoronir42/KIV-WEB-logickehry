@@ -19,7 +19,8 @@
 			{% endif %}
 			<div class="col-md-{{ 12 / gpr }}">
 				<div class="game panel panel-default" id="game_{{ g.game_type_id }}">
-					<div class="panel-heading">
+					<div class="panel-heading game{{ g.game_type_id }}">
+						<span class="hidden game_type_id">{{ g.game_type_id }}</span>
 						<div class="row">
 							<span class="col-lg-9">
 								<div class="game_name">{{ g.game_name }}</div>
@@ -74,7 +75,8 @@
 {% endif %}
 
 <div id="edit_form" class="hidden">
-	<form class="form-inline" action="{{ urlgen.url(game_edit_form_action) }}" method="post">
+	<form class="form-inline" action="{{ urlgen.url(game_edit_form_action) }}" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="game_type_id">
 		<ul class="list-group">
 			<li class="list-group-item">
 				<input type="text" class="form-control" name="game_name" placeholder="Název hry">
@@ -107,7 +109,7 @@
 					</span>
 					<input type="text" class="form-control" readonly>
 					<span class="input-group-addon">
-						<input type="checkbox" name="keepPic" class="checkbox" checked="true" data-toggle="tooltip" data-placement="bottom" title="Ponechat stávající obrázek">
+						<input type="checkbox" name="keepPicture" class="checkbox" checked="true" data-toggle="tooltip" data-placement="bottom" title="Ponechat stávající obrázek">
 					</span>
 				</div>
 			</li>
@@ -125,4 +127,11 @@
 </div>
 
 
+{% endblock %}
+
+{% block pageStyle %}
+	<style>
+		{% for g in games %}.panel-heading.game{{ g.game_type_id }}{ border-color: #{{ g.getColor() }} }
+		{% endfor %}
+	</style>
 {% endblock %}
