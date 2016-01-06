@@ -7,13 +7,13 @@ namespace model;
  * @author Stepan
  */
 class ImageManager{
-	const IMG_FOLDER = __DIR__."/../www/images/";
+	const IMG_FOLDER = "../www/images/";
 	const ALLOWED_FILE_TYPES = ["jpg", "jpeg", "png"];
 	
 	const MIN_IMG_SIZE = 150;
 	const MAX_IMG_SIZE = 2000;
 	
-	const MAX_IMG_FILE_SIZE = 12 * 1024 * 1024;
+	const MAX_IMG_FILE_SIZE = 12582912; // 12 * 1024 * 1024
 	
 	const IMAGE_NOT_FOUND = "nf.png";
 	
@@ -59,7 +59,7 @@ class ImageManager{
 		$finalFileName = self::IMG_FOLDER."$destFile.$fileType";
 		self::deleteIfexists(self::IMG_FOLDER.$destFile);
 		if (move_uploaded_file($_FILES[$sourceKey]["tmp_name"], $finalFileName)) {
-			return ['result' => true, 'message' => "Obrázek se podařilo nahrát do $finalFileName"];
+			return ['result' => true, 'message' => "Obrázek se podařilo nahrát jako $destFile.$fileType"];
 		} else {
 			return ['result' => false, 'message' => "Nahraný obrázek se nepodařilo přesunout do správné složky"];
 		}

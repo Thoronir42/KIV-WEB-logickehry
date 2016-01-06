@@ -56,27 +56,24 @@ class SpravaController extends Controller{
 		$this->template['games'] = $games;
 	}
 	
-	public function doPridatHru(){
+	public function doPridatHru() {
 		$nextId = Tables\GameType::nextId($this->pdo);
-		$gameType = GameType::fromPOST();
-		if(!$gameType->readyForInsert()){
-			$this->message("Nebylo možné přidat hru, nebyla vyplněna následující pole: ".$gameType->getMissingParameters());
+		$gameType = Tables\GameType::fromPOST();
+		if (!$gameType->readyForInsert()) {
+			$this->message("Nebylo možné přidat hru, nebyla vyplněna následující pole: " . $gameType->getMissingParameters());
 			$this->redirectPars();
 		}
 		$pars = $gameType->asArray();
 		$pars['game_type_id'] = $nextId;
-		if(!Tables\GameType::insert($this->pdo, $pars)){
+		if (!Tables\GameType::insert($this->pdo, $pars)) {
 			$this->message("Nebylo možné přidat hru na úrovni databáze", \libs\MessageBuffer::LVL_WAR);
 			$this->redirectPars('sprava', 'hry');
 		} else {
 			$this->message("Hra $gameType->game_name byla úspěšně přidána do databáze", \libs\MessageBuffer::LVL_SUC);
-			$this->redirectPars('sprava', 'hry');
 		}
-		
+
 		$imgRes = ImageManager::put("picture", sprintf("game_%03d", $nextId));
-		if($imgRes['result']){
-			$this->message($imgRes['message'], \libs\MessageBuffer::LVL_SUC);
-		} else {
+		if (!$imgRes['result']) {
 			$this->message($imgRes['message'], \libs\MessageBuffer::LVL_WAR);
 		}
 		$this->redirectPars('sprava', 'hry');

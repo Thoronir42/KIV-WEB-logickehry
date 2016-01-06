@@ -16,12 +16,12 @@ class GameType extends \model\database\DB_Entity {
 	 */
 	public static function insert($pdo, $pars) {
 		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`game_type` "
-				. "(`game_type_id`, `game_name`, `subtitle`, `avg_playtime`, `max_players`, `min_players`) "
-				. "VALUES ( :game_type_id,  :game_name,  :subtitle,  :avg_playtime,  :max_players,  :min_players )");
+				. "(`game_type_id`, `game_name`, `game_subtitle`, `avg_playtime`, `max_players`, `min_players`) "
+				. "VALUES ( :game_type_id,  :game_name,  :game_subtitle,  :avg_playtime,  :max_players,  :min_players )");
 		if ($statement->execute($pars)) {
 			return true;
 		}
-		var_dump($statement->errorInfo());
+		var_dump($pars);
 		echo '<br/>';
 		var_dump($statement->queryString);
 	}
