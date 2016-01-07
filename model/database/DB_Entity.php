@@ -25,14 +25,15 @@ abstract class DB_Entity {
 		$missing = [];
 		foreach ($properties as $prp) {
 			$prpName = $prp->name;
-			$val = filter_input(INPUT_POST, $prpName);
-			if ($prpName === "misc") {
+			if ($prpName == 'misc') {
 				continue;
 			}
-			if (!$val) {
+			$val = \filter_input(INPUT_POST, $prpName);
+			if (!empty($val) && $val !== "0") {
+				$instance->$prpName = $val;
+			} else if ($instance->$prpName !== false) {
 				$missing[$prpName] = true;
 			}
-			$instance->$prpName = $val;
 		}
 		if (!empty($missing)) {
 			$instance->missing = $missing;
@@ -40,10 +41,10 @@ abstract class DB_Entity {
 		return $instance;
 	}
 
-	var $misc;
+	var $misc = false;
 
 	public function __construct() {
-		$this->misc = [];
+		$this->misc = ['missing' => []];
 	}
 
 	public function __isset($name) {
@@ -95,15 +96,18 @@ abstract class DB_Entity {
 		$instance = $rc->newInstanceArgs();
 		foreach ($properties as $prp) {
 			$prpName = $prp->name;
-			if ($instance->$prpName === false || !isset($this->missing[$prpName])) {
-				continue;
+			if (isset($this->missing[$prpName]) && $instance->$prpName !== false) {
+				echo "$prpName => $instance->$prpName";
+				return false;
 			}
-			return false;
 		}
 		return true;
 	}
 
 	public function getMissingParameters() {
+		if (!is_array($this->missing) || empty($this->missing)) {
+			return 'wat';
+		}
 		return implode(", ", array_keys($this->missing));
 	}
 

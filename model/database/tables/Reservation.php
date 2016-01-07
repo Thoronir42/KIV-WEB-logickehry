@@ -55,8 +55,8 @@ class Reservation extends \model\database\DB_Entity {
 		if ($reservation->desk_id == Desk::NO_DESK) {
 			$reservation->desk_id = null;
 		}
-		$missing = $this->missing;
-		switch ($this->reservation_type_id) {
+		$missing = $reservation->missing;
+		switch ($reservation->reservation_type_id) {
 			case self::RES_TYPE_OPEN: case self::RES_TYPE_CLOSED:
 				if (empty($reservation->time_from)) {
 					$missing[] = 'time_from';
@@ -71,7 +71,7 @@ class Reservation extends \model\database\DB_Entity {
 	}
 
 	var $reservation_id = false;
-	var $game_box_id;
+	var $game_box_id = false;
 	var $reservee_user_id = false;
 	var $reservation_type_id;
 	var $reservation_date;
@@ -85,7 +85,7 @@ class Reservation extends \model\database\DB_Entity {
 	}
 	
 	public function checkRequiredProperties() {
-		parent::checkRequiredProperties(self::class);
+		return parent::checkRequiredProperties(self::class);
 	}
 	
 	public function isEvent(){
