@@ -44,8 +44,30 @@ class GameBoxExtended extends GameBox {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param int $game_type_id
+	 * @return GameBoxExtended[]
+	 */
+	public static function fetchAllByGameType($pdo, $game_type_id) {
+		$statement = $pdo->prepare("SELECT * FROM game_box_extended"
+				. " WHERE retired = 0 "
+				. "AND game_type_id = :gid");
+		if (!$statement->execute(['gid' => $game_type_id])) {
+			return false;
+		}
+		$result =  $statement->fetchAll(\PDO::FETCH_CLASS, GameBoxExtended::class);
+		$boxes = [];
+		foreach($result as $gb){
+			$boxes[$gb->game_box_id] = $gb;
+		}
+		
+	}
+
 	var $game_name;
 	var $game_subtitle;
-	var $picture_path;
+	var $times_reserved;
+	
 
 }
