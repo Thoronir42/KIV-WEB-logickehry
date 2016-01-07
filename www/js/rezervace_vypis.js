@@ -52,12 +52,12 @@ $(document).ready(function () {
 	
 	$(document).on("click", '.dateCol .btn', function () {
 		var year = $(this).attr('data-year'),
-			split = ($(this).html()).split('.');
+			split = ($(this).find('.date').html()).split('.');
 		var month = split[1],
 			day = split[0];
 		
 		$('input[name=reservation_date]').val(year+'-'+month+'-'+day);
-		setReservationTimes(false);
+		setReservationTimes(true);
 	});
 
 });
