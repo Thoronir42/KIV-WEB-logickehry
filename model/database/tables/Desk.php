@@ -9,6 +9,8 @@ namespace model\database\tables;
  */
 class Desk extends \model\database\DB_Entity {
 
+	const NO_DESK = 0;
+	
 	/**
 	 * 
 	 * @param \PDO $pdo
