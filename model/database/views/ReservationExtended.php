@@ -27,6 +27,12 @@ class ReservationExtended extends Reservation {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param mixed[] $pars
+	 * @return mixed[]
+	 */
 	public static function countByGametypeWithinTimespan($pdo, $pars) {
 		$statement = $pdo->prepare("SELECT game_type_id, count(reservation_id) as count FROM `reservation_extended` "
 				. "WHERE reservation_date >= :time_from AND reservation_date <= :time_to "
@@ -35,6 +41,38 @@ class ReservationExtended extends Reservation {
 			return $statement->fetchAll(\PDO::FETCH_ASSOC);
 		}
 		return null;
+	}
+
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param int $desk_id
+	 * @param Date $date
+	 * @param Time $time_from
+	 * @param Time $time_tom
+	 */
+	public static function checkDeskAvailable($pdo, $desk_id, $date, $time_from, $time_tom) {
+		$statement = $pdo->prepare('SELCT count(reservation_id) as count FROM reservation_extended '
+				. 'WHERE desk_id = :desk_id AND '
+				. 'reservation_date = :date AND ( '
+				  . '( date_to < :date_from && date_from > :date_from )'
+				  . '( date_to < :date_to && date_from > :date_to )'
+				. ')');
+		if($statement->execute(['desk_id' => $desk_id, 'date' => $date, 'time_from' => $time_from, 'time_to' => $time_to])){
+			return $statement->fetch(\PDO::FETCH_COLUMN)['count'];
+		}
+	}
+
+	public static function getAvailableGameBox($pdo, $game_type_id, $date, $time_from = null, $time_to = null) {
+		
+	}
+
+	public static function countReservationsOn($pdo, $date) {
+		
+	}
+
+	public static function isEventOn($pdo, $date) {
+		
 	}
 
 	var $borrower_name;

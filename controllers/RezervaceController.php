@@ -117,11 +117,55 @@ class RezervaceController extends Controller {
 
 	public function doRezervovat() {
 		$reservation = \model\database\tables\Reservation::fromPOST();
+		$reservation->reservee_user_id = $this->user->user_id;
+		$game_type_id = $this->getParam('game_type_id', INPUT_POST);
+
 		if (!$reservation->readyForInsert()) {
-			
+			$this->message('Vstupní pole rezervace nebyla správně vyplněna - rezervae nebyla přidána');
+			$this->redirect('rezervace', RezervaceController::getDefaultAction());
 		}
+
+		$v = $this->validateReservation($reservation, $game_type_id);
+		if (!$v['result']){
+			$this->message($v['message'], \libs\MessageBuffer::LVL_WAR);
+			$this->redirectPars('reservation', 'vypis');
+		}
+		
 		$pars = $reservation->asArray();
-		$pars['reservee_user_id'] = $this->user->user_id;
+		Tables\Reservation::insert($this->pdo, $pars);
+	}
+
+	/**
+	 * 
+	 * @param Tables\Reservation $reservation
+	 * @return mixed[]
+	 */
+	private function validateReservation($reservation) {
+		if (Views\ReservationExtended::isEventOn($this->pdo, $reservation->reservation_date)) {
+			return ['result' => false, 'message' =>
+				sprtintf('V den %s je naplánovaná událost a nelze tedy přidat %s.', date(DatetimeManager::HUMAN_DATE_ONLY, strtotime($reservation->reservation_date)), $reservation->isEvent() ? 'událost' : 'rezervaci')];
+		}
+
+		if ($reservation->isEvent()) {
+			$count = Views\ReservationExtended::countReservationsOn($this->pdo, $reservation->reservation_date);
+			if (!$count) {
+				return ['result' => true];
+			} else {
+				return ['result' => false, 'message' =>
+					sprtintf('V den %s není možné vytvořit událost, vytvoření blokuje %d %s', date(DatetimeManager::HUMAN_DATE_ONLY, strtotime($reservation->reservation_date)), $count, $count > 5 ? 'rezervací' : 'rezervace')];
+			}
+		}
+
+		if ($reservation->desk_id != Desk::NO_DESK) {
+			if (Views\ReservationExtended::checkDeskAvailable($this->reservation_date, $this->time_from, $this->time_tom)) {
+				return ['result' => false, 'message' => sprintf("Stůl č %02d je ve vámi zvolený čas obsazený", $this->desk_id)];
+			}
+		}
+		$box = Views\ReservationExtended::getAvailableGameBox($this->pdo, $game_type_id, $date);
+		if (!$box) {
+			return ['result' => false, 'message' => sprintf("Stůl č %02d je ve vámi zvolený čas obsazený", $this->desk_id)];
+		}
+		$reservation->game_box_id = $box;
 	}
 
 }
