@@ -31,7 +31,7 @@
 			</div>
 			<div class="panel-body">
 
-				<form class="form-horizontal">
+				<form class="form-horizontal" action="{{ urlgen.url(formAction) }}" method="post">
 					<div class="row">
 						<div class="col-sm-4">
 							{% include "mini/game_type_list_group.twig" with {'games':games, 'active':defaultGame, 'count': 'reservations'} %}
@@ -48,8 +48,8 @@
 									</select>
 								</div>
 								<div class="col-sm-8">
-									<label class="control-label" for="reservation_date">Typ rezervace</label>
-									<select name="desk_id" class="form-control">
+									<label class="control-label" for="reservation_type_id">Typ rezervace</label>
+									<select name="reservation_type_id" class="form-control">
 										{% for r in reservationTypes %}
 											<option value="{{ r.type}}">{{ r.label }}</option>
 										{% endfor %}
