@@ -53,7 +53,8 @@ class GameBoxExtended extends GameBox {
 	public static function fetchAllByGameType($pdo, $game_type_id) {
 		$statement = $pdo->prepare("SELECT * FROM game_box_extended"
 				. " WHERE retired = 0 "
-				. "AND game_type_id = :gid");
+				. "AND game_type_id = :gid "
+				. "ORDER BY times_reserved ASC");
 		if (!$statement->execute(['gid' => $game_type_id])) {
 			return false;
 		}
