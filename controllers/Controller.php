@@ -70,8 +70,8 @@ abstract class Controller {
 		$this->navbar['session_time'] = date(\model\DatetimeManager::HUMAN_FULL, $_SESSION['LAST_ACTIVITY']);
 		$this->layout = "layout.twig";
 		$this->template = [
-			'css' => [],
-			'js' => [],
+			'css' => ['bootstrap.css'],
+			'js' => ['jquery-2.1.4.min.js', 'bootstrap.js'],
 			'title' => self::APP_NAME,
 			'user' => $this->user,
 		];

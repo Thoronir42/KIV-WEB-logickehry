@@ -2,23 +2,9 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        {# Latest compiled and minified CSS
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-		<!-- Latest compiled and minified JavaScript
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>  
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-		#}
-
-		<!-- Style includes -->
-		<link href="css/bootstrap.css" rel="stylesheet">
-
         {% for style in css %}
 			<link href="{{ urlgen.css(style) }}" rel="stylesheet">
         {% endfor %}
-
-        <!-- Javascript includes -->
-        <script src="js/jquery-2.1.4.min.js"></script>  
-        <script src="js/bootstrap.js"></script>
 
         {% for script in js %}
 			<script src="{{ urlgen.js(script) }}" rel="stylesheet"></script>
