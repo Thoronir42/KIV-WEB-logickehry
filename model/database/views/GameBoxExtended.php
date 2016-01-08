@@ -62,6 +62,7 @@ class GameBoxExtended extends GameBox {
 		foreach($result as $gb){
 			$boxes[$gb->game_box_id] = $gb;
 		}
+		return $boxes;
 		
 	}
 

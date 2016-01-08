@@ -118,7 +118,6 @@ class RezervaceController extends Controller {
 	}
 
 	public function doRezervovat() {
-		var_dump($_POST);
 		$game_type_id = $this->getParam('game_type_id', INPUT_POST);
 		$reservation = \model\database\tables\Reservation::fromPOST();
 		$reservation->reservee_user_id = $this->user->user_id;
