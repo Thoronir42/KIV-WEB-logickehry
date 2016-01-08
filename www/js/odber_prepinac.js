@@ -11,7 +11,10 @@ function toggleSubscription(subscribe, game_type_id) {
 	}
 	var new_button = "<a class=\"btn btn-default " + (subscribe ? "un" : "") + "subscribe\" type=\"button\"><span class=\"glyphicon glyphicon-" + (subscribe ? "minus" : "plus") + "\"></span></a>";
 
-	var xmlhttp = new XMLHttpRequest();
+	var xmlhttp = new XMLHttpRequest(),
+		ajaxLink = $('#subToggleLink').attr('data-link').replace('~', action);
+		
+
 	xmlhttp.onreadystatechange = function () {
 		if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 			var resp = xmlhttp.responseText;
@@ -26,7 +29,7 @@ function toggleSubscription(subscribe, game_type_id) {
 
 		}
 	};
-	xmlhttp.open("GET", "?controller=ajax&action=" + action + "&id=" + game_type_id, true);
+	xmlhttp.open("GET", ajaxLink + "&id=" + game_type_id, true);
 	xmlhttp.send();
 }
 

@@ -1,24 +1,26 @@
 $(document).ready(function() {
 	$(".retire").click(function(){
 		var game_code = $(this).parent().parent(".input-group").children("input").attr("value");
-		var xmlhttp = new XMLHttpRequest();
+		var xmlhttp = new XMLHttpRequest(),
+			ajaxLink = $('#retireBoxLink').attr('data-link');
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 				var resp = xmlhttp.responseText;
-				console.info(resp);
+				
 				if(resp !== 'false'){
 					$("#ig_"+resp).remove();
 				}
 			}
 		};
-		xmlhttp.open("GET", "?controller=ajax&action=retireBox&code=" + game_code, true);
+		xmlhttp.open("GET", ajaxLink + "?code=" + game_code, true);
 		xmlhttp.send();
 	});
 	
 	$(".insert").click(function(){
 		var inputText = $(this).parent().parent(".input-group").find('input[type=text]');
 		var game_id = inputText.attr('name').split("_")[1],
-			game_code = inputText.val();
+			game_code = inputText.val(),
+			ajaxLink = $('#insertBoxLink').attr('data-link');
 		var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -33,7 +35,7 @@ $(document).ready(function() {
 				}
 			}
 		};
-		xmlhttp.open("GET", "?controller=ajax&action=insertBox&code=" + game_code + "&gameId=" + game_id, true);
+		xmlhttp.open("GET", ajaxLink+"?code=" + game_code + "&gameId=" + game_id, true);
 		xmlhttp.send();
 	});
 	

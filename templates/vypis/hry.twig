@@ -34,5 +34,10 @@
 		{% if open_row %}
 		</div>
 	{% endif %}
+
+	{% if user.isLoggedIn %}
+		<span id="subToggleLink" data-link="{{ urlgen.ajaxUrl }}"></span>
+	{% endif %}
+
 </div>
 {% endblock %}

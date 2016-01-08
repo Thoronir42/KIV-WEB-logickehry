@@ -176,6 +176,8 @@ class SpravaController extends Controller {
 				$gamesSrt[$g->game_type_id]['tracking_codes'][] = $g;
 			}
 		}
+		$this->template['retireAction'] = 'retireBox';
+		$this->template['insertAction'] = 'insertBox';
 		$this->template['games'] = $gamesSrt;
 	}
 

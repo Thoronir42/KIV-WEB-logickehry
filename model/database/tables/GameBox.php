@@ -9,6 +9,8 @@ namespace model\database\tables;
  */
 class GameBox extends \model\database\DB_Entity {
 
+	const MIN_CODE_LENGTH = 5;
+
 	/**
 	 * 
 	 * @param \PDO $pdo

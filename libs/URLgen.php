@@ -36,6 +36,11 @@ class URLgen {
 		return ['controller' => $controller, 'action' => $action, 'redirect' => $redirect];
 	}
 
+	public function ajaxUrl($action = null){
+		return $this->url(['controller' => 'ajax',
+			'action' => $action ?: \controllers\AjaxController::WILDCARD]);
+	}
+	
 	public function url($params = null) {
 		if (self::USE_NICE_URL) {
 			return $this->niceUrl($params);

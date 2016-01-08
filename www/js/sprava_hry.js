@@ -51,6 +51,7 @@ $(document).ready(function () {
 
 
 	$(".butt-submit").click(function () {
+		return;
 		var panel = $(this).parents(".game");
 
 		var xmlhttp = new XMLHttpRequest();

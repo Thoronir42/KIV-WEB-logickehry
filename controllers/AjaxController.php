@@ -11,8 +11,8 @@ use \model\database\tables as Tables,
  * @author Stepan
  */
 class AjaxController extends Controller {
-
-	const MIN_CODE_LENGTH = 5;
+	
+	const WILDCARD = '~';
 
 	public function __construct($support) {
 		parent::__construct($support);
@@ -48,8 +48,8 @@ class AjaxController extends Controller {
 		if (!$this->user->isSupervisor()) {
 			return "Nedostatečná uživatelská oprávnění";
 		}
-		if (strlen($code) < self::MIN_CODE_LENGTH) {
-			return sprintf("Evidenční kód musí být alespoň %d znaků dlouhý.", self::MIN_CODE_LENGTH);
+		if (strlen($code) < Tables\GameBox::MIN_CODE_LENGTH) {
+			return sprintf("Evidenční kód musí být alespoň %d znaků dlouhý.", Tables\GameBox::MIN_CODE_LENGTH);
 		}
 		$gameBox = Views\GameBoxExtended::fetchByCode($this->pdo, $code);
 		if ($gameBox) {
@@ -57,7 +57,7 @@ class AjaxController extends Controller {
 			$response .= ($gameBox->retired ? "je však vyřazený z oběhu" : "náleží hře " . $gameBox->game_name);
 			return $response;
 		}
-		$gameType = GameTypeManager::fetchById($this->pdo, $game_id);
+		$gameType = Views\GameTypeExtended::fetchById($this->pdo, $game_id);
 		if (!$gameType) {
 			return $this->template['response'] = sprintf("Nebyla nalezena hra %03d", $game_id);
 		}
