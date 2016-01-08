@@ -6,22 +6,67 @@ use model\ImageManager;
 
 class URLgen {
 
+	const USE_NICE_URL = true;
+	const ADDR_SEP = '/';
+
 	var $urlPrefix;
+	var $addr;
 
 	public function __construct($prefix) {
-		$this->urlPrefix = $prefix;
+		$this->addr = $this->urlPrefix = $prefix;
 	}
 
 	public function getContAct() {
-		return ['controller' => filter_input(INPUT_GET, 'controller'),
-			'action' => filter_input(INPUT_GET, 'action')];
+		$redirect = false;
+		if (!self::USE_NICE_URL) {
+			$controller = filter_input(INPUT_GET, 'controller');
+			$action = filter_input(INPUT_GET, 'action');
+		} else {
+			$url = filter_input(INPUT_GET, 'q');
+			$parts = explode(self::ADDR_SEP, $url);
+			if (count($parts) < 2) {
+				$redirect = true;
+			} else {
+				$controller = $parts[0];
+				$this->addr .= $parts[0].self::ADDR_SEP;
+				$action = $parts[1];
+				$this->addr .= $parts[1].self::ADDR_SEP;
+			}
+		}
+		return ['controller' => $controller, 'action' => $action, 'redirect' => $redirect];
 	}
 
-	public function url($params) {
+	public function url($params = null) {
+		if (self::USE_NICE_URL) {
+			return $this->niceUrl($params);
+		}
 		$return = $this->urlPrefix;
-		if (!$params) {
+		if (empty($params)) {
 			return $return;
 		}
+		$first = true;
+		foreach ($params as $parKey => $parVal) {
+			$return.=($first ? "?" : "&") . "$parKey=$parVal";
+			$first = false;
+		}
+		return $return;
+	}
+
+	private function niceUrl($params) {
+		$return = $this->urlPrefix;
+		if (empty($params)) {
+			return $return;
+		}
+		if (isset($params['controller'])) {
+			$return .= $params['controller'] . self::ADDR_SEP;
+			unset($params['controller']);
+		}
+		if (isset($params['action'])) {
+			$return .= $params['action'] . self::ADDR_SEP;
+			unset($params['action']);
+		}
+
+
 		$first = true;
 		foreach ($params as $parKey => $parVal) {
 			$return.=($first ? "?" : "&") . "$parKey=$parVal";
