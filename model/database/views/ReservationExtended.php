@@ -55,8 +55,8 @@ class ReservationExtended extends Reservation {
 		$statement = $pdo->prepare('SELCT count(reservation_id) as count FROM reservation_extended '
 				. 'WHERE desk_id = :desk_id AND '
 				. 'reservation_date = :date AND ( '
-				. ' ( time_from < :time_from1 AND :time_from2 < time_to ) OR'
-				. ' ( time_from < :time_to1   AND :time_to2   < time_to )'
+				. ' ( time_from <= :time_from1 AND :time_from2 <= time_to ) OR'
+				. ' ( time_from <= :time_to1   AND :time_to2   <= time_to )'
 				. ')');
 		$pars = ['desk_id' => $desk_id, 'date' => $date,
 			'time_from1' => $time_from, 'time_from2' => $time_from,
@@ -83,8 +83,8 @@ class ReservationExtended extends Reservation {
 		$statement = $pdo->prepare('SELECT game_box_id FROM reservation_extended '
 				. 'WHERE game_type_id = :game_type_id AND '
 				. 'reservation_date = :date AND ( '
-				. ' ( time_from < :time_from1 AND :time_from2 < time_to ) OR'
-				. ' ( time_from < :time_to1   AND :time_to2   < time_to )'
+				. ' ( time_from <= :time_from1 AND :time_from2 <= time_to ) OR'
+				. ' ( time_from <= :time_to1   AND :time_to2   <= time_to )'
 				. ')');
 		$pars = ['game_type_id' => $game_type_id, 'date' => $date,
 			'time_from1' => $time_from, 'time_from2' => $time_from,
