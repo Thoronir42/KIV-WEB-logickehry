@@ -31,6 +31,7 @@
 					
 					<div class="col-md-{{ 12 / ipr }}" id="ig_{{ code.tracking_code }}">
 						<div class="input-group">
+							<span class="input-group-addon">{{ code.times_reserved }}</span>
 							<input type="text" class="form-control" value="{{ code.tracking_code }}" readonly>
 							{% if not code.retired %}
 							<span class="input-group-btn">
