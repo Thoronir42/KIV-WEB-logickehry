@@ -131,11 +131,17 @@ class RezervaceController extends Controller {
 		$v = $this->validateReservation($reservation, $game_type_id);
 		if (!$v['result']){
 			$this->message($v['message'], \libs\MessageBuffer::LVL_WAR);
+			echo $v['message']; die;
 			$this->redirectPars('rezervace', 'vypis');
 		}
-		
-		$pars = $reservation->asArray();
-		Tables\Reservation::insert($this->pdo, $pars);
+		$reservation->game_box_id = $v['box']->game_box_id;
+		if(!Tables\Reservation::insert($this->pdo, $reservation)){
+			$this->message('Při ukládání rezervace nastaly neočekávané potíže.', \libs\MessageBuffer::LVL_WAR);
+			die;
+		} else {
+			$this->message('Rezervace byla úspěšně uložena.', \libs\MessageBuffer::LVL_SUC);	
+		}
+		$this->redirectPars('rezervace');
 	}
 
 	/**
@@ -144,32 +150,36 @@ class RezervaceController extends Controller {
 	 * @return mixed[]
 	 */
 	private function validateReservation($reservation, $game_type_id) {
-		if (Views\ReservationExtended::isEventOn($this->pdo, $reservation->reservation_date)) {
+		$resCounts = Views\ReservationExtended::countReservationsOn($this->pdo, $reservation->reservation_date);
+		if (!empty($resCounts) && !empty($resCounts[Tables\Reservation::RES_TYPE_EVENT])) {
 			return ['result' => false, 'message' =>
 				sprtintf('V den %s je naplánovaná událost a nelze tedy přidat %s.', date(DatetimeManager::HUMAN_DATE_ONLY, strtotime($reservation->reservation_date)), $reservation->isEvent() ? 'událost' : 'rezervaci')];
 		}
 
 		if ($reservation->isEvent()) {
-			$count = Views\ReservationExtended::countReservationsOn($this->pdo, $reservation->reservation_date);
-			if (!$count) {
+			if (!empty($resCounts)) {
 				return ['result' => true];
 			} else {
+				$total = $resCounts['total'];
 				return ['result' => false, 'message' =>
-					sprtintf('V den %s není možné vytvořit událost, vytvoření blokuje %d %s', date(DatetimeManager::HUMAN_DATE_ONLY, strtotime($reservation->reservation_date)), $count, $count > 5 ? 'rezervací' : 'rezervace')];
+					sprtintf('V den %s není možné vytvořit událost, vytvoření blokuje %d %s', date(DatetimeManager::HUMAN_DATE_ONLY, strtotime($reservation->reservation_date)), $total, $total > 5 ? 'rezervací' : 'rezervace')];
 			}
 		}
 
 		if ($reservation->desk_id != Tables\Desk::NO_DESK) {
 			echo $reservation->desk_id;
-			if (Views\ReservationExtended::checkDeskAvailable($this->reservation_date, $this->time_from, $this->time_tom)) {
-				return ['result' => false, 'message' => sprintf("Stůl č %02d je ve vámi zvolený čas obsazený", $this->desk_id)];
+			if (Views\ReservationExtended::checkDeskAvailable($this->pdo, $reservation->reservation_date, $reservation->time_from, $reservation->time_to)) {
+				return ['result' => false, 'message' => sprintf("Stůl č %02d je ve vámi zvolený čas obsazený", $reservation->desk_id)];
 			}
 		}
-		$box = Views\ReservationExtended::getAvailableGameBox($this->pdo, $game_type_id, $reservation->reservation_date);
-		if (!$box) {
+		$boxes = Views\ReservationExtended::getAvailableGameBox($this->pdo, $game_type_id, $reservation->reservation_date, $reservation->time_from, $reservation->time_to);
+		if($boxes === false){
+			return ['result' => false, 'message' => "Při kontrole použitých krabic nastala chyba."];
+		}
+		if (empty($boxes)) {
 			return ['result' => false, 'message' => "Ve vámi zvolený čas není dostupná žádná herní krabice požadované hry."];
 		}
-		$reservation->game_box_id = $box;
+		return ['result' => true, 'box' => array_shift(array_slice($boxes, 0, 1))];
 	}
 
 }

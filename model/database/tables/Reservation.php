@@ -31,19 +31,25 @@ class Reservation extends \model\database\DB_Entity {
 	/**
 	 * 
 	 * @param \PDO $pdo
-	 * @param mixed[] $pars
+	 * @param Reservation $res
 	 */
-	public static function insert($pdo, $pars) {
-		$pars['time_to'] = date(\model\DatetimeManager::DB_FULL, $pars['time_to']);
-		$pars['time_to'] = date(\model\DatetimeManager::DB_FULL, $pars['time_to']);
+	public static function insert($pdo, $res) {
 		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`reservation` "
-				. "(`reservation_id`, `game_box_id`, `reservee_user_id`, `open_reservation`, `time_from`, `time_to`, `desk_id`)
-		VALUES (NULL,		  :game_box_id , :reservee_user_id, '1', '2015-12-14 12:23:00', '2015-12-14 14:00:00', '1'");
-		if ($statement->execute($pars)) {
-			return true;
+				. "(`game_box_id`, `reservee_user_id`, `reservation_type_id`, `reservation_date`, `time_from`, `time_to`, `desk_id`) "
+		. "VALUES ( :game_box_id , :reservee_user_id,  :reservation_type_id,  :reservation_date,  :time_from,  :time_to,  :desk_id )");
+		$pars = [
+			'game_box_id' => $res->game_box_id, 'reservee_user_id' => $res->reservee_user_id,
+			'reservation_type_id' => $res->reservation_type_id, 'reservation_date' => $res->reservation_date,
+			'reservation_date' => date(\model\DatetimeManager::DB_DATE_ONLY, strtotime($res->reservation_date)),
+			'time_to' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($res->time_to)),
+			'time_from' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($res->time_from)),
+			'desk_id' => $res->desk_id];
+		if (!$statement->execute($pars)) {
+			var_dump($statement->errorInfo());
+			return false;
 		}
-		var_dump($statement->errorInfo());
-		return false;
+		return true;
+		
 	}
 
 	/**
@@ -79,16 +85,16 @@ class Reservation extends \model\database\DB_Entity {
 	var $time_to = false;
 	var $desk_id = false;
 
-	
 	public function readyForInsert() {
 		return parent::readyForInsert();
 	}
-	
+
 	public function checkRequiredProperties() {
 		return parent::checkRequiredProperties(self::class);
 	}
-	
-	public function isEvent(){
+
+	public function isEvent() {
 		return $this->reservation_type_id == self::RES_TYPE_EVENT;
 	}
+
 }
