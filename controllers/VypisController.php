@@ -37,7 +37,7 @@ class VypisController extends Controller {
 		$this->template['col_game'] = 4;
 		$games = Views\GameTypeExtended::fetchAll($this->pdo);
 		$this->user->setSubscribedItems(Views\Subscription::fetchGamesByUser($this->pdo, $this->user->user_id));
-		$this->template['hry'] = $games;
+		$this->template['games'] = $games;
 	}
 
 	public function renderDetailHry() {

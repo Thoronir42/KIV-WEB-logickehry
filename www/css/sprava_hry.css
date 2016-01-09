@@ -23,6 +23,10 @@
 	width: 100%;
 }
 
+.game .panel-body{
+	border: 1px solid;
+}
+
 .grp-edit .list-group-item{
 	padding: 0px;
 	width:100%;

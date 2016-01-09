@@ -3,10 +3,10 @@
 
 {% block bodyContent %}
 	<div class="row">
-		{% for g in hry %}
+		{% for g in games %}
 			<div class="col-md-{{ col_game }}">
 				{% set game_panel_class = (user.isSubscribedTo(g.game_type_id) ? 'panel-info' : 'panel-default' ) %}
-				<div class="game panel {{ game_panel_class }}" id="gp_{{ g.game_type_id }}">
+				<div class="game panel {{ game_panel_class }}" id="game_{{ g.game_type_id }}">
 					<div class="panel-heading">
 						<div class="row" style="height: 100%;">
 							<span class="col-xs-9"><a href="{{ urlgen.gDet(g.game_type_id) }}">
@@ -29,4 +29,15 @@
 	{% if user.isLoggedIn %}
 		<span id="subToggleLink" data-link="{{ urlgen.ajaxUrl }}"></span>
 	{% endif %}
+{% endblock %}
+
+{% block pageStyle %}
+	<style>
+		{% for g in games %}
+			#game_{{ g.game_type_id }}>.panel-heading, #game_{{ g.game_type_id}}>.panel-body{ border-color: #{{ g.getColor() }}
+			}
+			#game_{{ g.game_type_id}}>.panel-body{ background-color: #{{ g.getColor() }}
+			}
+		{% endfor %}
+	</style>
 {% endblock %}

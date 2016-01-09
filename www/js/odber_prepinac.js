@@ -21,7 +21,7 @@ function toggleSubscription(subscribe, game_type_id) {
 			if (resp === 'false') {
 				return;
 			}
-			var gp = $("#gp_" + game_type_id);
+			var gp = $("#game_" + game_type_id);
 			gp.removeClass(class_rem);
 			gp.addClass(class_add);
 			gp.find('.sub_user_count').html(resp);
