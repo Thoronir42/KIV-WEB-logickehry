@@ -155,19 +155,23 @@ class SpravaController extends Controller {
 		$retired = $this->getParam("retired");
 		$this->addCss("hra.css");
 		$this->template['pageTitle'] = "Správa evidovaných herních krabic";
-		$this->template['col_game'] = 6;
+		$this->template['col_game'] = 4;
 		$this->template['col_code'] = 6;
 
 
-		$games = Views\GameBoxExtended::fetchAll($this->pdo);
+		$boxes = Views\GameBoxExtended::fetchAll($this->pdo);
+		$games = Views\GameTypeExtended::fetchAll($this->pdo);
 		$gamesSrt = [];
-		foreach ($games as $g) {
-			if (!isset($gamesSrt[$g->game_type_id])) {
-				$gamesSrt[$g->game_type_id] = $g->asArray();
-				$gamesSrt[$g->game_type_id]['tracking_codes'] = [];
-			}
-			if ($g->tracking_code && (!$g->retired || $retired)) {
-				$gamesSrt[$g->game_type_id]['tracking_codes'][] = $g;
+		
+		foreach($games as $g){
+			$g->tracking_codes = [];
+			$gamesSrt[$g->game_type_id] = $g;
+		}
+		
+		foreach ($boxes as $b) {
+			if ($b->tracking_code && (!$b->retired || $retired)) {
+				$game = $gamesSrt[$b->game_type_id];
+				$game->addTrackingCode($b);
 			}
 		}
 		$this->template['retireAction'] = 'retireBox';

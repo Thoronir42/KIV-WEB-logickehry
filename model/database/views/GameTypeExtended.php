@@ -76,4 +76,7 @@ class GameTypeExtended extends GameType {
 	var $box_count;
 	var $reservationCount;
 
+	public function addTrackingCode($code){
+		$this->misc['tracking_codes'][] = $code;
+	}
 }

@@ -7,16 +7,16 @@
 	{% set open_game_row = false %}
 	<div class="row">
 		{% for g in games %}
-			<div class="col-md-{{ col_game }}">
-				<div class="game panel panel-default">
+			<div class="col-lg-{{ col_game }}">
+				<div class="game panel panel-default" id="game_{{ g.game_type_id }}">
 					<div class="panel-heading">
 						<div class="row" style="height: 100%;">
 							<span class="col-lg-9">
 								<div class="game_name">{{ g.game_name }}</div>
 								<div class="game_subtitle">{{ g.game_subtitle }}</div>
 							</span>
-							<span class="col-lg-3 image-frame pull-right">
-								<img src="{{ g.picture_path }}" class="img-rounded img-responsive">
+							<span class="col-lg-3 image-frame">
+								<img src="{{ urlgen.gImg(g.game_type_id) }}" class="pull-right img-rounded img-responsive">
 							</span>
 						</div>
 					</div>
@@ -31,7 +31,7 @@
 											<input type="text" class="form-control" value="{{ code.tracking_code }}" readonly>
 											{% if not code.retired %}
 												<span class="input-group-btn">
-													<button class="btn btn-default retire" type="button" data-toggle="tooltip" data-placement="bottom" title="Vyřadit"><span class="glyphicon glyphicon-log-out"></span></button>
+													<button class="btn btn-danger retire" type="button" data-toggle="tooltip" data-placement="bottom" title="Vyřadit"><span class="glyphicon glyphicon-log-out"></span></button>
 												</span>
 											{% else %}
 												<span class="input-group-addon">Vyřazený</span>
@@ -52,8 +52,10 @@
 								<input type="text" class="form-control" name="addcode_{{g.game_type_id}}" placeholder="G00001" data-toggle="tooltip" title="Evidovat nový kód">
 
 								<span class="input-group-btn">
-									<a tabindex="{{ loop.index0 }}" class="btn btn btn-default insert" id="ai_{{ g.game_type_id }}"
-									   role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content=" ? ? ? ">Ok</a>
+									<a tabindex="{{ loop.index0 }}" class="btn btn btn-primary insert" id="ai_{{ g.game_type_id }}"
+									   role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content=" ? ? ? ">
+										<span class="glyphicon glyphicon-plus"></span>
+									</a>
 								</span>
 							</div>
 						</div>
@@ -66,4 +68,15 @@
 	<span id="retireBoxLink" data-link="{{ urlgen.ajaxUrl(retireAction) }}"></span>
 	<span id="insertBoxLink" data-link="{{ urlgen.ajaxUrl(insertAction) }}"></span>
 
+{% endblock %}
+
+{% block pageStyle %}
+	<style>
+		{% for g in games %}
+			#game_{{ g.game_type_id }}>.panel-heading, #game_{{ g.game_type_id}}>.panel-body{ border-color: #{{ g.getColor() }};
+			}
+			#game_{{ g.game_type_id}}>.panel-body{ background-color: #{{ g.getColor() }};
+			}
+		{% endfor %}
+	</style>
 {% endblock %}

@@ -58,18 +58,16 @@ class GameBoxExtended extends GameBox {
 		if (!$statement->execute(['gid' => $game_type_id])) {
 			return false;
 		}
-		$result =  $statement->fetchAll(\PDO::FETCH_CLASS, GameBoxExtended::class);
+		$result = $statement->fetchAll(\PDO::FETCH_CLASS, GameBoxExtended::class);
 		$boxes = [];
-		foreach($result as $gb){
+		foreach ($result as $gb) {
 			$boxes[$gb->game_box_id] = $gb;
 		}
 		return $boxes;
-		
 	}
 
 	var $game_name;
 	var $game_subtitle;
 	var $times_reserved;
-	
 
 }
