@@ -156,7 +156,7 @@ class SpravaController extends Controller {
 		$this->addCss("hra.css");
 		$this->template['pageTitle'] = "Správa evidovaných herních krabic";
 		$this->template['col_game'] = 4;
-		$this->template['col_code'] = 6;
+		$this->template['col_code'] = 12;
 
 
 		$boxes = Views\GameBoxExtended::fetchAll($this->pdo);

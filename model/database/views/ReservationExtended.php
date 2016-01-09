@@ -30,6 +30,21 @@ class ReservationExtended extends Reservation {
 	/**
 	 * 
 	 * @param \PDO $pdo
+	 * @param type $id
+	 * @return type
+	 */
+	public static function fetchById($pdo, $id) {
+		$statement = $pdo->prepare("SELECT * FROM `reservation_extended` "
+				. "WHERE reservation_id = :id ");
+		if ($statement->execute(['id' => $id])) {
+			return $statement->fetchObject(ReservationExtended::class);
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param \PDO $pdo
 	 * @param mixed[] $pars
 	 * @return mixed[]
 	 */
@@ -130,9 +145,12 @@ class ReservationExtended extends Reservation {
 	var $reservation_type;
 	var $game_type_id;
 	var $game_name;
+	var $game_subtitle;
 	var $min_players;
 	var $signed_players;
 	var $max_players;
 	var $desk_capacity;
+
+	
 
 }

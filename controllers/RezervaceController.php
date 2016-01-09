@@ -149,7 +149,7 @@ class RezervaceController extends Controller {
 	 */
 	private function validateReservation($reservation, $game_type_id) {
 		$resCounts = Views\ReservationExtended::countReservationsOn($this->pdo, $reservation->reservation_date);
-		
+
 		if (!empty($resCounts) && !empty($resCounts[Tables\Reservation::RES_TYPE_EVENT])) {
 			return ['result' => false, 'message' =>
 				sprtintf('V den %s je naplánovaná událost a nelze tedy přidat %s.', date(DatetimeManager::HUMAN_DATE_ONLY, strtotime($reservation->reservation_date)), $reservation->isEvent() ? 'událost' : 'rezervaci')];
@@ -176,6 +176,18 @@ class RezervaceController extends Controller {
 			return ['result' => false, 'message' => "Ve vámi zvolený čas není dostupná žádná herní krabice požadované hry."];
 		}
 		return ['result' => true, 'box' => array_shift(array_slice($boxes, 0, 1))];
+	}
+
+	public function renderDetail() {
+		$id = $this->getParam('id');
+		$reservation =  Views\ReservationExtended::fetchById($this->pdo, $id);
+		if(empty($reservation)){
+			$this->message("Požadovaná rezeravce číslo $id není k dispozici.");
+			$this->redirectPars('rezervace', 'vypis');
+		}
+		
+		
+		$this->template['r'] = $reservation;
 	}
 
 }

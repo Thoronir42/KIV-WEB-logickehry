@@ -1,0 +1,36 @@
+.reservation>.panel-heading{
+	
+}
+
+.reservation .panel-heading img{
+	height: 110px;
+}
+
+.reservation_title{
+	font-size:3.0em;
+}
+
+.game_name{
+	font-size: 2.8em;
+}
+
+.game_name .game_subtitle{
+	font-size: 0.68em;
+}
+
+.game .ratings .panel-body{
+	max-height: 240px;
+	overflow-y: auto;
+}
+
+.panel.users .panel-heading .btn{
+	margin-top: -6px;
+}
+.panel.users .panel-body{
+	max-height: 230px;
+	padding:0;
+	overflow-y: auto;
+}
+.panel.users .list-group{
+	
+}
