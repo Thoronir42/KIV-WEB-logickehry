@@ -49,14 +49,8 @@ class SpravaController extends Controller {
 		$this->template['col_game'] = 4;
 		$this->template['game_edit_form_action'] = ['controller' => 'sprava', 'action' => 'upravitHru'];
 		$this->template['mailLink'] = ['controller' => 'sprava', 'action' => 'hromadnyMail', 'id' => 0];
-
-
-		$games = Views\GameTypeExtended::fetchAll($this->pdo);
-		foreach ($games as $key => $g) {
-			$path = $this->urlGen->img(ImageManager::get(sprintf("game_%03d", $g->game_type_id)));
-			$games[$key]->picture_path = $path;
-		}
-		$this->template['games'] = $games;
+		
+		$this->template['games'] = Views\GameTypeExtended::fetchAll($this->pdo);
 	}
 
 	public function doUpravitHru() {
