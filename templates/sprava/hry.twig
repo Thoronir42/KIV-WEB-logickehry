@@ -13,11 +13,9 @@
 	</div>
 
 	{% set open_row = false %}
-	{% for g in games %}
-		{% if loop.index0 % gpr == 0 %}
-			<div class="row"> {% set open_row = true %}
-			{% endif %}
-			<div class="col-md-{{ 12 / gpr }}">
+	<div class="row"> {% set open_row = true %}
+		{% for g in games %}
+			<div class="col-md-{{ col_game }}">
 				<div class="game panel panel-default" id="game_{{ g.game_type_id }}">
 					<div class="panel-heading game{{ g.game_type_id }}">
 						<span class="hidden game_type_id">{{ g.game_type_id }}</span>
@@ -62,69 +60,62 @@
 							<h3>Toto nemělo být vidět, gratuluji k rozbití stránky</h3>
 						</div>
 					</div>
-
-
 				</div>
 			</div>
-			{% if loop.index0 % gpr == gpr - 1 %}
-			</div> {% set open_row = false %}
-		{% endif %}
-	{% endfor %}
-	{% if open_row %}
+		{% endfor %}
 	</div>
-{% endif %}
 
-<div id="edit_form" class="hidden">
-	<form class="form-inline" action="{{ urlgen.url(game_edit_form_action) }}" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="game_type_id">
-		<ul class="list-group">
-			<li class="list-group-item">
-				<input type="text" class="form-control" name="game_name" placeholder="Název hry">
-			</li>
-			<li class="list-group-item">
-				<input type="text" class="form-control" name="game_subtitle" placeholder="Podtitulek">
-			</li>
-			<li class="list-group-item">
-				<div class="row">
-					<div class="col-xs-6">
-						<input type="number" class="form-control" name="min_players" placeholder="Min. hráčů">
+	<div id="edit_form" class="hidden">
+		<form class="form-inline" action="{{ urlgen.url(game_edit_form_action) }}" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="game_type_id">
+			<ul class="list-group">
+				<li class="list-group-item">
+					<input type="text" class="form-control" name="game_name" placeholder="Název hry">
+				</li>
+				<li class="list-group-item">
+					<input type="text" class="form-control" name="game_subtitle" placeholder="Podtitulek">
+				</li>
+				<li class="list-group-item">
+					<div class="row">
+						<div class="col-xs-6">
+							<input type="number" class="form-control" name="min_players" placeholder="Min. hráčů">
+						</div>
+						<div class="col-xs-6">
+							<input type="number" class="form-control" name="max_players" placeholder="Max. hráčů">
+						</div>
 					</div>
-					<div class="col-xs-6">
-						<input type="number" class="form-control" name="max_players" placeholder="Max. hráčů">
-					</div>
-				</div>
-			</li>
-			<li class="list-group-item">
-				<span class="input-group">
-					<input type="text" class="form-control" name="avg_playtime" placeholder="Průměrná doba hry">
-					<span class="input-group-addon">minut</span>
-				</span>
-			</li>
-			<li class="list-group-item">
-				<div class="input-group">
-					<span class="input-group-btn">
-						<span class="btn btn-default btn-file">
-							Procházet&hellip; <input type="file" name="picture">
+				</li>
+				<li class="list-group-item">
+					<span class="input-group">
+						<input type="text" class="form-control" name="avg_playtime" placeholder="Průměrná doba hry">
+						<span class="input-group-addon">minut</span>
+					</span>
+				</li>
+				<li class="list-group-item">
+					<div class="input-group">
+						<span class="input-group-btn">
+							<span class="btn btn-default btn-file">
+								Procházet&hellip; <input type="file" name="picture">
+							</span>
 						</span>
-					</span>
-					<input type="text" class="form-control" readonly>
-					<span class="input-group-addon">
-						<input type="checkbox" name="keepPicture" class="checkbox" checked="true" data-toggle="tooltip" data-placement="bottom" title="Ponechat stávající obrázek">
-					</span>
-				</div>
-			</li>
+						<input type="text" class="form-control" readonly>
+						<span class="input-group-addon">
+							<input type="checkbox" name="keepPicture" class="checkbox" checked="true" data-toggle="tooltip" data-placement="bottom" title="Ponechat stávající obrázek">
+						</span>
+					</div>
+				</li>
 
-			<div class="row pull-down">
-				<div class="col-xs-6">
-					<a class="btn btn-info form-control butt-cancel"><span class="glyphicon glyphicon-backward"></span></a>
+				<div class="row pull-down">
+					<div class="col-xs-6">
+						<a class="btn btn-info form-control butt-cancel"><span class="glyphicon glyphicon-backward"></span></a>
+					</div>
+					<div class="col-xs-6">
+						<button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-ok"></span></button>
+					</div>
 				</div>
-				<div class="col-xs-6">
-					<button type="submit" class="btn btn-success form-control"><span class="glyphicon glyphicon-ok"></span></button>
-				</div>
-			</div>
-		</ul>
-	</form>
-</div>
+			</ul>
+		</form>
+	</div>
 
 
 {% endblock %}

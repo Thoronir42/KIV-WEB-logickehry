@@ -46,7 +46,7 @@ class SpravaController extends Controller {
 
 		$this->template['pageTitle'] = "Správa her";
 		$this->template['insert_game_form_action'] = ['controller' => 'sprava', 'action' => 'pridatHru'];
-		$this->template['gpr'] = 3;
+		$this->template['col_game'] = 4;
 		$this->template['game_edit_form_action'] = ['controller' => 'sprava', 'action' => 'upravitHru'];
 		$this->template['mailLink'] = ['controller' => 'sprava', 'action' => 'hromadnyMail', 'id' => 0];
 
@@ -161,8 +161,8 @@ class SpravaController extends Controller {
 		$retired = $this->getParam("retired");
 		$this->addCss("hra.css");
 		$this->template['pageTitle'] = "Správa evidovaných herních krabic";
-		$this->template['gpr'] = 2;
-		$this->template['ipr'] = 2;
+		$this->template['col_game'] = 6;
+		$this->template['col_code'] = 6;
 
 
 		$games = Views\GameBoxExtended::fetchAll($this->pdo);

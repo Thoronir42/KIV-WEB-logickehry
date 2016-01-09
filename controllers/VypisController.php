@@ -34,7 +34,7 @@ class VypisController extends Controller {
 		$this->addCss("hra.css");
 		$this->addJs('odber_prepinac.js');
 		$this->template['pageTitle'] = "Výpis her";
-		$this->template['gpr'] = 3; // games per row
+		$this->template['col_game'] = 4;
 		$games = Views\GameTypeExtended::fetchAll($this->pdo);
 		$this->user->setSubscribedItems(Views\Subscription::fetchGamesByUser($this->pdo, $this->user->user_id));
 		$this->template['hry'] = $games;

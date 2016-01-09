@@ -3,80 +3,67 @@
 {% extends layout %}
 
 {% block bodyContent %}
-	
+
 	{% set open_game_row = false %}
-	{% for g in games %}
-	{% if loop.index0 % gpr == 0 %}
-		<div class="row"> {% set open_code_row = true %}
-	{% endif %}
-		<div class="col-md-{{ 12 / gpr }}">
-		<div class="game panel panel-default">
-			<div class="panel-heading">
-				<div class="row" style="height: 100%;">
-				<span class="col-lg-9">
-					<div class="game_name">{{ g.game_name }}</div>
-					<div class="game_subtitle">{{ g.game_subtitle }}</div>
-				</span>
-				<span class="col-lg-3 image-frame pull-right">
-					<img src="{{ g.picture_path }}" class="img-rounded img-responsive">
-				</span>
-				</div>
-			</div>
-			<div class="panel-body">
-				{% set open_code_row = false %}{% set gLoop = loop %}
-				{% for code in g.tracking_codes%}
-					{% if loop.index0 % ipr == 0 %}
-						<div class="row"> {% set open_code_row = true %}
-					{% endif %}
-					
-					<div class="col-md-{{ 12 / ipr }}" id="ig_{{ code.tracking_code }}">
-						<div class="input-group">
-							<span class="input-group-addon">{{ code.times_reserved }}</span>
-							<input type="text" class="form-control" value="{{ code.tracking_code }}" readonly>
-							{% if not code.retired %}
-							<span class="input-group-btn">
-								<button class="btn btn-default retire" type="button" data-toggle="tooltip" data-placement="bottom" title="Vyřadit"><span class="glyphicon glyphicon-log-out"></span></button>
+	<div class="row">
+		{% for g in games %}
+			<div class="col-md-{{ col_game }}">
+				<div class="game panel panel-default">
+					<div class="panel-heading">
+						<div class="row" style="height: 100%;">
+							<span class="col-lg-9">
+								<div class="game_name">{{ g.game_name }}</div>
+								<div class="game_subtitle">{{ g.game_subtitle }}</div>
 							</span>
-							{% else %}
-								<span class="input-group-addon">Vyřazený</span>
-							{% endif %}
+							<span class="col-lg-3 image-frame pull-right">
+								<img src="{{ g.picture_path }}" class="img-rounded img-responsive">
+							</span>
 						</div>
 					</div>
-					{% if loop.index0 % ipr == ipr-1 %}
-						</div> {% set open_code_row = false %}
-					{% endif %}
-				{% else %}
-					<div class="well"><span class="label label-warning">!</span> Pro tuto hru nejsou evidovány žádné kódy</div>
-				{% endfor %}{% set loop = gLoop %}
-				{% if open_code_row %}
-				</div>
-				{% endif %}
-			</div>
-			<div class="panel-footer">
-				<div class="row">
-					<div class="col-md-offset-3 col-md-6 input-group">
-						<label class="input-group-addon" for="addcode_{{g.game_type_id}}"><span class="glyphicon glyphicon-log-in"></span></label>
-						
-						<input type="text" class="form-control" name="addcode_{{g.game_type_id}}" placeholder="G00001" data-toggle="tooltip" title="Evidovat nový kód">
-						
-						<span class="input-group-btn">
-							<a tabindex="{{ loop.index0 }}" class="btn btn btn-default insert" id="ai_{{ g.game_type_id }}"
-							   role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content=" ? ? ? ">Ok</a>
-						</span>
+					<div class="panel-body">
+						{% set gLoop = loop %}
+						{% if g.tracking_codes is not empty %}
+							<div class="row">
+								{% for code in g.tracking_codes%}
+									<div class="col-md-{{ col_code }}" id="ig_{{ code.tracking_code }}">
+										<div class="input-group">
+											<span class="input-group-addon">{{ code.times_reserved }}</span>
+											<input type="text" class="form-control" value="{{ code.tracking_code }}" readonly>
+											{% if not code.retired %}
+												<span class="input-group-btn">
+													<button class="btn btn-default retire" type="button" data-toggle="tooltip" data-placement="bottom" title="Vyřadit"><span class="glyphicon glyphicon-log-out"></span></button>
+												</span>
+											{% else %}
+												<span class="input-group-addon">Vyřazený</span>
+											{% endif %}
+										</div>
+									</div>
+								{% endfor %}{% set loop = gLoop %}
+							</div>
+						{% else %}
+							<div class="well"><span class="label label-warning">!</span> Pro tuto hru nejsou evidovány žádné kódy</div>
+						{% endif %}
+					</div>
+					<div class="panel-footer">
+						<div class="row">
+							<div class="col-md-offset-3 col-md-6 input-group">
+								<label class="input-group-addon" for="addcode_{{g.game_type_id}}"><span class="glyphicon glyphicon-log-in"></span></label>
+
+								<input type="text" class="form-control" name="addcode_{{g.game_type_id}}" placeholder="G00001" data-toggle="tooltip" title="Evidovat nový kód">
+
+								<span class="input-group-btn">
+									<a tabindex="{{ loop.index0 }}" class="btn btn btn-default insert" id="ai_{{ g.game_type_id }}"
+									   role="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content=" ? ? ? ">Ok</a>
+								</span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		</div>
-	{% if loop.index0 % gpr == gpr-1 %}
-		</div> {% set open_game_row = false %}
-	{% endif %}
-	{% endfor %}
-	{% if open_game_row %}
-		</div>
-	{% endif %}
-	
+		{% endfor %}
+	</div>
+
 	<span id="retireBoxLink" data-link="{{ urlgen.ajaxUrl(retireAction) }}"></span>
 	<span id="insertBoxLink" data-link="{{ urlgen.ajaxUrl(insertAction) }}"></span>
-	
+
 {% endblock %}
