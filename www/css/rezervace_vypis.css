@@ -15,6 +15,7 @@
 	padding-left: 0;
 	text-align: center;
 }
+.resCol{padding-right: 0;}
 .reservations .panel-body .list-group-item.reservationRow{
 	height:48px;
 	border-width:1px;
@@ -36,6 +37,10 @@
 .reservations .list-group-item .row,
 .reservations .list-group-item .row>*{
 	height:100%;
+}
+
+.resRow{
+	margin-right: 0px;
 }
 
 .reservation{

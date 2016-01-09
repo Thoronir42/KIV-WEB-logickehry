@@ -11,7 +11,7 @@
 </div>
 {% for i in (resRend.getWeekStartDay())..(resRend.getWeekEndDay()) %}
 	<div class="list-group-item{% if i > 0 %} reservationRow{% endif %}">
-		<div class="row">
+		<div class="row resRow">
 			{% set rd = reservationDays[i] %}
 			<div class="col-sm-1 dateCol">
 				<span class="btn btn-default" data-year="{{ rd['year'] }}">
@@ -26,7 +26,8 @@
 				{% for res in rd['reservations'] %}
 					<div class="reservation game{{ res.game_type_id }}" style="left:{{ resRend.getStartPct(res) }}%; width: {{ resRend.getWidthPct(res) }}%;">
 						{{ res.game_name }}
-						{{ resRend.time(res.time_from) }} - {{ resRend.time(res.time_to) }}
+						<br>
+						<small>{{ resRend.time(res.time_from) }} - {{ resRend.time(res.time_to) }}</small>
 					</div>
 				{% else %}
 					{{ resRend.getDuringDayString(i) }} nejsou žádné rezervace

@@ -32,7 +32,7 @@ class ReservationRenderer {
 		$rStart = strtotime($res->time_from);
 		$h = date('H', $rStart);
 		$m = date('i', $rStart);
-		$dayMin = 60 * ($h - $this->dayStart) + $m - 5;
+		$dayMin = 60 * ($h - $this->dayStart) + $m;
 		return $dayMin * 100 / $this->dayLength;
 	}
 
@@ -42,10 +42,18 @@ class ReservationRenderer {
 	 * @return double
 	 */
 	public function getWidthPct($res) {
-		$rLength = strtotime($res->time_to) - strtotime($res->time_from);
+		if($res->isEvent()){
+			return 100;
+		}
+		
+		$rFrom = strtotime($res->time_from);
+		$rTo = strtotime($res->time_to);
+		$rLength = $rTo - $rFrom;
 		$h = date('H', $rLength);
 		$m = date('i', $rLength);
 		$rTime = 60 * $h + $m;
+		// 19:00 - 7:00 = 13:00 ?????? only happened to eventReservation
+		//echo date('H:i', $rFrom).' - '.date('H:i', $rTo)." =$h:$m = $rTime / $this->dayLength";
 		return $rTime * 100 / $this->dayLength;
 	}
 
