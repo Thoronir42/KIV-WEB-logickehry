@@ -50,7 +50,7 @@ class SpravaController extends Controller {
 		$this->template['game_edit_form_action'] = ['controller' => 'sprava', 'action' => 'upravitHru'];
 		$this->template['mailLink'] = ['controller' => 'sprava', 'action' => 'hromadnyMail', 'id' => 0];
 		
-		$this->template['games'] = Views\GameTypeExtended::fetchAll($this->pdo);
+		$this->template['games'] = Views\GameTypeExtended::fetchAllWithCounts($this->pdo);
 	}
 
 	public function doUpravitHru() {
