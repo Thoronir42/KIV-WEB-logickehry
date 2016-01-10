@@ -85,6 +85,14 @@ class GameType extends \model\database\DB_Entity {
 	public function getColor() {
 		return \model\ColorManager::numberToColor($this->game_type_id);
 	}
+	
+	public function getFullName(){
+		$return = $this->game_name;
+		if(!empty($this->game_subtitle)){
+			$return .= ' '.$this->game_subtitle;
+		}
+		return $return;
+	}
 
 	public function getPlayerCount($separator = ' - ') {
 		$reverse = ($this->min_players > $this->max_players);
