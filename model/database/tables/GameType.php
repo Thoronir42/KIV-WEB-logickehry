@@ -64,7 +64,11 @@ class GameType extends \model\database\DB_Entity {
 	 * @return GameType
 	 */
 	public static function fromPOST() {
-		return parent::fromPOST(self::class);
+		$gt = parent::fromPOST(self::class);
+		if(empty($gt->max_players)){
+			$gt->max_players = $gt->min_players;
+		}
+		return $gt;
 	}
 
 	var $game_type_id = false;
