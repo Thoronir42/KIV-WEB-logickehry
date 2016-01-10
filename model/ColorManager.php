@@ -9,7 +9,7 @@ namespace model;
  */
 class ColorManager {
 
-	const TRANSFORM_POLYNOM = [1, -2, -7, 3, +12];
+	const TRANSFORM_POLYNOM = [1, -5, -2, 1, +12];
 
 	private static $colors = [];
 
