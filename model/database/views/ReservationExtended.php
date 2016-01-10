@@ -31,7 +31,7 @@ class ReservationExtended extends Reservation {
 	 * 
 	 * @param \PDO $pdo
 	 * @param type $id
-	 * @return type
+	 * @return ReservationExtended
 	 */
 	public static function fetchById($pdo, $id) {
 		$statement = $pdo->prepare("SELECT * FROM `reservation_extended` "
@@ -41,7 +41,7 @@ class ReservationExtended extends Reservation {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -140,7 +140,22 @@ class ReservationExtended extends Reservation {
 		return $return;
 	}
 
-	var $borrower_name;
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param int $reservation_id
+	 * @return UserExtended[]
+	 */
+	public static function getUsers($pdo, $reservation_id) {
+		$statement = $pdo->prepare('SELECT ue.* FROM reservation_users '
+				. 'JOIN user_extended AS ue ON reservation_users.user_id = ue.user_id '
+				. 'WHERE reservation_users.reservation_id = :rid');
+		if (!$statement->execute(['rid' => $reservation_id])) {
+			return false;
+		}
+		return $statement->fetchAll(\PDO::FETCH_CLASS, UserExtended::class);
+	}
+
 	var $tracking_code;
 	var $reservation_type;
 	var $game_type_id;
@@ -150,7 +165,5 @@ class ReservationExtended extends Reservation {
 	var $signed_players;
 	var $max_players;
 	var $desk_capacity;
-
-	
 
 }

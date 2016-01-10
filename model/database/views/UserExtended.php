@@ -25,6 +25,21 @@ class UserExtended extends User {
 		}
 		return null;
 	}
+	
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param int $user_id
+	 * @return ReservationExtended
+	 */
+	public static function fetchById($pdo, $user_id) {
+		$statement = $pdo->prepare("SELECT * FROM user_extended
+			WHERE user_id = :id");
+		if ($statement->execute(['id' => $user_id])) {
+			return $statement->fetchObject(UserExtended::class);
+		}
+		return null;
+	}
 
 	/**
 	 * 

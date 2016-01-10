@@ -180,14 +180,35 @@ class RezervaceController extends Controller {
 
 	public function renderDetail() {
 		$id = $this->getParam('id');
-		$reservation =  Views\ReservationExtended::fetchById($this->pdo, $id);
+		$reservation = $this->prepareReservation($id);
+		if(empty($reservation)){
+			$this->message("Požadovaná rezeravce číslo $id není k dispozici.");
+			$this->redirectPars('rezervace', 'vypis');
+		}
+		$this->template['r'] = $reservation;
+	}
+	
+	private function prepareReservation($id){
+		$r = Views\ReservationExtended::fetchById($this->pdo, $id);
+		if(empty($r)){
+			return null;
+		}
+		$r->user = Views\UserExtended::fetchById($this->pdo, $r->reservee_user_id);
+		$r->game = Views\GameTypeExtended::fetchById($this->pdo, $r->game_type_id);
+		$rUsers = [$r->user];
+		$users = Views\ReservationExtended::getUsers($this->pdo, $r->reservation_id);
+		foreach($users as $u){
+			$rUsers[] = $u;
+		}
+		$r->allUsers = $rUsers;
+		return $r;
+	}
 		if(empty($reservation)){
 			$this->message("Požadovaná rezeravce číslo $id není k dispozici.");
 			$this->redirectPars('rezervace', 'vypis');
 		}
 		
 		
-		$this->template['r'] = $reservation;
 	}
 
 }

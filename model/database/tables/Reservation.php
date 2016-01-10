@@ -96,5 +96,11 @@ class Reservation extends \model\database\DB_Entity {
 	public function isEvent() {
 		return $this->reservation_type_id == self::RES_TYPE_EVENT;
 	}
+	
+	public function isOpen(){
+		return $this->reservation_type_id == self::RES_TYPE_OPEN;
+	}
+
+	
 
 }
