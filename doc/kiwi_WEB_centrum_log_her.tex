@@ -73,27 +73,50 @@
 %------------------------------------------
 
 %--------------Text dokumentu--------------
+\section{Zadání}
+Vytvoření rezervačního systému pro Centrum Logických Her nacházející se ve studovně budovy NTIS. Aplikace umožní uživatelům vytvářet a zobrazovat rezervace deskových her, sledovat dění jednotlivých her pomocí emailových upozornění a inventární správu evidovaných her. ...
+
+
 {\section{Použité technologie}}
-{\subsection{Backend}}
+{\subsection{Back-end}}
 Jedním z požadavků na aplikaci je systém, ve kterém má fungovat: webový server s PHP. Pro vývoj a produkci byla zvolena verze php 5.6.
 {\subsubsection{Kostra aplikace}}
-Aplikace funguje a dedikovaném modelu založeném na MVC architektuře. Při každém spuštění se načte odpovídající kontrolér, v němž se vykoná vhodná akce, která zpracuje uživatelův požadavek a připraví výsledek pro šablonovací část aplikace.
+Aplikace funguje na dedikovaném modelu založeném na MVC architektuře. Při každém spuštění se načte odpovídající kontrolér, v němž se vykoná vhodná akce, která zpracuje uživatelův požadavek a připraví výsledek pro šablonovací část aplikace.
 {\subsubsection{Přístup k databázi}}
-Pro přístup k databázi 
-{\subsection{Podkapitola 2}}
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+Pro přístup k databázi je použito nativní rozhraní PDO, jehož instance se vytvoří před spuštěním aplikace. Většině tabulek odpovídá modelová třída, v němž se provádí jednotlivé databázové operace.
+{\subsubsection{Vytváření a zpracování odkazů}}
+Veškerá manipulace s url probíhá v dedikované třídě \textbf{URLGenerator}. Zde lze také nastavit zda-li se mají používat 'hezké url', tedy formát zpracovávané adresy.
+{\subsubsection{Šablonování}}
+Většině pohledů, neboli stránek či uživatelských akcí, náleží unikátní šablona. Pro zobrazování šablon se využívá knihovna \textit{Twig}, které stačí předat název šablony k zobrazení a data, jež se v šabloně mají zobrazit. Některé šablony pohledů však dědí od jiných šablon, protože mají téměř identickou funkci a je mezi nimi rozdíl v několika drobnostech.
+{\subsection{Front-end}}
+Kostra front-endu stojí na standardní technologii HTML5, do níž se vzhled vnáší css. Z velké části je kostra také tvořena frameworkem \textit{Twitter Bootstrap} k jehož provozu je také potřeba knihovna \textit{jQuery}.
+{\subsubsection{Ovládání aplikace}}
+Aplikace se ve většině případů ovládá přímými odkazy mezi jednotlivými pohledy, ačkoliv se v některých částech vyskytují nestandardní ovládací prvky nebo animace, které jsou deklarovány ve specifických .css a .js souborech.
+
+V některých případech pro práci s aplikací ani není třeba přecházet mezi stránkami a jednotlivé akce se provádí pomocí AJAXových požadavků.
 
 
-{\section{Kapitola 2}}
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam dui sem, fermentum vitae, sagittis id, malesuada in, quam. Phasellus enim erat, vestibulum vel, aliquam a, posuere eu, velit.
-{\subsection{Ukázka Kódu}}
-\lstset{language=Python} %funguje globálně, stačí nastavit jednou
-\begin{lstlisting}[frame=single]
-def test():
-	a = 1
-	b = 2
-	return a + b
-\end{lstlisting}
+{\section{Adresářová struktura}}
+Struktura adresářů je navržena pro jednoduchou orientaci a pro zamítnutí přístupu ke zdrojům aplikace zvenčí.
+
+\begin{description}
+\item[config]
+Specifické konfigurace aplikace, např.: konfigurace databáze, konfigurace jednotlivých modulů
+\item[controllers]
+Hlavní kontrolér a jednotlivé kontroléry určující strukturu aplikace z pohledu uživatele
+\item[libs]
+Použité knihovny, moduly konkrétních výkonných logik a takzvaný autoloader, který zajišťuje načtení souborů tříd, které se v běhu aplikace zrovna mají použít.
+\item[logs]
+Výpisy a hlášení vzniklá při běhu aplikace
+\item[model]
+Třídy definující datovou část aplikace a třídy, které jsou specifické pro tuto aplikaci
+\item[operator]
+Složka pro import a export dat z aplikace
+\item[templates]
+Všechny šablony a části šablon se nachází zde roztříděné podle jednotlivých kontrolérů.
+\item[www]
+Výchozí složka, kam se návštěvník stránky dostane, obsahuje aplikační zdroje se kterými pracuje prohlížeč jako jsou například styly, skripty nebo obrázky her. Také je zde adresář \textbf{webauth}, pomocí kterého funguje přihlašování pomocí jednotného orion loginu.
+\end{description}
 %------------------------------------------
 
 \end{document}
