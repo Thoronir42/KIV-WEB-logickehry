@@ -4,6 +4,7 @@ Seznam her
 
 
 Deskové hry:
+								1 - 10
 Abalone Quattro
 Afrika
 Agricola
@@ -14,6 +15,7 @@ Anti virus (Smart)
 Bang!
 Beasty Bar
 Callisto
+								11 - 20
 Colorpop
 Colt Express
 Èerné historky/absurdní pøíbìhy
@@ -24,6 +26,7 @@ Galaxy Trucker
 Genial
 Gyges
 Hive Pocket
+								21 - 30
 Chòapni èuníka!
 Koncept
 Milostný dopis
@@ -34,6 +37,7 @@ Pylos mini
 RoboRally
 Timeline - Pestrá historie
 Tokaido
+								31 - ...
 Vìž (Jenga) Barevná
 Vládce Tokia
 Záchranáøi: Boj s ohnìm
