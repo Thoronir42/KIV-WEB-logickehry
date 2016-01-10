@@ -7,3 +7,6 @@ database/web_logickehry_db.mwb.bak
 operator/*.sql
 www/images/*
 !www/img/nf.png
+doc/*
+!doc/*.tex
+!doc/img/*

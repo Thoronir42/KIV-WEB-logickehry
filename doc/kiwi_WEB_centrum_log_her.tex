@@ -1,0 +1,99 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+
+%Pravidlo pro řádkování
+\renewcommand{\baselinestretch}{1.5}
+
+%Pravidlo pro začínání kapitol na novém řádku
+\let\oldsection\section
+\renewcommand\section{\clearpage\oldsection}
+
+%Formáty písem pro nadpisy (-změněno na bezpatkové \sffamily z původního \normalfont
+\titleformat{\section}
+{\sffamily\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}
+{\sffamily\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+{\sffamily\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+%Nastavení zvýrazňování kódu v \lslisting
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\lstset{commentstyle=\color{mygreen},keywordstyle=\color{blue},numberstyle=\tiny\color{mygray}}
+
+\author{Jan Šmejkal}
+
+\begin{document}
+
+%-------------Úvodni strana---------------
+\begin{titlepage}
+
+\includegraphics[width=50mm]{img/FAV.jpg}
+\\[160 pt]
+\centerline{ \Huge \sc KIV/WEB - Webové aplikace}
+\centerline{ \huge \sc Semestrální práce }
+\\[12 pt]
+{\large \sc
+\centerline{Rezervační systém pro Centrum Logických Her}
+}
+
+
+{
+\vfill 
+\parindent=0cm
+\textbf{Jméno:} Štěpán Ševčík\\
+\textbf{Osobní číslo:} A13B0443P\\
+\textbf{E-mail:} kiwi@students.zcu.cz\\
+\textbf{Datum:} {\large \today\par} %datum
+\textbf{www:} \url{https://logickehry.zcu.cz/}
+
+}
+
+\end{titlepage}
+
+%------------------------------------------
+
+%------------------Obsah-------------------
+\newpage
+\setcounter{page}{2}
+\setcounter{tocdepth}{3}
+\tableofcontents
+%------------------------------------------
+
+%--------------Text dokumentu--------------
+{\section{Použité technologie}}
+{\subsection{Backend}}
+Jedním z požadavků na aplikaci je systém, ve kterém má fungovat: webový server s PHP. Pro vývoj a produkci byla zvolena verze php 5.6.
+{\subsubsection{Kostra aplikace}}
+Aplikace funguje a dedikovaném modelu založeném na MVC architektuře. Při každém spuštění se načte odpovídající kontrolér, v němž se vykoná vhodná akce, která zpracuje uživatelův požadavek a připraví výsledek pro šablonovací část aplikace.
+{\subsubsection{Přístup k databázi}}
+Pro přístup k databázi 
+{\subsection{Podkapitola 2}}
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+
+
+{\section{Kapitola 2}}
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam dui sem, fermentum vitae, sagittis id, malesuada in, quam. Phasellus enim erat, vestibulum vel, aliquam a, posuere eu, velit.
+{\subsection{Ukázka Kódu}}
+\lstset{language=Python} %funguje globálně, stačí nastavit jednou
+\begin{lstlisting}[frame=single]
+def test():
+	a = 1
+	b = 2
+	return a + b
+\end{lstlisting}
+%------------------------------------------
+
+\end{document}
