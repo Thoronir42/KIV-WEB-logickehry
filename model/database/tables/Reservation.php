@@ -49,7 +49,6 @@ class Reservation extends \model\database\DB_Entity {
 			return false;
 		}
 		return true;
-		
 	}
 
 	/**
@@ -100,15 +99,27 @@ class Reservation extends \model\database\DB_Entity {
 	public function isEvent() {
 		return $this->reservation_type_id == self::RES_TYPE_EVENT;
 	}
-	
-	public function isOpen(){
+
+	public function isOpen() {
 		return $this->reservation_type_id == self::RES_TYPE_OPEN;
 	}
-	
-	public function hasDesk(){
+
+	public function hasDesk() {
 		return !empty($this->desk_id);
 	}
 
-	
+	public function getTime($type) {
+		switch ($type) {
+			case 'from':
+				$time = $this->time_from;
+				break;
+			case 'to':
+				$time = $this->time_to;
+				break;
+			default:
+				return 'Nesprávný čas';
+		}
+		return date(\model\DatetimeManager::HUMAN_TIME_ONLY, strtotime($time));
+	}
 
 }

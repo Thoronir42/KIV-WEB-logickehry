@@ -7,7 +7,9 @@
 			<div class="row" style="height: 100%;">
 				<span class="col-xs-9">
 					<div class="reservation_title">Rezervace uživatele {{ r.user.getFullName }}</div>
-					<div class="game_name">{{ r.game_name }}{% if r.game_subtitle is not empty %} <small class="game_subtitle">{{ r.game_subtitle }}</small>{% endif %}</div>
+					<a href="{{ urlgen.gDet(r.game_type_id) }}">
+						<div class="game_name">{{ r.game_name }}{% if r.game_subtitle is not empty %} <small class="game_subtitle">{{ r.game_subtitle }}</small>{% endif %}</div>
+					</a>
 				</span>
 				<span class="col-xs-3 image-frame">
 					<img src="{{ urlgen.gImg(r.game_type_id) }}" class="img-rounded img-responsive pull-right">
@@ -32,7 +34,7 @@
 									<div class="col-xs-6">
 										<span class="glyphicon glyphicon-time"></span>
 										{% if not r.isEvent %}
-											{{ r.time_from }} - {{ r.time_to }}
+											{{ r.getTime('from') }} - {{ r.getTime('to') }}
 										{% else %}
 											Celý den
 										{% endif %}
