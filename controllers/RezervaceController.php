@@ -54,6 +54,7 @@ class RezervaceController extends Controller {
 		$this->template['games'] = $this->prepareGames($dbTimePars);
 		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
 		$this->template['weekShift'] = $this->makeWeekLinks($week);
+		$this->template['resListColSize'] = $this->colSizeFromGet();
 	}
 
 	private function prepareReservationDays($timeFrom, $dbTimePars) {
