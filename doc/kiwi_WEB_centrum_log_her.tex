@@ -86,10 +86,12 @@ Aplikace funguje na dedikovaném modelu založeném na MVC architektuře. Při k
 Pro přístup k databázi je použito nativní rozhraní PDO, jehož instance se vytvoří před spuštěním aplikace. Většině tabulek odpovídá modelová třída, v němž se provádí jednotlivé databázové operace.
 {\subsubsection{Vytváření a zpracování odkazů}}
 Veškerá manipulace s url probíhá v dedikované třídě \textbf{URLGenerator}. Zde lze také nastavit zda-li se mají používat 'hezké url', tedy formát zpracovávané adresy.
+{\subsubsection{Odesílání mailů}}
+O rozesílání emailů se stará knihovna \textit{PHPMailer}, která umožňuje postupné skládání mailové zprávy. Tuto knihovnu přímo využívá modelová třída aplikace \textbf{MailManager}.
 {\subsubsection{Šablonování}}
 Většině pohledů, neboli stránek či uživatelských akcí, náleží unikátní šablona. Pro zobrazování šablon se využívá knihovna \textit{Twig}, které stačí předat název šablony k zobrazení a data, jež se v šabloně mají zobrazit. Některé šablony pohledů však dědí od jiných šablon, protože mají téměř identickou funkci a je mezi nimi rozdíl v několika drobnostech.
 {\subsection{Front-end}}
-Kostra front-endu stojí na standardní technologii HTML5, do níž se vzhled vnáší css. Z velké části je kostra také tvořena frameworkem \textit{Twitter Bootstrap} k jehož provozu je také potřeba knihovna \textit{jQuery}.
+Kostra front-endu stojí na standardní technologii HTML5, do níž se vzhled vnáší css. Z velké části je kostra tvořena frameworkem \textit{Twitter Bootstrap} k jehož provozu je také potřeba knihovna \textit{jQuery}.
 {\subsubsection{Ovládání aplikace}}
 Aplikace se ve většině případů ovládá přímými odkazy mezi jednotlivými pohledy, ačkoliv se v některých částech vyskytují nestandardní ovládací prvky nebo animace, které jsou deklarovány ve specifických .css a .js souborech.
 
@@ -117,6 +119,23 @@ Všechny šablony a části šablon se nachází zde roztříděné podle jednot
 \item[www]
 Výchozí složka, kam se návštěvník stránky dostane, obsahuje aplikační zdroje se kterými pracuje prohlížeč jako jsou například styly, skripty nebo obrázky her. Také je zde adresář \textbf{webauth}, pomocí kterého funguje přihlašování pomocí jednotného orion loginu.
 \end{description}
+
+
+{\section{Architektura aplikace}}
+Běh aplikace lze popsat v několika rozlišných krocích a z velké části se odehrává ve třídě \textbf{Dispatcher}.
+
+{\subsection{Postup zpracování požadavku}}
+Požadavek dorazí do adresáře \texttt{/www/}, odkud se spustí v kořenovém adresáři \texttt{starter.php}. Zde se načte autoloader a konfigurační třída, pomocí které se připraví instance modulů \texttt{PDO}, \texttt{Twig}, \texttt{URLgen} a \texttt{MessageBuffer}. Z těchto modulů poté vytvoří instanci třídy \textbf{Dispatcher} a nad ní již jen zavolá metodu \textbf{dispatch()}.
+
+Instance \textbf{Dispatcher}u v metodě \textbf{dispatch()} z modulu \texttt{URLgen} získá název požadovaného kontroléru a akce. Podle názvu kontroléru se poté pokusí získat pomocí reflexe instance odpovídajícího kontroléru. Pokud pokus selže, zobrazí se chyboví kontrolér s odpovídající chybovou hláškou. Pokud je kontrolér nalezen, podle jména akce se sestaví posloupnost metod, které se nad ním zavolají. Pokud do tohoto bodu nenastane žádná chyba, \textbf{Dispatcher} se pokusí najít css a js soubory jména odpovídajícímu spojení názvu kontroléru a vykonávané akce a přidat je do požadavku. Po vykonání posloupnosti metod se z kontroléru použije pole pro data šablony a název kontroléru a akce pro cestu k šabloně v modulu \textbf{Twig}, čímž se zobrazí uživateli výsledek aplikace.
+
+Pokud je nalezen kontrolér a není nalezena akce, pokud je nalezena akce a nemá definovanou metodu pro zobrazení akce nebo pokud má kontrolér definovanou akci pro zobrazení ale chybí šablona, zobrazí se chybový kontrolér s odpovídající hláškou.
+
+
+{\section{Závěr}}
+Aplikaci jsem se snažil tvořit podle pevně dané struktury aby byl zdrojový kód jasně oddělený podle vrstev aplikace. Myslím si, že je aplikace přehledná a jednoduše rozšířitelná s tím, že možné rozšíření lze provést například v sekci \textit{Rezervace/výpis}, kde by bylo potřeba zvýšit přehlednost rezervací, nebo v sekci \textit{Sprava/ovladaciPanel}, kde lze dodělat import / export nebo jiné operace s daty.
+
+
 %------------------------------------------
 
 \end{document}

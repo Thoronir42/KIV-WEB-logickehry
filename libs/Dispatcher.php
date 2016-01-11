@@ -97,7 +97,7 @@ class Dispatcher {
 			$cont->redirectPars($contName, $cont->getDefaultAction());
 		}
 
-		if ($cont == null) {
+		if ($cont instanceof ErrorController) {
 			$this->error(ErrorController::NO_CONTROLLER_FOUND, $contName);
 			return;
 		}
