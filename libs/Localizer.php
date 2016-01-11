@@ -9,23 +9,36 @@ namespace libs;
  */
 class Localizer {
 
+	const DAY_FORMAT_ABBR = 'abbr';
+	const DAY_FORMAT_FULL = 'full';
+	const DAY_FORMAT_ON_DAY = 'on_day';
 	const USE_WIN_LOCALE = true;
 
-	/** @var string[] days of the week */
-	static $dayAbbrs;
+	/** @var string[][] days of the week */
+	static $dayStrings = [];
 
-	public static function getDayName($n) {
-		if (!isset(self::$dayAbbrs) || is_null(self::$dayAbbrs)) {
-			self::$dayAbbrs = self::makeDays();
+	public static function getDayName($n, $type) {
+		if (!isset(self::$dayStrings[$type])) {
+			self::$dayStrings[$type] = self::makeDays($type);
 		}
-		if (array_key_exists($n, self::$dayAbbrs)) {
-			return self::$dayAbbrs[$n];
+		$days = self::$dayStrings[$type];
+		if (array_key_exists($n, $days)) {
+			return $days[$n];
 		}
-		return 'Den' . $n;
+		return sprintf($days[0], $n);
 	}
 
-	private static function makeDays() {
-		return [1 => 'Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+	private static function makeDays($type) {
+		switch ($type) {
+			case self::DAY_FORMAT_ABBR:
+				return ['d%d', 'Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+			case self::DAY_FORMAT_FULL:
+				return ['Den %d', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota', 'Neděle'];
+			case self::DAY_FORMAT_ON_DAY:
+				return [ 'V den $d', 'V Pondělí', 'V Úterý', 'Ve Středu', 'Ve Čtvrtek',
+					'V Pátek', 'V Sobotu', 'V Neděli'];
+			default: return ['Den %d'];
+		}
 	}
 
 	/**

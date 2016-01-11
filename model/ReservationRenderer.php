@@ -10,9 +10,6 @@ use model\database\views\ReservationExtended;
  * @author Stepan
  */
 class ReservationRenderer {
-
-	private static $ON_DAY_STRING = [ 1 => 'V Pondělí', 'V Úterý', 'Ve Středu', 'Ve Čtvrtek',
-		'V Pátek', 'V Sobotu', 'V Neděli'];
 	
 	public $dayStart,
 			$dayEnd;
@@ -62,15 +59,11 @@ class ReservationRenderer {
 		return DatetimeManager::format($iTime, DatetimeManager::HUMAN_TIME_ONLY);
 	}
 
-	public function getDayAbbr($n){
-		return \libs\Localizer::getDayName($n);
-	}
-	
-	public function getDuringDayString($n) {
-		if (isset(self::$ON_DAY_STRING[$n])) {
-			return self::$ON_DAY_STRING[$n];
+	public function getDay($n, $type = \libs\Localizer::DAY_FORMAT_FULL){
+		switch($type){
+			default:
+			return \libs\Localizer::getDayName($n, $type);
 		}
-		return "V den $n";
 	}
 
 	public function getWeekStartDay() {

@@ -15,7 +15,7 @@
 			{% set rd = reservationDays[i] %}
 			<div class="col-sm-1 dateCol">
 				<span class="btn btn-default" data-year="{{ rd['year'] }}">
-					{{ resRend.getDayAbbr(i) }}
+					{{ resRend.getDay(i, 'abbr') }}
 					<br>
 					<span class="date">{{ rd['date'] }}</span>
 					
@@ -30,7 +30,7 @@
 						<small>{{ resRend.time(res.time_from) }} - {{ resRend.time(res.time_to) }}</small>
 					</div>
 				{% else %}
-					{{ resRend.getDuringDayString(i) }} nejsou žádné rezervace
+					{{ resRend.getDay(i, 'on_day') }} nejsou žádné rezervace
 				{% endfor %}
 			</div>
 		</div>
