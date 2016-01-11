@@ -71,6 +71,10 @@ class Reservation extends \model\database\DB_Entity {
 					$missing[] = 'time_to';
 				}
 				break;
+			case self::RES_TYPE_EVENT:
+				$reservation->time_from = sprintf('%02d:00:00', self::EARLY_RESERVATION);
+				$reservation->time_to = sprintf('%02d:00:00', self::LATE_RESERVATION);
+				break;
 		}
 		$reservation->missing = $missing;
 		return $reservation;

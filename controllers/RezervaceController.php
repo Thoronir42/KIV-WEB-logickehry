@@ -160,12 +160,12 @@ class RezervaceController extends Controller {
 			if (!empty($resCounts)) {
 				$total = $resCounts['total'];
 				return ['result' => false, 'message' =>
-					sprtintf('V den %s není možné vytvořit událost, vytvoření blokuje %d %s', date(DatetimeManager::HUMAN_DATE_ONLY, strtotime($reservation->reservation_date)), $total, $total > 5 ? 'rezervací' : 'rezervace')];
+					\sprintf('V den %s není možné vytvořit událost, vytvoření blokuje %d %s', date(DatetimeManager::HUMAN_DATE_ONLY, strtotime($reservation->reservation_date)), $total, $total >= 5 ? 'rezervací' : 'rezervace')];
 			}
 		} else if ($reservation->desk_id != Tables\Desk::NO_DESK) {
 			echo $reservation->desk_id;
 			if (Views\ReservationExtended::checkDeskAvailable($this->pdo, $reservation->reservation_date, $reservation->time_from, $reservation->time_to)) {
-				return ['result' => false, 'message' => sprintf("Stůl č %02d je ve vámi zvolený čas obsazený", $reservation->desk_id)];
+				return ['result' => false, 'message' => \sprintf("Stůl č %02d je ve vámi zvolený čas obsazený", $reservation->desk_id)];
 			}
 		}
 		$boxes = Views\ReservationExtended::getAvailableGameBox($this->pdo, $game_type_id, $reservation->reservation_date, $reservation->time_from, $reservation->time_to);
