@@ -51,3 +51,8 @@
 	display:inline-block;
 	border:2px solid transparent;
 }
+
+
+.reservations-list img.media-object{
+	width:64px;
+}

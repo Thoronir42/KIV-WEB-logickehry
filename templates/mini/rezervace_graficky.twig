@@ -10,7 +10,7 @@
 	</div>
 </div>
 {% for i in (resRend.getWeekStartDay())..(resRend.getWeekEndDay()) %}
-	<div class="list-group-item{% if i > 0 %} reservationRow{% endif %}">
+	<div class="list-group-item reservationRow">
 		<div class="row resRow">
 			{% set rd = reservationDays[i] %}
 			<div class="col-sm-1 dateCol">
@@ -18,8 +18,6 @@
 					{{ resRend.getDay(i, 'abbr') }}
 					<br>
 					<span class="date">{{ rd['date'] }}</span>
-					
-					
 				</span>
 			</div>
 			<div class="col-sm-11 resCol">

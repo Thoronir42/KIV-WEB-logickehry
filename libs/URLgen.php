@@ -117,6 +117,13 @@ class URLgen {
 		return $this->url($args);
 	}
 
+	public function rDet($reservation_id) {
+		$args = [ 'controller' => 'rezervace',
+			'action' => 'detail',
+			'id' => $reservation_id];
+		return $this->url($args);
+	}
+
 	public function uProfile($orion_login) {
 		$args = [ 'controller' => 'uzivatel',
 			'action' => 'zobrazitProfil',

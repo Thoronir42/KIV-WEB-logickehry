@@ -84,19 +84,53 @@
 		</div>
 	{% endif %}
 
-	{% for r in rezervace %}
-		<div class="reservation">
-			<div class="res-head row">
-				<span>Rezervace #{{ "%04d"|format(r.reservation_id) }} - {{ r.game_name }}</span>
-				<span>Hráčů: {{ r.signed_players}}</span>
-				<span> z {{ "%d-%d"|format(r.min_players, r.max_players) }}</span>
-				<span>{{ "%s - %s"|format(r.time_from, r.time_to) }}</span>
+	<div class="well well-lg reservations-list">
+		{% for i in (resRend.getWeekStartDay())..(resRend.getWeekEndDay()) if reservationDays[i]['reservations'] is not empty %}
+			<div class="row smartRow">
+				{% set rd = reservationDays[i] %}
+				<h3>{{ resRend.getDay(i, 'full') }}</h3>
+				{% for r in rd['reservations'] %}
+					{% set rGame = games[r.game_type_id] %}
+					<div class="col-md-{% if not rd['reservations']|first.isEvent() %}{{ resListColSize }}{% else %}12{% endif %}">
+						<div class="media" style="background: #{{ games[r.game_type_id].getColor }}">
+							<div class="media-left">
+								<a href="{{ urlgen.gDet(r.game_type_id) }}" style="background: white;">
+									<img class="media-object" src="{{ urlgen.gImg(r.game_type_id) }}" alt="...">
+								</a>
+							</div>
+							<div class="media-body"  style="margin: 10px; background: white;">
+								<div class="row">
+									<div class="col-xs-6">
+										<a href="{{ urlgen.rdet(r.reservation_id) }}"
+										<small>Rezervace #{{ "%04d"|format(r.reservation_id) }}</small>
+										</a>
+									</div>
+									<div class="col-xs-6">
+										<small class="pull-right">Hráčů: {{ r.getSignedPlayerCount() }}<span> (doporuč. {{ "%d-%d"|format(r.min_players, r.max_players) }})</span></small>
+									</div>
+								</div>
+								<h4 class="media-heading">
+									{{ rGame.game_name }}{% if rGame.game_subtitle is not empty %} <small>{{ rGame.game_subtitle}}</small>{% endif %}
+								</h4>
+
+
+								<span>{{ "%s - %s"|format(r.time_from, r.time_to) }}</span>
+								...
+							</div>
+						</div>
+						<div class="res-head row">
+
+
+						</div>
+						<div class="res-body row">
+							<span></span>
+						</div>
+					</div>
+				{% endfor %}
 			</div>
-			<div class="res-body row">
-				<span></span>
-			</div>
-		</div>
-	{% endfor %}
+			<hr/>
+		{% endfor %}
+	</div>
 
 {% endblock %}
 

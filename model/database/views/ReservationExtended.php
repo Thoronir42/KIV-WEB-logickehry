@@ -165,5 +165,9 @@ class ReservationExtended extends Reservation {
 	var $signed_players;
 	var $max_players;
 	var $desk_capacity;
+	
+	public function getSignedPlayerCount(){
+		return $this->signed_players + 1;
+	}
 
 }

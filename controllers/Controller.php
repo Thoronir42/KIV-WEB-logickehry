@@ -102,6 +102,14 @@ abstract class Controller {
 		return $menu;
 	}
 
+	public function colSizeFromGet(){
+		$size = $this->getParam('colSize');
+		if(is_numeric($size) && !is_double($size) && $size >= 0 && $size <= 12){
+			return $size;
+		}
+		return 6;
+	}
+	
 	protected function buildSubmenu() {
 		return false;
 	}
