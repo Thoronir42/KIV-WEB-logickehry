@@ -46,17 +46,19 @@ class LetisteController extends Controller {
 	private function prepareReservationDays($timeFrom, $dbTimePars) {
 		$reservations = Views\ReservationExtended::fetchWithinTimespan(
 						$this->pdo, $dbTimePars);
-		$reservationDays = [0 => ['date' => null]];
+		$reservationDays = [];
 
 		for ($i = 0; $i < 7; $i++) {
+			$day = strtotime(("+ $i days"), $timeFrom);
 			$reservationDays[$i + 1] = [
-				'date' => date('d.m.', strtotime(("+ $i days"), $timeFrom)),
+				'date' => date('d.m.', $day),
 				'reservations' => [],
+				'year' => date('Y', $day),
 			];
 		}
 
 		foreach ($reservations as $r) {
-			$day = date("w", strtotime($reservations[0]->time_from));
+			$day = date("w", strtotime($r->reservation_date));
 			$reservationDays[$day]['reservations'][] = $r;
 		}
 		return $reservationDays;
