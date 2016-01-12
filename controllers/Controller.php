@@ -44,7 +44,7 @@ abstract class Controller {
 
 	/** @var String */
 	var $action, $controller;
-
+	
 	public function __construct($support) {
 		if ($support instanceof UserExtended) {
 			$this->user = $support;
@@ -107,6 +107,10 @@ abstract class Controller {
 		if(is_numeric($size) && !is_double($size) && $size >= 0 && $size <= 12){
 			return $size;
 		}
+		return $this->getDefaultColSize();
+	}
+	
+	protected function getDefaultColSize(){
 		return 6;
 	}
 	

@@ -11,6 +11,10 @@ class LetisteController extends Controller {
 	public static function getDefaultAction() {
 		return 'rezervace';
 	}
+	
+	protected function getDefaultColSize(){
+		return 12;
+	}
 
 	public function __construct($support) {
 		parent::__construct($support);
@@ -41,6 +45,7 @@ class LetisteController extends Controller {
 		$this->template['games'] = Views\GameTypeExtended::fetchAll($this->pdo);
 		$this->template["pageTitle"] = $this->makeVypisTitle($week);
 		$this->template["timeSpan"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY);
+		$this->template['resListColSize'] = $this->colSizeFromGet();
 	}
 
 	private function prepareReservationDays($timeFrom, $dbTimePars) {
