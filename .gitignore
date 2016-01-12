@@ -10,3 +10,4 @@ www/images/*
 doc/*
 !doc/*.tex
 !doc/img/*
+www/adminer.php

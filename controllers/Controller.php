@@ -174,8 +174,14 @@ abstract class Controller {
 		die;
 	}
 
-	public function redirectPars($controller = null, $action = null) {
-		$location = $this->urlGen->url(['controller' => $controller ? : self::DEFAULT_CONTROLLER, 'action' => $action]);
+	public function redirectPars($controller = null, $action = null, $additional = null) {
+		$url = ['controller' => $controller ? : self::DEFAULT_CONTROLLER, 'action' => $action];
+		if(!empty($additional) && is_array($additional)){
+			foreach($additional as $k => $v){
+				$url[$k] = $v;
+			}
+		}
+		$location = $this->urlGen->url($url);
 		$this->redirect($location);
 	}
 
