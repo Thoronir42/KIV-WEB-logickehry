@@ -1,9 +1,9 @@
 <?php
 
-include __DIR__ . '/Twig/Autoloader.php';
+include 'Twig/Autoloader.php';
 Twig_Autoloader::register(true);
 
-include '/PHPMailer/PHPMailerAutoload.php';
+include 'PHPMailer/PHPMailerAutoload.php';
 
 spl_autoload_register('Loader::NamespaceLoader');
 spl_autoload_register('Loader::LibsLoader');
