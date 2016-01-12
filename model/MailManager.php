@@ -8,7 +8,7 @@ namespace model;
  * @author Stepan
  */
 class MailManager {
-
+	
 	const MAIL_SERVER = "zcu.cz";
 	const FROM_NAME = "Deskař";
 	const FROM_ADDRESS = "deskar@logickehry.zcu.cz";

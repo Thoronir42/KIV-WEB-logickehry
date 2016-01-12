@@ -2,14 +2,16 @@
 {% extends layout %}
 
 {% block bodyContent %}
+	<p>Zde lze odeslat email všem uživatelům nebo jen těm, kteří odebírají určitou hru. U každé skupiny je vyznačen počet uživatelů, kteří obdrží váš email.</p>
+	
 	<div class="panel panel-default">
 		<div class="panel-heading">Odesílání hromadných emailů</div>
 		<div class="panel-body">
 			<form class="form-horizontal" action="{{ urlgen.url(send_url) }}" method="post">
 				<div class="row">
 					<div class="col-sm-4">
-						<label for="game_type_id" class="control-label" >Katalog her a evidenčních čísel</label>
-						{% include 'mini/game_type_list_group.twig' with{'count':'subscribed'}%}
+						<label for="game_type_id" class="control-label" >Výběr cílové skupiny uživatelů</label>
+						{% include 'mini/game_type_list_group.twig' with{'count':'subscribed', 'active': -1}%}
 					</div>
 					<div class="col-sm-8">
 						<label for="Předmět" class="control-label">Text mailu</label>

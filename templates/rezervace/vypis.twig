@@ -34,6 +34,7 @@
 				<form class="form-horizontal" action="{{ urlgen.url(formAction) }}" method="post">
 					<div class="row">
 						<div class="col-sm-4">
+							<label for="game_type_id" class="control-label">Výběr hry</label>
 							{% include "mini/game_type_list_group.twig" with {'games':games, 'active':defaultGame, 'count': 'reservations'} %}
 						</div>
 						<div class="col-sm-8">

@@ -45,6 +45,24 @@ class User extends \model\database\DB_Entity {
 	/**
 	 * 
 	 * @param \PDO $pdo
+	 */
+	public static function count($pdo){
+		$result = $pdo->query('SELECT count(orion_login) as count FROM `web_logickehry_db`.`user`');
+		return $result->fetch(\PDO::FETCH_ASSOC)['count'];
+	}
+	
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 */
+	public static function fetchAllLogins($pdo) {
+		$result= $pdo->query('SELECT orion_login FROM user');
+		return $result->fetchAll(\PDO::FETCH_COLUMN);
+	}
+	
+	/**
+	 * 
+	 * @param \PDO $pdo
 	 * @param String $orion_login
 	 * @param DateTime $time
 	 * @return boolean

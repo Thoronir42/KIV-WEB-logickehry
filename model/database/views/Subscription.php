@@ -28,7 +28,7 @@ class Subscription {
 	 * 
 	 * @param \PDO $pdo
 	 * @param int $game_type_id
-	 * @return int[]
+	 * @return string[]
 	 */
 	public static function fetchUsersByGame($pdo, $game_type_id) {
 		$statement = $pdo->prepare("SELECT orion_login FROM subscribees "

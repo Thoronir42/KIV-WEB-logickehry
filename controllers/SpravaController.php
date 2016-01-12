@@ -9,6 +9,9 @@ use \model\database\tables as Tables,
 
 class SpravaController extends Controller {
 
+	const ALL_USERS_GT_ID = -1;
+	
+	
 	public static function getDefaultAction() {
 		return "hry";
 	}
@@ -196,20 +199,31 @@ class SpravaController extends Controller {
 	public function renderHromadnyMail() {
 		$this->addCss('input-specific.css');
 		$this->addJs('input-specific.js');
+		
+		$this->template['pageTitle'] = 'Hromadný mail';
 
 		$this->template['default_subject'] = MailManager::getDefaultSubject();
 		$this->template['send_url'] = ['controller' => 'sprava', 'action' => 'poslatMail'];
-		$this->template['games'] = Views\GameTypeExtended::fetchAll($this->pdo);
+		$games = array_merge([$this->mockAllUserGameEntry()], Views\GameTypeExtended::fetchAll($this->pdo));
+		$this->template['games'] = $games;
 		$this->template['active'] = $this->getParam('id');
 	}
 
+	private function mockAllUserGameEntry(){
+		$allEntry = new Views\GameTypeExtended();
+		$allEntry->game_type_id = self::ALL_USERS_GT_ID;
+		$allEntry->game_name = 'Všichni uživatelé';
+		$allEntry->subscribed_users = Tables\User::count($this->pdo);
+		return $allEntry;
+	}
+	
 	public function doPoslatMail() {
 		$gid = $this->getParam('game_type_id', INPUT_POST);
 		$subject = $this->getParam('subject', INPUT_POST);
 		$body = $this->getParam('mail_body', INPUT_POST);
-
-		$users = Views\Subscription::fetchUsersByGame($this->pdo, $gid);
-
+		
+		$users = ($gid == self::ALL_USERS_GT_ID) ? Tables\User::fetchAllLogins($this->pdo) : Views\Subscription::fetchUsersByGame($this->pdo, $gid);
+		
 		$result = MailManager::send($users, $body, $subject);
 		if ($result['result']) {
 			$this->message($result['message'], \libs\MessageBuffer::LVL_SUC);

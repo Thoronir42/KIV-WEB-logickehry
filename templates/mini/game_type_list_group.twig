@@ -2,7 +2,6 @@
 {% if active is empty %}
 	{% set active = (games|first).game_type_id %}
 {% endif %}
-<label for="game_type_id" class="control-label">Výběr hry</label>
 <input type="hidden" name="game_type_id" value="{{ active }}">
 <div class="list-group game-type-list-group	">	
 	{% for g in games %}
