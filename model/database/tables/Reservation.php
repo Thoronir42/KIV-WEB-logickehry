@@ -53,6 +53,38 @@ class Reservation extends \model\database\DB_Entity {
 
 	/**
 	 * 
+	 * @param \PDO $pdo
+	 * @param int $user_id
+	 * @param int $reservation_id
+	 */
+	public static function deleteAttendee($pdo, $user_id, $reservation_id) {
+		$statement = $pdo->prepare('DELETE FROM `web_logickehry_db`.`reservation_users` '
+				. 'WHERE user_id = :uid AND reservation_id = :rid');
+		if($statement->execute(['uid' => $user_id, 'rid' => $reservation_id])){
+			return true;
+		}
+	}
+
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param int $user_id
+	 * @param int $reservation_id
+	 */
+	public static function insertAttendee($pdo, $user_id, $reservation_id) {
+		$statement = $pdo->prepare('INSERT INTO `web_logickehry_db`.`reservation_users` '
+				. '(`user_id`, `reservation_id`) VALUES ( :uid, :rid )');
+		if($statement->execute(['uid' => $user_id, 'rid' => $reservation_id])){
+			return true;
+		}
+	}
+
+
+	
+	
+	
+	/**
+	 * 
 	 * @return Reservation
 	 */
 	public static function fromPOST() {
@@ -121,5 +153,4 @@ class Reservation extends \model\database\DB_Entity {
 		}
 		return date(\model\DatetimeManager::HUMAN_TIME_ONLY, strtotime($time));
 	}
-
 }

@@ -182,34 +182,69 @@ class RezervaceController extends Controller {
 	public function renderDetail() {
 		$id = $this->getParam('id');
 		$reservation = $this->prepareReservation($id);
-		if(empty($reservation)){
+		if (empty($reservation)) {
 			$this->message("Požadovaná rezeravce číslo $id není k dispozici.");
 			$this->redirectPars('rezervace', 'vypis');
 		}
 		$this->template['r'] = $reservation;
+		$curUserSigned = array_key_exists($this->user->user_id, $reservation->allUsers);
+		$this->template['signAction'] = ['newVal' => !$curUserSigned,
+			'url' => ['controller' => 'rezervace', 'action' => 'ucast', 'id' => $id, 'co' => $curUserSigned ? 'odhlasit' : 'prihlasit']];
 	}
-	
-	private function prepareReservation($id){
+
+	private function prepareReservation($id) {
 		$r = Views\ReservationExtended::fetchById($this->pdo, $id);
-		if(empty($r)){
+		if (empty($r)) {
 			return null;
 		}
 		$r->user = Views\UserExtended::fetchById($this->pdo, $r->reservee_user_id);
 		$r->game = Views\GameTypeExtended::fetchById($this->pdo, $r->game_type_id);
 		$rUsers = [$r->user];
 		$users = Views\ReservationExtended::getUsers($this->pdo, $r->reservation_id);
-		foreach($users as $u){
-			$rUsers[] = $u;
+		foreach ($users as $u) {
+			$rUsers[$u->user_id] = $u;
 		}
 		$r->allUsers = $rUsers;
 		return $r;
 	}
-		if(empty($reservation)){
-			$this->message("Požadovaná rezeravce číslo $id není k dispozici.");
-			$this->redirectPars('rezervace', 'vypis');
+
+	public function doUcast() {
+		$id = $this->getParam('id');
+		$co = $this->getParam('co');
+		switch ($co) {
+			default:
+				$result = ['result' => false, 'message' => "Neplatná operace účasti, jsou vaše odkazy akutální?"];
+				break;
+			case 'prihlasit':
+				$result = $this->changeAttendancy($id, true);
+				break;
+			case 'odhlasit':
+				$result = $this->changeAttendancy($id, false);
 		}
-		
-		
+		$this->message($result['message'], $result['result'] ? \libs\MessageBuffer::LVL_SUC : \libs\MessageBuffer::LVL_WAR);
+		$this->redirectPars('rezervace', 'detail', ['id' => $id]);
+	}
+
+	private function changeAttendancy($reservation_id, $newVal) {
+		$reservation = $this->prepareReservation($reservation_id);
+		if (empty($reservation)) {
+			return ['result' => true, 'message' => "Rezervace č $id není k dispozici a nelze u níměni vaší účast."];
+		}
+		$delOk = Tables\Reservation::deleteAttendee($this->pdo, $this->user->user_id, $reservation_id);
+		if(!$newVal){
+			if($delOk){
+				return ['result' => true, 'message' => 'Byli jste úspěšně odhlášeni z rezervace'];
+			} else {
+				return ['result' => false, 'message' => 'Při odhlašování z rezervace nastaly potíže'];
+			}
+		} else {
+			$insOk = Tables\Reservation::insertAttendee($this->pdo, $this->user->user_id, $reservation_id);
+			if($insOk){
+				return ['result' => true, 'message' => 'Byli jste úspěšně přihlášeni z rezervace'];
+			} else {
+				return ['result' => false, 'message' => 'Při přihlašování k rezervaci nastaly potíže'];
+			}
+		}
 	}
 
 }

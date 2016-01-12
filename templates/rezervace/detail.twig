@@ -68,7 +68,13 @@
 						<div class="panel panel-info users">
 							<div class="panel-heading">
 								Přihlášení uživatelé
-								<a class="btn btn-info pull-right"><span class="glyphicon glyphicon-plus"></span></a>
+								{% if r.reservee_user_id != user.user_id %}
+									{% if signAction['newVal'] %}
+										<a href="{{ urlgen.url(signAction['url']) }}" class="btn btn-info pull-right"><span class="glyphicon glyphicon-plus"></span></a>
+									{% else %}
+										<a href="{{ urlgen.url(signAction['url']) }}" class="btn btn-warning pull-right"><span class="glyphicon glyphicon-minus"></span></a>
+									{% endif %}
+								{% endif %}
 							</div>
 							<div class="panel-body">
 								<span class="list-group">
