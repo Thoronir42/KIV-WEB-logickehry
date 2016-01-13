@@ -34,8 +34,13 @@ class OhlasController extends Controller {
 	public function renderPridat(){
 		$this->template['feedbackItems'] = Tables\Feedback::fetchAll($this->pdo);
 		$this->template['formAction'] = ['controller' => 'ohlas', 'action' => 'vlozit'];
-		
+		$this->template['detailedList'] = ['controller' => 'ohlas', 'action' => 'zobrazitVsechny'];
 	}
+	
+	public function renderZobrazitVsechny(){
+		$this->template['feedbackItems'] = Tables\Feedback::fetchAll($this->pdo);
+	}
+	
 	public function doVlozit(){
 		$fb = Tables\Feedback::fromPOST();
 		$fb->user_id = $this->user->user_id;

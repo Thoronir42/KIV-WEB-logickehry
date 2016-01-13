@@ -12,7 +12,7 @@ class DatetimeManager {
 	const DB_FULL = "y-m-d H:i:s";
 	const DB_DATE_ONLY = 'y-m-d';
 	const DB_TIME_ONLY = 'H:i:s';
-	const HUMAN_FULL = "d/m/y H:i:s";
+	const HUMAN_FULL = "d/m/y H:i";
 	const HUMAN_DATE_ONLY = "d.m.Y";
 	const HUMAN_TIME_ONLY = 'H:i';
 

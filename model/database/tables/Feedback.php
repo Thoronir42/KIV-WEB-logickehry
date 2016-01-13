@@ -87,6 +87,19 @@ class Feedback extends \model\database\DB_Entity {
 		return $this->feedback_type == self::TYPE_SUGGESTION;
 	}
 
+	public function isResolved(){
+		return !is_null($this->resolved);
+	}
+	
+	public function getDate($type){
+		switch($type){
+			default: return 'date error';
+				case 'created':
+				case 'resolved':
+					return date(\model\DatetimeManager::HUMAN_FULL, strtotime($this->$type));
+		}
+	}
+	
 	var $feedback_id;
 	var $feedback_type;
 	var $user_id;
