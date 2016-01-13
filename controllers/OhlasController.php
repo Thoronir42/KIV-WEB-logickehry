@@ -20,10 +20,15 @@ class OhlasController extends Controller {
 	
 	public function startUp() {
 		parent::startUp();
+		if(!$this->user->isLoggedIn()){
+			$this->message('Pro psaní ohlasů musíte být přihlášeni.');
+			$this->redirectPars();
+		}
 		if(!self::FEEDBACK_ENABLED){
 			$this->message('Ohlasy zpětné vazby nejsou v tento moment povoleny');
 			$this->redirectPars();
 		}
+		$this->template['pageTitle'] = 'Zpětná vazba';
 	}
 
 	public function renderPridat(){

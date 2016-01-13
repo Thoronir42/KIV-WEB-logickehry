@@ -1,0 +1,9 @@
+.feedbackList .panel-body{
+	padding: 0;
+	border-width: 0;
+	overflow-y: auto;
+	height: 285px;
+}
+.feedbackList .btn{
+	margin-top: -6px;
+}

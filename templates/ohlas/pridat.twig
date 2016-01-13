@@ -4,7 +4,7 @@
 {% block bodyContent %}
 	Před nahlášením chyby nebo návrhu na vylepšení prosím zkontrolujte, zda-li se 
 	váš příspěvek nepodobá některému již zadanému příspěvku podle stručného popisu v seznamu vpravo.
-	<div class="row">
+	<div class="row mainRow">
 		<div class="col-md-7">
 			<div class="panel panel-default">
 				<div class="panel-heading">Ohlášení chyby</div>
@@ -20,10 +20,10 @@
 								<label class="control-label">Typ příspěvku</label>
 								<div class="btn-group btn-group-justified" data-toggle="buttons">
 									<label class="btn btn-warning active">
-										<input type="radio" name="rating" id="rad_bug" value="1" checked> Chyba
+										<input type="radio" name="feedback_type" id="rad_bug" value="1" checked> Chyba
 									</label>
 									<label class="btn btn-info">
-										<input type="radio" name="rating" id="rad_sug" value="2"> Návrh
+										<input type="radio" name="feedback_type" id="rad_sug" value="2"> Návrh
 									</label>
 								</div>
 							</div>
@@ -40,15 +40,23 @@
 			</div>
 		</div>
 		<div class="col-md-5">
-			<div class="well">
-				<div class="list-group">
-					{% for fb in feedbackItems %}
-						<span class="list-group-item {% if fb.isBugReport() %}list-group-item-warning{% elseif fb.isFeatureSuggestion %} list-group-item-info{% endif %}">
-							{{ fb.label }}
-						</span>
-					{% else %}
-						<span class="list-group-item list-group-item-success">Nejsou nahlášeny žádné chyby nebo návrhy na vylepšení</span>
-					{% endfor %}
+			<div class="panel panel-default feedbackList">
+				<div class="panel-heading">
+					Zadané ohlasy
+					{% if user.isAdministrator %}
+						<a class="btn btn-primary pull-right" href="{{ urlgen.url(detailedList) }}">Zobrazit detailně</a>
+					{% endif %}
+				</div>
+				<div class="panel-body">
+					<div class="list-group">
+						{% for fb in feedbackItems %}
+							<span class="list-group-item {% if fb.isBugReport() %}list-group-item-warning{% elseif fb.isFeatureSuggestion %} list-group-item-info{% endif %}">
+								{{ fb.label }}
+							</span>
+						{% else %}
+							<span class="list-group-item list-group-item-success">Nejsou nahlášeny žádné chyby nebo návrhy na vylepšení</span>
+						{% endfor %}
+					</div>
 				</div>
 			</div>
 		</div>
