@@ -64,7 +64,7 @@ abstract class DB_Entity {
 	public function asArray($includeMissing = false) {
 		$ret = [];
 		foreach ($this as $prpKey => $prpVal) {
-			if ($prpKey === "misc") {
+			if ($prpKey === "misc" || is_null($this->$prpKey)) {
 				continue;
 			}
 			$ret[$prpKey] = $prpVal;
