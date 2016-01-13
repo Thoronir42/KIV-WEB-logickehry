@@ -10,7 +10,7 @@
 				<div class="panel-heading">Ohlášení chyby</div>
 
 				<div class="panel-body">
-					<form class="form-horizontal" action="" method="post">
+					<form class="form-horizontal" action="{{ urlgen.url(formAction) }}" method="post">
 						<div class="row">
 							<div class="col-lg-8">
 								<label for="label" class="control-label">Krátký popis příspěvku</label>
@@ -44,6 +44,7 @@
 				<div class="list-group">
 					{% for fb in feedbackItems %}
 						<span class="list-group-item {% if fb.isBugReport() %}list-group-item-warning{% elseif fb.isFeatureSuggestion %} list-group-item-info{% endif %}">
+							{{ fb.label }}
 						</span>
 					{% else %}
 						<span class="list-group-item list-group-item-success">Nejsou nahlášeny žádné chyby nebo návrhy na vylepšení</span>
