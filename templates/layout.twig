@@ -18,14 +18,16 @@
 <body>
 	{% block layoutBody %}
         {% include 'mini/top-navbar.twig' with {'navbar': navbar, 'user': user} %}
-		{% block badge %}
-			{% if badgeTpl is not empty %}
-				{% include badgeTpl %}
-			{% endif %}
-		{% endblock %}
 		<div class="container-fluid">
 			<div class="row">
-				<div class="bodyContainer col-sm-offset-2 col-sm-8">
+				<div class="col-md-2">
+					{% block badge %}
+						{% if badgeTpl is not empty %}
+							{% include badgeTpl %}
+						{% endif %}
+					{% endblock %}
+				</div>
+				<div class="bodyContainer col-md-8">
 					{% if alert_messages %}
 						<div class="alerts">
 							{% for msg in alert_messages %}

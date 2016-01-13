@@ -12,10 +12,6 @@ body{
 }
 
 .clh-badge{
-	position:fixed;
-	top: 60px; left: 23px;
-	
-	width:260px;
 	border-radius: 20px;
 	text-align: center;
 	padding:14px;
