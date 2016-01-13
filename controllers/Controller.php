@@ -16,6 +16,7 @@ abstract class Controller {
 
 	const DEFAULT_CONTROLLER = 'rezervace';
 	const APP_NAME = "Centrum Logických Her";
+	const BADGE = 'mini/badge/testing.twig';
 
 	public static function getDefaultAction() {
 		return null;
@@ -74,6 +75,7 @@ abstract class Controller {
 			'js' => ['jquery-2.1.4.min.js', 'bootstrap.js'],
 			'title' => self::APP_NAME,
 			'user' => $this->user,
+			'badgeTpl' => self::BADGE,
 		];
 	}
 

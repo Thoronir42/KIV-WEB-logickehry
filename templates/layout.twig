@@ -18,6 +18,11 @@
 <body>
 	{% block layoutBody %}
         {% include 'mini/top-navbar.twig' with {'navbar': navbar, 'user': user} %}
+		{% block badge %}
+			{% if badgeTpl is not empty %}
+				{% include badgeTpl %}
+			{% endif %}
+		{% endblock %}
 		<div class="container-fluid">
 			<div class="row">
 				<div class="bodyContainer col-sm-offset-2 col-sm-8">
