@@ -21,11 +21,13 @@
 								{% else %}
 									<b>K vyřešení</b>
 								{% endif %}
-								<a href="{{ urlgen.url() }}" class="btn btn-danger">{% if not fb.isResolved %}Považovat za vyřízené{% else %}Znovu otevřít{% endif %}</a>
+								
+								{% set link = (fb.isResolved ? openLink : closeLink) %}
+								{% set link = link|merge({'id': fb.feedback_id}) %}
+								<a href="{{ urlgen.url(link) }}" class="btn btn-primary">{% if not fb.isResolved %}Považovat za vyřízené{% else %}Znovu otevřít{% endif %}</a>
 							</div>
 							<div class="col-md-10">
 								<p>{{ fb.description }}</p>
-
 							</div>
 						</div>
 					</div>
