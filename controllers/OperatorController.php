@@ -2,7 +2,8 @@
 
 namespace controllers;
 
-use \libs\Operator;
+use \libs\Operator,
+	config\Config;
 
 /**
  * Description of OperatorController
@@ -13,7 +14,7 @@ class OperatorController extends Controller {
 
 	public function startUp() {
 		parent::startUp();
-		if (!\Dispatcher::ENABLE_OPERATOR) {
+		if (!Config::ENABLE_OPERATOR) {
 			$this->message('Operátor je momentálně vypnutý!', \libs\MessageBuffer::LVL_INF);
 			$this->redirectPars();
 		}

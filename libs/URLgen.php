@@ -2,23 +2,22 @@
 
 namespace libs;
 
-use model\ImageManager;
+use model\ImageManager,
+	config\Config;
 
 class URLgen {
 
-	const USE_NICE_URL = true;
 	const ADDR_SEP = '/';
 
 	var $urlPrefix;
-	var $addr;
 
 	public function __construct($prefix) {
-		$this->addr = $this->urlPrefix = $prefix;
+		$this->urlPrefix = $prefix;
 	}
 
 	public function getContAct() {
 		$redirect = false;
-		if (!self::USE_NICE_URL) {
+		if (!Config::USE_NICE_URL) {
 			$controller = filter_input(INPUT_GET, 'controller');
 			$action = filter_input(INPUT_GET, 'action');
 		} else {
@@ -28,9 +27,7 @@ class URLgen {
 				$redirect = true;
 			} else {
 				$controller = $parts[0];
-				$this->addr .= $parts[0] . self::ADDR_SEP;
 				$action = $parts[1];
-				$this->addr .= $parts[1] . self::ADDR_SEP;
 			}
 		}
 		return ['controller' => $controller, 'action' => $action, 'redirect' => $redirect];
@@ -42,7 +39,7 @@ class URLgen {
 	}
 
 	public function url($params = null) {
-		if (self::USE_NICE_URL) {
+		if (Config::USE_NICE_URL) {
 			return $this->niceUrl($params);
 		}
 		$return = $this->urlPrefix;
@@ -84,11 +81,11 @@ class URLgen {
 		return $this->urlPrefix . "webauth/";
 	}
 
-	public function fbSub(){
+	public function fbSub() {
 		$pars = ['controller' => 'ohlas', 'action' => 'pridat'];
 		return $this->url($pars);
 	}
-	
+
 	public function urlReserve($game_type_id) {
 		$params = ['controller' => 'rezervace', 'action' => 'vypis', 'game_id' => $game_type_id];
 		return $this->url($params);

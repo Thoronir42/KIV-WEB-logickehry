@@ -10,8 +10,6 @@ use controllers\Controller,
  */
 class Dispatcher {
 
-	const ENABLE_OPERATOR = true;
-
 	var $JS_DIR = __DIR__ . "/../www/js/";
 	var $CSS_DIR = __DIR__ . "/../www/css/";
 
