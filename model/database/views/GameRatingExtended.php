@@ -2,6 +2,8 @@
 
 namespace model\database\views;
 
+use config\Config;
+
 /**
  * Description of GameRatingExtended
  *
@@ -58,14 +60,18 @@ class GameRatingExtended extends \model\database\tables\GameRating {
 		return false;
 	}
 
-	var $name;
+	var $nickname;
 	var $orion_login;
 	var $game_name;
 	var $game_subtitle;
 
+	public function userHasNickname() {
+		return (strlen($this->nickname) >= Config::USER_NICKNAME_MIN_LENGTH);
+	}
+
 	public function getFullUserName() {
-		if (strlen($this->name) >= \model\database\tables\User::MIN_NAME_LENGTH) {
-			return "$this->name $this->surname";
+		if (strlen($this->nickname) >= Config::USER_NICKNAME_MIN_LENGTH) {
+			return $this->nickname;
 		}
 		return $this->orion_login;
 	}

@@ -36,8 +36,7 @@ class User extends \model\database\DB_Entity {
 	public static function update($pdo, $pars) {
 		$statement = $pdo->prepare(
 				"UPDATE `web_logickehry_db`.`user` SET "
-				. "`name` = :name, "
-				. "`surname` = :surname "
+				. "`nickname` = :nickname "
 				. "WHERE `user`.`orion_login` = :orion_login"
 		);
 		return $statement->execute($pars);
@@ -47,20 +46,20 @@ class User extends \model\database\DB_Entity {
 	 * 
 	 * @param \PDO $pdo
 	 */
-	public static function count($pdo){
+	public static function count($pdo) {
 		$result = $pdo->query('SELECT count(orion_login) as count FROM `web_logickehry_db`.`user`');
 		return $result->fetch(\PDO::FETCH_ASSOC)['count'];
 	}
-	
+
 	/**
 	 * 
 	 * @param \PDO $pdo
 	 */
 	public static function fetchAllLogins($pdo) {
-		$result= $pdo->query('SELECT orion_login FROM user');
+		$result = $pdo->query('SELECT orion_login FROM user');
 		return $result->fetchAll(\PDO::FETCH_COLUMN);
 	}
-	
+
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -106,8 +105,7 @@ class User extends \model\database\DB_Entity {
 
 	var $user_id;
 	var $orion_login;
-	var $name;
-	var $surname;
+	var $nickname;
 	var $role_id;
 	var $last_active;
 
@@ -119,18 +117,12 @@ class User extends \model\database\DB_Entity {
 		return $this->role_id >= self::ROLE_ADMIN;
 	}
 
-	public function isReady() {
-		$params = ['name' => self::MIN_NAME_LENGTH, 'surname' => self::MIN_NAME_LENGTH];
-		foreach ($params as $par => $length) {
-			if (strlen($this->$par) < $length) {
-				return false;
-			}
-		}
-		return true;
+	public function hasNickname() {
+		return (strlen($this->nickname) >= Config::USER_NICKNAME_MIN_LENGTH);
 	}
 
 	public function isLoggedIn() {
-		return (strlen($this->orion_login) > 2);
+		return (!empty($this->orion_login));
 	}
 
 	public function __sleep() {
@@ -140,8 +132,8 @@ class User extends \model\database\DB_Entity {
 	}
 
 	public function getFullName() {
-		if (strlen($this->name) >= self::MIN_NAME_LENGTH || strlen($this->surname) >= self::MIN_NAME_LENGTH) {
-			return "$this->name $this->surname";
+		if (strlen($this->nickname) >= Config::USER_NICKNAME_MIN_LENGTH) {
+			return $this->nickname;
 		}
 		return $this->orion_login;
 	}

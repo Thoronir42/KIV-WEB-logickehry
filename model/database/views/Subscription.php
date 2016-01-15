@@ -93,8 +93,7 @@ class Subscription {
 
 	var $user_id;
 	var $orion_login;
-	var $name;
-	var $surname;
+	var $nickname;
 	var $role_id;
 
 

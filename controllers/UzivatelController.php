@@ -22,11 +22,13 @@ class UzivatelController extends Controller {
 	public static function buildUserActionsMenu($user) {
 
 		$changeDetails = ["urlParams" => ["controller" => "uzivatel", "action" => "mojeUdaje"],
-			"label" => "Moje údaje"];
-		$changeDetails['danger'] = !$user->isReady();
+			"text" => "Moje údaje"];
+		if(!$user->hasNickname()){
+			$changeDetails['label'] = 'label-info';
+		}
 		$separator = ["separator" => true];
 		$logout = ["urlParams" => ["controller" => "uzivatel", "action" => "odhlasitSe"],
-			"label" => "Odhlásit se"];
+			"text" => "Odhlásit se"];
 		$menu = [$changeDetails, $separator, $logout];
 		return $menu;
 	}

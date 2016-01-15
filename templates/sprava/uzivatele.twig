@@ -12,9 +12,9 @@
 				<thead>
 					<tr>
 						<th>Orion login</th>
-						<th>Role</th>
-						<th>Jméno</th>
+						<th>Přezdívka</th>
 						<th>Poslední aktivita</th>
+						<th>Role</th>
 						<th colspan="{{ actions['count'] }}">Akce</th>
 					</tr>
 				</thead>
@@ -23,14 +23,14 @@
 					{% set tmpUrl = tmpUrl|merge({'orion_login': u.orion_login}) %}
 					<tr>
 						<td>{{ u.orion_login }}</td>
-						<td>{{ u.role_label }}</td>
-						<td>{{ '%s %s'|format(u.name, u.surname)}}</td>
+						<td>{{ u.nickname }}</td>
 						<td>{% if u.last_active %}
 							{{ u.last_active }}
 							{% else %}
 							Žádná
 							{% endif %}
 						</td>
+						<td>{{ u.role_label }}</td>
 						<td>
 							{% if u.user_id != user.user_id and not u.isAdministrator %}
 								{% set item = (u.isSupervisor() ? actions['list']['supervisor']['remove'] : actions['list']['supervisor']['add']) %}
