@@ -57,22 +57,31 @@
 							Operátorský režim je vypnutý
 						</div>
 					{% endif %} 
-					<h3>SQL import</h3>
-					<p>Vykoná SQL skript uložený ve složce /operator/</p>
-					<form action="{{ urlgen.url(SQL_action) }}" method="post">
-						<div class="row">
-							<div class="col-sm-7">
-								<select class="form-control" name="filename">
-									{% for file in SQL_files %}
-										<option class="list-group-item">{{ file }}</option>
-									{% endfor %}
-								</select>
-							</div>
-							<div class="col-sm-5">
-								<input type="submit" class="form-control btn btn-warning" value="Spustit">
-							</div>
+					<h2>Hry (typy)</h2>
+					<div>
+						<div class="col-md-6">
+							<h3>Import</h3>
+							<p>Projede soubor typu .csv a každý validní řádek převede na informace o hře, které následně uloží do databáze</p>
+							<form action="{{ urlgen.url(SQL_action) }}" method="post">
+								<div class="input-group">
+									<span class="input-group-btn">
+										<span class="btn btn-default btn-file">
+											Procházet&hellip; <input type="file" name="picture">
+										</span>
+									</span>
+									<input type="text" class="form-control" readonly>
+									<span class="input-group-btn">
+										<input type="submit" class="btn btn-warning" value="Nahrát">
+									</span>
+								</div>
+							</form>
 						</div>
-					</form>
+						<div class="col-md-6">
+							<h3>Export</h3>
+							<p>Exportuje všechny herní typy do souboru .csv</p>
+							<a class="btn btn-info pull-right" href="{{ urlgen.url(exportUrl) }}">Stáhnout</a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

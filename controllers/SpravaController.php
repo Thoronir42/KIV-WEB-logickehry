@@ -182,6 +182,9 @@ class SpravaController extends Controller {
 	}
 
 	public function renderOvladaciPanel() {
+		$this->addCss('input-specific.css');
+		$this->addJs('input-specific.js');
+		
 		$this->template['xml_inventory'] = ['controller' => 'xml', 'action' => 'inventory'];
 		$this->template['xml_reservations'] = ['controller' => 'xml', 'action' => 'reservations'];
 		$this->template['operator_enabled'] = \Dispatcher::ENABLE_OPERATOR;
