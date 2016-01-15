@@ -156,14 +156,17 @@ class ReservationExtended extends Reservation {
 		return $statement->fetchAll(\PDO::FETCH_CLASS, UserExtended::class);
 	}
 
-	var $tracking_code;
 	var $reservation_type;
+	var $signed_players;
+	
+	var $tracking_code;
+	
 	var $game_type_id;
 	var $game_name;
 	var $game_subtitle;
 	var $min_players;
-	var $signed_players;
 	var $max_players;
+	
 	var $desk_capacity;
 	
 	public function getSignedPlayerCount(){

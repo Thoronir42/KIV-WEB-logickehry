@@ -97,7 +97,7 @@ abstract class DB_Entity {
 		foreach ($properties as $prp) {
 			$prpName = $prp->name;
 			if (isset($this->missing[$prpName]) && $instance->$prpName !== false) {
-				echo "$prpName => ".$instance->$prpName;
+				echo "$prpName => " . $instance->$prpName;
 				return false;
 			}
 		}

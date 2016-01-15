@@ -2,6 +2,8 @@
 
 namespace model\database\tables;
 
+use config\Config;
+
 /**
  * Description of User
  *
@@ -12,7 +14,6 @@ class User extends \model\database\DB_Entity {
 	const ROLE_USER = 1;
 	const ROLE_SUPERVISOR = 2;
 	const ROLE_ADMIN = 3;
-	const MIN_NAME_LENGTH = 3;
 
 	/**
 	 * 
