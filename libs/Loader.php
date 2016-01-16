@@ -76,7 +76,8 @@ class Loader {
 	// ### Autoloader functions
 	
 	public static function NamespaceLoader($class) {
-		if (self::tryInclude(__DIR__ . "/../" . $class)) {
+		$path = implode(DIRECTORY_SEPARATOR, explode('\\', $class));
+		if (self::tryInclude(__DIR__ . "/../" . $path)) {
 			return true;
 		}
 
