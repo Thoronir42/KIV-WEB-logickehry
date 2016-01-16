@@ -50,7 +50,7 @@ class MailManager {
 	}
 
 	public static function getDefaultSubject() {
-		return "Oznámení aplikace " . \controllers\Controller::APP_NAME;
+		return "Oznámení aplikace " . \config\Config::APP_NAME;
 	}
 
 }

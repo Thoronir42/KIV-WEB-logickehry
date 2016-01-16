@@ -15,7 +15,6 @@ use model\UserManager;
 abstract class Controller {
 
 	const DEFAULT_CONTROLLER = 'rezervace';
-	const APP_NAME = "Centrum Logických Her";
 	const BADGE = 'mini/badge/testing.twig';
 
 	public static function getDefaultAction() {
@@ -45,7 +44,7 @@ abstract class Controller {
 
 	/** @var String */
 	var $action, $controller;
-	
+
 	public function __construct($support) {
 		if ($support instanceof UserExtended) {
 			$this->user = $support;
@@ -62,7 +61,7 @@ abstract class Controller {
 
 		$this->user = UserManager::getCurrentUser($this->pdo);
 		$this->navbar = [];
-		$this->navbar['app-name'] = self::APP_NAME;
+		$this->navbar['app-name'] = \config\Config::APP_NAME;
 		if ($this->user->isLoggedIn()) {
 			$this->navbar['user_actions'] = UzivatelController::buildUserActionsMenu($this->user);
 		} else {
@@ -73,7 +72,7 @@ abstract class Controller {
 		$this->template = [
 			'css' => ['bootstrap.css'],
 			'js' => ['jquery-2.1.4.min.js', 'bootstrap.js'],
-			'title' => self::APP_NAME,
+			'title' => \config\Config::APP_NAME,
 			'user' => $this->user,
 			'badgeTpl' => self::BADGE,
 		];
@@ -104,18 +103,18 @@ abstract class Controller {
 		return $menu;
 	}
 
-	public function colSizeFromGet(){
+	public function colSizeFromGet() {
 		$size = $this->getParam('colSize');
-		if(is_numeric($size) && !is_double($size) && $size >= 0 && $size <= 12){
+		if (is_numeric($size) && !is_double($size) && $size >= 0 && $size <= 12) {
 			return $size;
 		}
 		return $this->getDefaultColSize();
 	}
-	
-	protected function getDefaultColSize(){
+
+	protected function getDefaultColSize() {
 		return 6;
 	}
-	
+
 	protected function buildSubmenu() {
 		return false;
 	}
@@ -182,8 +181,8 @@ abstract class Controller {
 
 	public function redirectPars($controller = null, $action = null, $additional = null) {
 		$url = ['controller' => $controller ? : self::DEFAULT_CONTROLLER, 'action' => $action];
-		if(!empty($additional) && is_array($additional)){
-			foreach($additional as $k => $v){
+		if (!empty($additional) && is_array($additional)) {
+			foreach ($additional as $k => $v) {
 				$url[$k] = $v;
 			}
 		}

@@ -4,6 +4,7 @@ namespace controllers;
 
 use \model\database\tables as Tables,
 	\model\database\views as Views;
+use config\Config;
 
 /**
  * Description of AjaxController
@@ -12,7 +13,7 @@ use \model\database\tables as Tables,
  */
 class OhlasController extends Controller {
 
-	const FEEDBACK_ENABLED = true;
+	
 	const STATE_CLOSE = 'zavrit';
 	const STATE_OPEN = 'otevrit';
 
@@ -26,7 +27,7 @@ class OhlasController extends Controller {
 			$this->message('Pro psaní ohlasů musíte být přihlášeni.');
 			$this->redirectPars();
 		}
-		if (!self::FEEDBACK_ENABLED) {
+		if (!Config::FEEDBACK_ENABLED) {
 			$this->message('Ohlasy zpětné vazby nejsou v tento moment povoleny');
 			$this->redirectPars();
 		}
