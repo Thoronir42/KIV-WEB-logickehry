@@ -1,24 +1,27 @@
-$(document).on('change', '.btn-file :file', function() {
-    var input = $(this),
-        numFiles = input.get(0).files ? input.get(0).files.length : 1,
-        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-    input.trigger('fileselect', [numFiles, label]);
+$(document).on('change', '.btn-file :file', function () {
+	var input = $(this),
+			numFiles = input.get(0).files ? input.get(0).files.length : 1,
+			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+	input.trigger('fileselect', [numFiles, label]);
 });
 
-$(document).ready( function() {
-    $(document).on('fileselect', '.btn-file :file', function(event, numFiles, label) {
-        
-        var input = $(this).parents('.input-group').find(':text'),
-            log = numFiles > 1 ? numFiles + ' files selected' : label;
-        
-        if( input.length ) {
-            input.val(log);
-        }
-    });
+$(document).ready(function () {
+	$(document).on('fileselect', '.btn-file :file', function (event, numFiles, label) {
+
+		var input = $(this).parents('.input-group').find(':text'),
+				log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+		if (input.length) {
+			input.val(log);
+		}
+	});
 });
 
 $(document).on("click", '.game-type-list-group .list-group-item', function () {
-		$(this).addClass('active');
-		$(this).siblings('.list-group-item').removeClass('active');
-		$('input[name=game_type_id]').attr('value', $(this).attr('data-value'));
+	if ($(this).hasClass('disabled')) {
+		return;
+	}
+	$(this).addClass('active');
+	$(this).siblings('.list-group-item').removeClass('active');
+	$('input[name=game_type_id]').attr('value', $(this).attr('data-value'));
 });

@@ -110,7 +110,7 @@ class RezervaceController extends Controller {
 	}
 
 	private function prepareGames($timePars) {
-		$games = Views\GameTypeExtended::fetchAll($this->pdo);
+		$games = Views\GameTypeExtended::fetchAllWithCounts($this->pdo);
 		$resCounts = Views\ReservationExtended::countByGametypeWithinTimespan($this->pdo, $timePars);
 		foreach ($resCounts as $count) {
 			$games[$count['game_type_id']]->reservationCount = $count['count'];
@@ -231,15 +231,15 @@ class RezervaceController extends Controller {
 			return ['result' => true, 'message' => "Rezervace č $id není k dispozici a nelze u níměni vaší účast."];
 		}
 		$delOk = Tables\Reservation::deleteAttendee($this->pdo, $this->user->user_id, $reservation_id);
-		if(!$newVal){
-			if($delOk){
+		if (!$newVal) {
+			if ($delOk) {
 				return ['result' => true, 'message' => 'Byli jste úspěšně odhlášeni z rezervace'];
 			} else {
 				return ['result' => false, 'message' => 'Při odhlašování z rezervace nastaly potíže'];
 			}
 		} else {
 			$insOk = Tables\Reservation::insertAttendee($this->pdo, $this->user->user_id, $reservation_id);
-			if($insOk){
+			if ($insOk) {
 				return ['result' => true, 'message' => 'Byli jste úspěšně přihlášeni z rezervace'];
 			} else {
 				return ['result' => false, 'message' => 'Při přihlašování k rezervaci nastaly potíže'];
