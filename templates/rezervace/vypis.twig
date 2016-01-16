@@ -5,10 +5,18 @@
 	<div class="panel panel-default reservations">
 		<div class="panel-heading">
 			<div class="row">
-				<div class="col-xs-9">
+				<div class="col-xs-6">
 					<h4 class="date_bounds">
 						{{ "%s - %s"|format(timeSpan['time_from'], timeSpan['time_to'])  }}
 					</h4>
+				</div>
+				<div class="col-xs-3">
+					<select class="form-control" id="filter">
+						<option value="0">Zobrazit vše</option>
+						{% for g in games if g.reservationCount is not empty%}
+							<option value="{{ g.game_type_id }}">{{ '%s (%01d)'|format(g.getFullName, g.reservationCount) }}</option>
+						{% endfor %}
+					</select>
 				</div>
 				<div class="col-xs-3">
 					<span class="btn-group btn-group-justified">

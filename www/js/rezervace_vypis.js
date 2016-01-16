@@ -60,4 +60,17 @@ $(document).ready(function () {
 		setReservationTimes(true);
 	});
 
+	$("#filter").change(function(){
+		var reservations = $('.reservation');
+		var gid = $(this).val();
+		if(gid === '0'){
+			reservations.removeClass('hidden');
+			return;
+		}
+		reservations.addClass('hidden');
+		var fil = reservations.filter('.game'+gid);
+		fil.removeClass('hidden');
+		
+	});
+
 });
