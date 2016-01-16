@@ -3,7 +3,7 @@
 
 {% block bodyContent %}
 	<div class="row">
-		<div class="col-xs-7">
+		<div class="col-lg-7">
 			<div class="panel panel-default reservations">
 				<div class="panel-heading">
 					<div class="row">
@@ -26,7 +26,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-5">
+		<div class="col-lg-5">
 			<div class="well well-lg reservations-list">
 				{% for i in (resRend.getWeekStartDay())..(resRend.getWeekEndDay()) if reservationDays[i]['reservations'] is not empty %}
 					<div class="dayLists{% if loop.first %} first{ else if loop.last} last {% endif %}" id="dl_{{ i }}">
