@@ -1,6 +1,10 @@
 {# mini/badge/testing.twig #}
 <div class="clh-badge">
 	<h3>Režim testování</h3>
-	<p>Pokud narazíte na nějakou chybu nebo pokud máte návrh na zlepšení, <a href="{{ urlgen.fbSub() }}">dejte nám o tom vědět</a>.</p>
+	{% if user.isLoggedIn %}
+		<p>Pokud narazíte na nějakou chybu nebo pokud máte návrh na zlepšení, <a href="{{ urlgen.fbSub() }}">dejte nám o tom vědět</a>.</p>
+	{% else %}
+		<p>Při prohlížení můžete narazit na neočekávané chyby.</p>
+	{% endif %}
 </div>
 
