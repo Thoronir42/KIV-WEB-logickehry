@@ -5,8 +5,10 @@
 <input type="hidden" name="game_type_id" value="{{ active }}">
 <div class="list-group game-type-list-group	">	
 	{% for g in games %}
+		{% set disabled = (count == 'reservations' and g.active_boxes < 1) or
+						  (count == 'subscribed' and g.subscribed_users < 1)%}
 		<a data-value="{{ g.game_type_id }}" data-avg-time="{{ g.avg_playtime }}"
-		   class="list-group-item{% if g.game_type_id == active %} active{%endif %}{% if g.active_boxes < 1%} disabled{%endif %}" style="border-color:#{{ g.getColor() }}">
+		   class="list-group-item{% if g.game_type_id == active %} active{%endif %}{% if disabled %} disabled{% endif %}" style="border-color:#{{ g.getColor() }}">
 			{% if count == 'reservations' and g.reservationCount is not empty %}
 				<span class="badge"><span class="glyphicon glyphicon-bookmark"></span> {{ g.reservationCount }} </span>
 			{% elseif count == 'subscribed' %}
