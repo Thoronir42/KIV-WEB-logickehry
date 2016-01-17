@@ -9,6 +9,20 @@ namespace model\database\tables;
  */
 class GameType extends \model\database\DB_Entity {
 
+	public static function getExportColumns() {
+		return ['game_name', 'game_subtitle', 'avg_playtime', 'min_players', 'max_players'];
+	}
+
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @return GameType[]
+	 */
+	public static function fetchAll($pdo) {
+		return $pdo->query("SELECT * FROM `game_type`")
+						->fetchAll(\PDO::FETCH_CLASS, self::class);
+	}
+
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -48,6 +62,21 @@ class GameType extends \model\database\DB_Entity {
 		var_dump($statement->queryString);
 	}
 
+	public static function prepareExport($pdo) {
+		$columns = self::getExportColumns();
+		$games = self::fetchAll($pdo);
+
+		$gamesArray = [];
+		foreach($games as $g) {
+			$ga = [];
+			foreach($columns as $c){
+				$ga[$c] = $g->$c;
+			}
+			$gamesArray[] = $ga;
+		}
+		return $gamesArray;
+	}
+
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -65,7 +94,7 @@ class GameType extends \model\database\DB_Entity {
 	 */
 	public static function fromPOST() {
 		$gt = parent::fromPOST(self::class);
-		if(empty($gt->max_players)){
+		if (empty($gt->max_players)) {
 			$gt->max_players = $gt->min_players;
 		}
 		return $gt;
@@ -85,11 +114,11 @@ class GameType extends \model\database\DB_Entity {
 	public function getColor() {
 		return \model\ColorManager::numberToColor($this->game_type_id);
 	}
-	
-	public function getFullName(){
+
+	public function getFullName() {
 		$return = $this->game_name;
-		if(!empty($this->game_subtitle)){
-			$return .= ' '.$this->game_subtitle;
+		if (!empty($this->game_subtitle)) {
+			$return .= ' ' . $this->game_subtitle;
 		}
 		return $return;
 	}

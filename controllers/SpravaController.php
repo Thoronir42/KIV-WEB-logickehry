@@ -10,8 +10,7 @@ use \model\database\tables as Tables,
 class SpravaController extends Controller {
 
 	const ALL_USERS_GT_ID = -1;
-	
-	
+
 	public static function getDefaultAction() {
 		return "hry";
 	}
@@ -52,7 +51,7 @@ class SpravaController extends Controller {
 		$this->template['col_game'] = 4;
 		$this->template['game_edit_form_action'] = ['controller' => 'sprava', 'action' => 'upravitHru'];
 		$this->template['mailLink'] = ['controller' => 'sprava', 'action' => 'hromadnyMail', 'id' => 0];
-		
+
 		$this->template['games'] = Views\GameTypeExtended::fetchAllWithCounts($this->pdo);
 	}
 
@@ -65,9 +64,9 @@ class SpravaController extends Controller {
 		}
 
 		if (Tables\GameType::update($this->pdo, $gameType->asArray())) {
-			$this->message("Úpravy na hře ".$gameType->getFullName()." byly úspěšně uloženy", \libs\MessageBuffer::LVL_SUC);
+			$this->message("Úpravy na hře " . $gameType->getFullName() . " byly úspěšně uloženy", \libs\MessageBuffer::LVL_SUC);
 		} else {
-			$this->message("Úpravy na hře ".$gameType->getFullName()." se nepodařilo uložit", \libs\MessageBuffer::LVL_WAR);
+			$this->message("Úpravy na hře " . $gameType->getFullName() . " se nepodařilo uložit", \libs\MessageBuffer::LVL_WAR);
 		}
 
 		if (!$keepPicture) {
@@ -164,12 +163,12 @@ class SpravaController extends Controller {
 		$boxes = Views\GameBoxExtended::fetchAll($this->pdo);
 		$games = Views\GameTypeExtended::fetchAll($this->pdo);
 		$gamesSrt = [];
-		
-		foreach($games as $g){
+
+		foreach ($games as $g) {
 			$g->tracking_codes = [];
 			$gamesSrt[$g->game_type_id] = $g;
 		}
-		
+
 		foreach ($boxes as $b) {
 			if ($b->tracking_code && (!$b->retired || $retired)) {
 				$game = $gamesSrt[$b->game_type_id];
@@ -184,13 +183,19 @@ class SpravaController extends Controller {
 	public function renderOvladaciPanel() {
 		$this->addCss('input-specific.css');
 		$this->addJs('input-specific.js');
-		
+
 		$this->template['xml_inventory'] = ['controller' => 'xml', 'action' => 'inventory'];
 		$this->template['xml_reservations'] = ['controller' => 'xml', 'action' => 'reservations'];
 		$this->template['operator_enabled'] = \config\Config::ENABLE_OPERATOR;
-		$this->template['SQL_files'] = \libs\Operator::getSQLfiles();
-		$this->template['SQL_action'] = ['controller' => 'operator', 'action' => 'SQL'];
+		$this->template['game_types'] = $this->prepareOperatiorGameTypes();
 		$this->template['letiste_links'] = $this->makeLetisteLinks();
+	}
+
+	private function prepareOperatiorGameTypes() {
+		return [
+			'import' => ['controller' => 'sprava', 'action' => 'importHer'],
+			'export' => ['controller' => 'sprava', 'action' => 'exportHer'],
+		];
 	}
 
 	private function makeLetisteLinks() {
@@ -199,10 +204,27 @@ class SpravaController extends Controller {
 		return $return;
 	}
 
+	public function doExportHer() {
+		$gameTypes = Tables\GameType::prepareExport($this->pdo);
+		$df = fopen("php://output", 'w');
+
+		\libs\Headders::download_send_headers("CLH_hry_" . date('d_m_Y').'.csv');
+
+		ob_start();
+		$df = fopen("php://output", 'w');
+		fputcsv($df, array_keys(reset($gameTypes)));
+		foreach ($gameTypes as $gt) {
+			fputcsv($df, $gt);
+		}
+		fclose($df);
+		echo ob_get_clean();
+		die;
+	}
+
 	public function renderHromadnyMail() {
 		$this->addCss('input-specific.css');
 		$this->addJs('input-specific.js');
-		
+
 		$this->template['pageTitle'] = 'Hromadný mail';
 
 		$this->template['default_subject'] = MailManager::getDefaultSubject();
@@ -212,21 +234,21 @@ class SpravaController extends Controller {
 		$this->template['active'] = $this->getParam('id');
 	}
 
-	private function mockAllUserGameEntry(){
+	private function mockAllUserGameEntry() {
 		$allEntry = new Views\GameTypeExtended();
 		$allEntry->game_type_id = self::ALL_USERS_GT_ID;
 		$allEntry->game_name = 'Všichni uživatelé';
 		$allEntry->subscribed_users = Tables\User::count($this->pdo);
 		return $allEntry;
 	}
-	
+
 	public function doPoslatMail() {
 		$gid = $this->getParam('game_type_id', INPUT_POST);
 		$subject = $this->getParam('subject', INPUT_POST);
 		$body = $this->getParam('mail_body', INPUT_POST);
-		
+
 		$users = ($gid == self::ALL_USERS_GT_ID) ? Tables\User::fetchAllLogins($this->pdo) : Views\Subscription::fetchUsersByGame($this->pdo, $gid);
-		
+
 		$result = MailManager::send($users, $body, $subject);
 		if ($result['result']) {
 			$this->message($result['message'], \libs\MessageBuffer::LVL_SUC);

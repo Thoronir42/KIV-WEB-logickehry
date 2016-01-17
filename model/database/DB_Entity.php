@@ -41,6 +41,10 @@ abstract class DB_Entity {
 		return $instance;
 	}
 
+	public static function getExportColumns() {
+		return [];
+	}
+
 	var $misc = false;
 
 	public function __construct() {
