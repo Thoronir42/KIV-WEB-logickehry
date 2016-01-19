@@ -43,14 +43,16 @@ class RezervaceController extends Controller {
 			$this->template['defaultGame'] = $game_type_id;
 		}
 
-		$this->template["reservationDays"] = $this->prepareReservationDays($timePars['time_from'], $dbTimePars);
-		$this->template["reservationTypes"] = Tables\Reservation::getTypes($this->user->isSupervisor());
-		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);
-
 		$this->template['formAction'] = ['controller' => 'rezervace', 'action' => 'rezervovat'];
+		
 
-		$this->template["pageTitle"] = $this->makeVypisTitle($week);
-		$this->template["timeSpan"] = DatetimeManager::format($timePars, DatetimeManager::HUMAN_DATE_ONLY);
+		$rw = \model\ReservationManager::prepareReservationWeek($this->pdo, $week);
+		$this->template["reservationDays"] = $rw['reservationDays'];
+		$this->template["pageTitle"] = $rw['pageTitle'];
+		$this->template["timeSpan"] = DatetimeManager::format($rw['timePars'], DatetimeManager::HUMAN_DATE_ONLY);
+		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);
+		
+		$this->template["reservationTypes"] = Tables\Reservation::getTypes($this->user->isSupervisor());
 		$this->template['games'] = $this->prepareGames($dbTimePars);
 		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
 		$this->template['weekShift'] = $this->makeWeekLinks($week);

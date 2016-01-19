@@ -23,7 +23,7 @@ class UzivatelController extends Controller {
 
 		$changeDetails = ["urlParams" => ["controller" => "uzivatel", "action" => "mujProfil"],
 			"text" => "Můj profil"];
-		if(!$user->hasNickname()){
+		if (!$user->hasNickname()) {
 			$changeDetails['label'] = 'label-info';
 		}
 		$separator = ["separator" => true];
@@ -62,14 +62,21 @@ class UzivatelController extends Controller {
 	}
 
 	private function renderProfile($user) {
+		$this->addCss('rezervace_vypis.css');
 		$this->template['rUser'] = $user;
 
+		$rw = \model\ReservationManager::prepareReservationWeek($this->pdo, 0, $user->user_id);
+		$this->template["reservationDays"] = $rw['reservationDays'];
+		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);
+		
 		$this->template['subscriptions'] = $this->buildSubscriptions($user->user_id);
 		$this->template['ratings'] = $this->buildRatings($user->user_id);
-		$this->template['reservations'] = $this->buildReservations($user->user_id);
-
+		$this->template['games'] = Views\GameTypeExtended::fetchAll($this->pdo);
+		
 		$this->template['resLink'] = ['controller' => 'rezervace', 'action' => 'vypis'];
 		$this->template['gameListLink'] = ['controller' => 'vypis', 'action' => 'hry'];
+		
+		$this->template['resListColSize'] = $this->colSizeFromGet();
 	}
 
 	private function buildSubscriptions($user_id) {
@@ -84,12 +91,6 @@ class UzivatelController extends Controller {
 		$ret = [];
 		$ret['list'] = Views\GameRatingExtended::fetchAllByUser($this->pdo, $user_id);
 		$ret['max_score'] = Tables\GameRating::SCORE_MAX;
-		return $ret;
-	}
-
-	private function buildReservations($user_id) {
-		$ret = [];
-
 		return $ret;
 	}
 
