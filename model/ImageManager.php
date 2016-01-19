@@ -16,6 +16,14 @@ class ImageManager {
 	const MAX_IMG_FILE_SIZE = 12582912; // 12 * 1024 * 1024
 	const IMAGE_NOT_FOUND = "nf.png";
 
+	public static function fileTypes() {
+		$resArray = [];
+		foreach(self::ALLOWED_FILE_TYPES as $ft){
+			$resArray[] = ".$ft";
+		}
+		return implode(",", $resArray);
+	}
+	
 	public static function get($fileName, $extension = null) {
 		if (file_exists(self::IMG_FOLDER . $fileName)) {
 			echo "<br>";

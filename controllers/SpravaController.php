@@ -51,7 +51,8 @@ class SpravaController extends Controller {
 		$this->template['col_game'] = 4;
 		$this->template['game_edit_form_action'] = ['controller' => 'sprava', 'action' => 'upravitHru'];
 		$this->template['mailLink'] = ['controller' => 'sprava', 'action' => 'hromadnyMail', 'id' => 0];
-
+		$this->template['img_fileTypes'] = ImageManager::fileTypes();
+		
 		$this->template['games'] = Views\GameTypeExtended::fetchAllWithCounts($this->pdo);
 	}
 
