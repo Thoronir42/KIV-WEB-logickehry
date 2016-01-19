@@ -15,7 +15,6 @@ use model\UserManager;
 abstract class Controller {
 
 	const DEFAULT_CONTROLLER = 'rezervace';
-	const BADGE = 'mini/badge/testing.twig';
 
 	public static function getDefaultAction() {
 		return null;
@@ -74,7 +73,7 @@ abstract class Controller {
 			'js' => ['jquery-2.1.4.min.js', 'bootstrap.js'],
 			'title' => \config\Config::APP_NAME,
 			'user' => $this->user,
-			'badgeTpl' => self::BADGE,
+			'badgeTpl' => \config\Config::BADGE,
 		];
 	}
 

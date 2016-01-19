@@ -16,13 +16,13 @@ class UzivatelController extends Controller {
 	const PORTAL_LOGOUT_URL = 'https://portal.zcu.cz/portal/logout';
 
 	public static function getDefaultAction() {
-		return "mojeUdaje";
+		return "mujProfil";
 	}
 
 	public static function buildUserActionsMenu($user) {
 
-		$changeDetails = ["urlParams" => ["controller" => "uzivatel", "action" => "mojeUdaje"],
-			"text" => "Moje údaje"];
+		$changeDetails = ["urlParams" => ["controller" => "uzivatel", "action" => "mujProfil"],
+			"text" => "Můj profil"];
 		if(!$user->hasNickname()){
 			$changeDetails['label'] = 'label-info';
 		}
@@ -45,7 +45,7 @@ class UzivatelController extends Controller {
 		}
 	}
 
-	public function renderMojeUdaje() {
+	public function renderMujProfil() {
 		$this->template['form_action'] = ["controller" => "uzivatel", "action" => "ulozitUdaje"];
 		$this->addCss("uzivatel_zobrazitProfil.css");
 		$this->renderProfile($this->user);
@@ -95,8 +95,7 @@ class UzivatelController extends Controller {
 
 	public function doUlozitUdaje() {
 		$pars = ["orion_login" => $this->user->orion_login,
-			"name" => $this->getParam("name", INPUT_POST),
-			"surname" => $this->getParam("surname", INPUT_POST)
+			"nickname" => trim($this->getParam("nickname", INPUT_POST)),
 		];
 		if (Tables\User::update($this->pdo, $pars)) {
 			$this->message("Vaše údaje byly zpracovány...", \libs\MessageBuffer::LVL_SUC);

@@ -18,5 +18,7 @@ class Config {
 	const ENABLE_OPERATOR = true;
 	
 	const FEEDBACK_ENABLED = true;
+	
+	const BADGE = 'mini/badge/testing.twig';
 
 }
