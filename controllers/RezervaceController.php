@@ -59,43 +59,6 @@ class RezervaceController extends Controller {
 		$this->template['resListColSize'] = $this->colSizeFromGet();
 	}
 
-	private function prepareReservationDays($timeFrom, $dbTimePars) {
-		$reservations = Views\ReservationExtended::fetchWithinTimespan(
-						$this->pdo, $dbTimePars);
-		$reservationDays = [];
-
-		for ($i = 0; $i < 7; $i++) {
-			$day = strtotime(("+ $i days"), $timeFrom);
-			$reservationDays[$i + 1] = [
-				'date' => date('d.m.', $day),
-				'reservations' => [],
-				'year' => date('Y', $day),
-			];
-		}
-
-		foreach ($reservations as $r) {
-			$day = date("w", strtotime($r->reservation_date));
-			$reservationDays[$day]['reservations'][] = $r;
-		}
-		return $reservationDays;
-	}
-
-	private function makeVypisTitle($week) {
-		switch ($week) {
-			case -1: return "Výpis rezervací předcházejícího týdne";
-			case 0: return "Výpis rezervací aktuálního týdne";
-			case 1: return "Výpis rezervací následujícího týdne";
-		}
-		if ($week < 0) {
-			$w = -1 * $week;
-			$filler = "před";
-		} else {
-			$w = $week;
-			$filler = "za";
-		}
-		return "Výpis rezervací $filler $w týdny";
-	}
-
 	private function makeWeekLinks($week) {
 		$ret = [];
 		$ret['next'] = $ret['curr'] = $ret['prev'] = [ 'url' => ['controller' => 'rezervace', 'action' => 'vypis']];
