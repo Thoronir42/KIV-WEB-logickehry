@@ -35,7 +35,7 @@ class GameTypeExtended extends GameType {
 		$result = $pdo->query("SELECT "
 						. "game_type_extended.*, "
 						. "COUNT(DISTINCT game_box.game_box_id) AS total_boxes, "
-						. "COUNT(DISTINCT case game_box.retired when '0' then 1 else null end) AS active_boxes, "
+						. "COUNT(DISTINCT case game_box.retired when '0' then game_box.game_box_id else null end) AS active_boxes, "
 						. "COUNT(DISTINCT reservation_extended.reservation_id) AS total_reservations "
 						. " FROM `game_type_extended` "
 						. "LEFT JOIN game_box "
