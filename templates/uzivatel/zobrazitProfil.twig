@@ -4,70 +4,70 @@
 
 {% block bodyContent %}
 	<h2>{{ rUser.orion_login }}{% if rUser.hasNickname %} <small>{{ rUser.nickname }}</small>{% endif %}</h2>
-	{% block zmenitUdajePanel %}{% endblock%}
+{% block zmenitUdajePanel %}{% endblock%}
 
-	<div class="row">
-		<div class="col-md-12">
-			<div class="panel panel-default reservations">
-				<div class="panel-heading">
-					<h2 class="panel-title">
-						{% block reservationsTitle %}
-							Rezervace uživatele {{ rUser.orion_login }} pro tento týden
-						{% endblock %}
-					</h2>
-				</div>
-				<div class="panel-body">
-					{% for r in reservations %}
-						<span>Res: {{ dump(r) }}</span>
-						{% if not loop.last %}
-							<hr/>
-						{% endif %}
-					{% else %}
-						<span>Žádné rezervace</span>
-					{% endfor %}
-				</div>
-				<div class="panel-footer">
-					Přejít na <a href="{{ urlgen.url(resLink) }}">Rezervace&hellip;</a>
-				</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default reservations-list">
+			<div class="panel-heading">
+				<h2 class="panel-title">
+					{% block reservationsTitle %}
+						Rezervace uživatele {{ rUser.orion_login }} pro tento týden
+					{% endblock %}
+				</h2>
+			</div>
+			<div class="panel-body reservations-list">
+				{% include 'mini/reservation_days.twig' %}
+			</div>
+			<div class="panel-footer">
+				Přejít na <a href="{{ urlgen.url(resLink) }}">Rezervace&hellip;</a>
 			</div>
 		</div>
 	</div>
+</div>
 
 
-	<div class="row">
-		<div class="col-md-6">
-			<div class="panel panel-default stats subscriptions">
-				<div class="panel-heading">
-					<h2 class="panel-title">
-						{% block subscriptionsTitle %}
-							Hry, které uživatel {{ rUser.orion_login }} sleduje
-						{% endblock %}
-					</h2>
-				</div>
-				<div class="panel-body">
-					{% include "uzivatel/mini_subscriptions.twig" %}
-				</div>
-				<div class="panel-footer">
-					Přejít na <a href="{{ urlgen.url(gameListLink) }}">Seznam her&hellip;</a>
-				</div>
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-default stats subscriptions">
+			<div class="panel-heading">
+				<h2 class="panel-title">
+					{% block subscriptionsTitle %}
+						Hry, které uživatel {{ rUser.orion_login }} sleduje
+					{% endblock %}
+				</h2>
 			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="panel panel-default stats ratings">
-				<div class="panel-heading">
-					<h2 class="panel-title">
-						{% block ratingsTitle %}
-							Hry zhodnocené uživatelem {{ rUser.orion_login }}
-						{% endblock %}
-					</h2>
-				</div>
-				<div class="panel-body">
-					{% include "uzivatel/mini_ratings.twig" %}
-				</div>
-				<div class="panel-footer">
-					Přejít na <a href="{{ urlgen.url(resLink) }}">Seznam her&hellip;</a>
-				</div>
+			<div class="panel-body">
+				{% include "uzivatel/mini_subscriptions.twig" %}
+			</div>
+			<div class="panel-footer">
+				Přejít na <a href="{{ urlgen.url(gameListLink) }}">Seznam her&hellip;</a>
 			</div>
 		</div>
 	</div>
+	<div class="col-md-6">
+		<div class="panel panel-default stats ratings">
+			<div class="panel-heading">
+				<h2 class="panel-title">
+					{% block ratingsTitle %}
+						Hry zhodnocené uživatelem {{ rUser.orion_login }}
+					{% endblock %}
+				</h2>
+			</div>
+			<div class="panel-body">
+				{% include "uzivatel/mini_ratings.twig" %}
+			</div>
+			<div class="panel-footer">
+				Přejít na <a href="{{ urlgen.url(resLink) }}">Seznam her&hellip;</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block pageStyle %}
+	<style>
+		{% for g in games %}.game{{ g.game_type_id }}{ border-color: #{{ g.getColor() }} }
+		{% endfor %}
+	</style>
 {% endblock %}
