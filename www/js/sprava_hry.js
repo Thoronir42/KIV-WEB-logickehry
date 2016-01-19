@@ -49,37 +49,15 @@ $(document).ready(function () {
 		showEdit(id, false);
 	});
 
-
-	$(".butt-submit").click(function () {
-		return;
-		var panel = $(this).parents(".game");
-
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange = function () {
-			if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-				var resp = xmlhttp.responseText;
-				if (resp === 'true') {
-					location.reload();
-					return;
-				} else {
-					var resp_parts = resp.split(";");
-					var id = resp_parts[0],
-							message = resp_parts[1];
-					var popover = $("#ai_" + id).attr('data-content', message).data('bs.popover');
-					popover.setContent();
-					popover.$tip.addClass(popover.options.placement);
-				}
-			}
-		};
-		xmlhttp.open("GET", "?controller=ajax&action=insertBox&code=" + game_code + "&gameId=" + game_id, true);
-		xmlhttp.send();
-	});
-
 	$(document).on('fileselect', '.btn-file :file', function (event, numFiles, label) {
 		$(this).parents('.input-group').find(':checkbox').prop('checked', false);
 	});
+	
+	$(".tt_totBox").attr('data-toggle', 'tooltip');
+	$(".tt_totBox").attr('title', 'Počet evidenčních kódů kdy vedených u této hry.');
+	
+	$(".tt_actBox").attr('data-toggle', 'tooltip');
+	$(".tt_actBox").attr('title', 'Počet aktivních evidenčních kódů.');
 
-
-	$('[data-toggle="popover"]').popover();
 	$('[data-toggle="tooltip"]').tooltip();
 });
