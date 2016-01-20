@@ -1,5 +1,6 @@
 body{
-    background-color: snow;
+    background-image: url("../images/bg.png");
+	background-attachment: fixed;
 }
 
 #top_infoBar{
