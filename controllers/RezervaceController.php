@@ -43,7 +43,8 @@ class RezervaceController extends Controller {
 			$this->template['defaultGame'] = $game_type_id;
 		}
 
-		$this->template['formAction'] = ['controller' => 'rezervace', 'action' => 'rezervovat'];
+		$this->template['reservationFormAction'] = ['controller' => 'rezervace', 'action' => 'rezervovat'];
+		$this->template['eventFormAction'] = ['controller' => 'rezervace', 'action' => 'vytvoritUdalost'];
 		
 
 		$rw = \model\ReservationManager::prepareReservationWeek($this->pdo, $week);
