@@ -35,8 +35,8 @@ class Localizer {
 			case self::DAY_FORMAT_FULL:
 				return ['Den %d', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota', 'Neděle'];
 			case self::DAY_FORMAT_ON_DAY:
-				return [ 'V den $d', 'V Pondělí', 'V Úterý', 'Ve Středu', 'Ve Čtvrtek',
-					'V Pátek', 'V Sobotu', 'V Neděli'];
+				return [ 'V den $d', 'V pondělí', 'V úterý', 'Ve středu', 'Ve čtvrtek',
+					'V pátek', 'V sobotu', 'V neděli'];
 			default: return ['Den %d'];
 		}
 	}
