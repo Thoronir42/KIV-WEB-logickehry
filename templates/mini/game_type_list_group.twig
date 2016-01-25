@@ -8,13 +8,13 @@
 		{% set disabled = (count == 'reservations' and g.active_boxes < 1) or
 						  (count == 'subscribed' and g.subscribed_users < 1)%}
 		<a data-value="{{ g.game_type_id }}" data-avg-time="{{ g.avg_playtime }}"
-		   class="list-group-item{% if g.game_type_id == active %} active{%endif %}{% if disabled %} disabled{% endif %}" style="border-color:#{{ g.getColor() }}">
+		   class="list-group-item{% if g.game_type_id == active and not disabled %} active{%endif %}{% if disabled %} disabled{% endif %}" style="border-color:#{{ g.getColor() }}">
 			{% if count == 'reservations' and g.reservationCount is not empty %}
 				<span class="badge"><span class="glyphicon glyphicon-bookmark"></span> {{ g.reservationCount }} </span>
 			{% elseif count == 'subscribed' %}
 				<span class="badge">{{ '%d'|format(g.subscribed_users) }} </span>
 			{% endif %}
-			<h4>{{ g.game_name }}{% if g.game_subtitle is not empty %}<small> {{ g.game_subtitle }}</small>{% endif %}</h4>
+			<h4>{{ g.game_name }}<br/><small>{% if g.game_subtitle is not empty %}{{ g.game_subtitle }}{% else %} {% endif %}</small></h4>
 		</a>
 	{% endfor %}
 </div>
