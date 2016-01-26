@@ -56,3 +56,7 @@
 .reservations-list img.media-object{
 	width:64px;
 }
+
+#addReservation .panel-heading a{
+	margin-top: -6px;
+}

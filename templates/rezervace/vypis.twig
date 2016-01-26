@@ -33,11 +33,12 @@
 	</div>
 
 	{% if user.isLoggedIn() %}
-		<div class="panel panel-default">
+		<div class="panel panel-default" id="addReservation">
 			<div class="panel-heading">
-				<h2 class="panel-title">Přidat rezervaci</h2>
+				<span class="panel-title">Přidat rezervaci</span>
+				{% if user.isAdministrator() %}<a class="btn btn-info pull-right" id="toggleEvent" data-toggle="false"><span class="label">Událost</span> <span class="glyphicon glyphicon-retweet"></span></a>{% endif %}
 			</div>
-			<div class="panel-body">
+			<div class="panel-body" id="reservationBody">
 				<form class="form-horizontal" action="{{ urlgen.url(reservationFormAction) }}" method="post">
 					<div class="row">
 						<div class="col-sm-3" id="game_type_list_res_col">
@@ -90,7 +91,7 @@
 
 			</div>
 			{% if user.isAdministrator() %}
-				<div class="panel-body">
+				<div class="panel-body" id="eventBody">
 					<form class="form-horizontal" action="{{ urlgen.url(eventFormAction) }}" method="post">
 						<div class="row">
 							<div class="col-sm-3" id="game_type_list_res_col">
