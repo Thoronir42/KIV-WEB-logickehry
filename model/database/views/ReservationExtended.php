@@ -9,7 +9,7 @@ use \model\database\tables\Reservation;
  *
  * @author Stepan
  */
-class ReservationExtended extends Reservation {
+class ReservationExtended extends Reservation implements \model\database\IRenderableWeekEntity {
 
 	/**
 	 * 
@@ -23,12 +23,11 @@ class ReservationExtended extends Reservation {
 				. "LEFT JOIN reservation_users AS ru ON ru.reservation_id = reservation_extended.reservation_id "
 				. "WHERE reservation_date >= :time_from AND reservation_date < :time_to "
 				. "AND (reservation_extended.reservee_user_id = :uid1 OR ru.user_id = :uid2) "
-				. "ORDER BY time_from ASC")
-				:
+				. "ORDER BY time_from ASC") :
 				("SELECT * FROM `reservation_extended` "
 				. "WHERE reservation_date >= :time_from AND reservation_date < :time_to "
 				. "ORDER BY time_from ASC");
-		if($user_id){
+		if ($user_id) {
 			$pars['uid1'] = $pars['uid2'] = $user_id;
 		}
 		$statement = $pdo->prepare($sql);
@@ -183,6 +182,47 @@ class ReservationExtended extends Reservation {
 
 	public function getSignedPlayerCount() {
 		return $this->signed_players + 1;
+	}
+
+	//
+	public function getDate() {
+		return $this->reservation_date;
+	}
+
+	public function getTimeFrom() {
+		return $this->time_from;
+	}
+
+	public function getTimeTo() {
+		return $this->time_to;
+	}
+
+	public function getTimeLength() {
+		return $this->time_to - $this->time_from;
+	}
+
+	public function getSubtitle() {
+		return $this->game_subtitle;
+	}
+
+	public function getTitle() {
+		return $this->game_name;
+	}
+
+	public function getType() {
+		return "reservation";
+	}
+	
+	public function hasGameAssigned() {
+		return true;
+	}
+
+	public function getGameTypeID() {
+		return $this->game_type_id;
+	}
+
+	public function isEvent() {
+		return false;
 	}
 
 }

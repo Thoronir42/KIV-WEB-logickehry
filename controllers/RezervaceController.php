@@ -37,7 +37,8 @@ class RezervaceController extends Controller {
 
 		$timePars = DatetimeManager::getWeeksBounds($week);
 		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FULL);
-
+		
+		$game_types = $this->prepareGames($dbTimePars);
 
 		$game_type_id = $this->getParam("game_id");
 		if (Views\GameTypeExtended::fetchById($this->pdo, $game_type_id)) {
@@ -45,7 +46,8 @@ class RezervaceController extends Controller {
 		}
 
 		$this->template['reservationFormAction'] = ['controller' => 'rezervace', 'action' => 'rezervovat'];
-		$this->template['eventFormAction'] = ['controller' => 'rezervace', 'action' => 'vytvoritUdalost'];
+		$this->template['eventFormAction'] = ['controller' => 'udalost', 'action' => 'pridat'];
+		$this->template['eventGameList'] = Tables\Event::addNoGame($game_types);
 		
 
 		$rw = \model\ReservationManager::prepareReservationWeek($this->pdo, $week);
@@ -53,8 +55,8 @@ class RezervaceController extends Controller {
 		$this->template["pageTitle"] = $rw['pageTitle'];
 		$this->template["timeSpan"] = DatetimeManager::format($rw['timePars'], DatetimeManager::HUMAN_DATE_ONLY);
 		
-		$this->template["reservationTypes"] = Tables\Reservation::getTypes($this->user->isSupervisor());
-		$this->template['games'] = $this->prepareGames($dbTimePars);
+		$this->template["reservationTypes"] = Tables\Reservation::getTypes();
+		$this->template['games'] = $game_types;
 		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
 		$this->template['weekShift'] = $this->makeWeekLinks($week);
 		$this->template['resListColSize'] = $this->colSizeFromGet();

@@ -22,11 +22,7 @@
 			</div>
 			<div class="col-sm-11 resCol">
 				{% for res in rd['reservations'] %}
-					<div class="reservation game{{ res.game_type_id }}" style="left:{{ resRend.getStartPct(res) }}%; width: {{ resRend.getWidthPct(res) }}%;">
-						{{ res.game_name }}
-						<br>
-						<small>{{ resRend.time(res.time_from) }} - {{ resRend.time(res.time_to) }}</small>
-					</div>
+					{{ resRend.renderEntity(res)|raw }}
 				{% else %}
 					{{ resRend.getDay(i, 'on_day') }} nejsou žádné rezervace
 				{% endfor %}

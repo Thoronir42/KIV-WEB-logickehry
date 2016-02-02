@@ -95,8 +95,8 @@
 					<form class="form-horizontal" action="{{ urlgen.url(eventFormAction) }}" method="post">
 						<div class="row">
 							<div class="col-sm-3" id="game_type_list_res_col">
-								<label for="game_type_id" class="control-label">Výběr hry</label>
-								{% include "mini/game_type_list_group.twig" with {'games':games, 'active':defaultGame, 'count': false} %}
+								<label for="game_type_id" class="control-label">Spojit událost s hrou</label>
+								{% include "mini/game_type_list_group.twig" with {'games':eventGameList	, 'active':defaultGame, 'count': false} %}
 							</div>
 							<div class="col-lg-6 col-md-9">
 								<div class="row">
@@ -105,11 +105,11 @@
 										<input type="text" name="event_title"  class="form-control">
 									</div>
 									<div class="col-sm-4">
-										<label class="control-label" for="time_from">Začátek rezervace</label>
+										<label class="control-label" for="time_from">Začátek události</label>
 										<input class="form-control" type="time" name="time_from" id="time_from">
 									</div>
 									<div class="col-sm-4">
-										<label class="control-label" for="time_from">Konec rezervace</label>
+										<label class="control-label" for="time_from">Konec události</label>
 										<input class="form-control" type="time" name="time_to" id="time_to">
 									</div>
 
@@ -120,7 +120,7 @@
 										<input type="text" name="event_subtitle" class="form-control">
 									</div>
 									<div class="col-sm-5">
-										<label class="control-label" for="reservation_date">Datum rezervace</label>
+										<label class="control-label" for="reservation_date">Datum události</label>
 										<input type="date" name="reservation_date" class="form-control">
 									</div>
 								</div>

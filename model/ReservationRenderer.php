@@ -2,7 +2,7 @@
 
 namespace model;
 
-use model\database\views\ReservationExtended;
+use model\database\IRenderableWeekEntity;
 
 /**
  * Description of ReservationRenderer
@@ -10,7 +10,7 @@ use model\database\views\ReservationExtended;
  * @author Stepan
  */
 class ReservationRenderer {
-	
+
 	public $dayStart,
 			$dayEnd;
 
@@ -23,10 +23,10 @@ class ReservationRenderer {
 
 	/**
 	 * 
-	 * @param ReservationExtended $res
+	 * @param IRenderableWeekEntity $res
 	 */
 	public function getStartPct($res) {
-		$rStart = strtotime($res->time_from);
+		$rStart = strtotime($res->getTimeFrom());
 		$h = date('H', $rStart);
 		$m = date('i', $rStart);
 		$dayMin = 60 * ($h - $this->dayStart) + $m;
@@ -35,17 +35,23 @@ class ReservationRenderer {
 
 	/**
 	 * 
-	 * @param ReservationExtended $res
+	 * @param IRenderableWeekEntity $re
+	 */
+	public function renderEntity($re) {
+		$return = sprintf("<div class=\"%s%s\" style=\"left:%.2f%%; width:%.2f%%;\">", $re->getType(), $re->hasGameAssigned() ? ' game' . $re->getGameTypeID() : "", $this->getStartPct($re), $this->getWidthPct($re)
+		);
+		$return .= sprintf("%s<br><small>%s</small>", $re->getTitle(), $re->getSubtitle());
+		$return .= "</div>";
+		return $return;
+	}
+
+	/**
+	 * 
+	 * @param IRenderableWeekEntity $res
 	 * @return double
 	 */
 	public function getWidthPct($res) {
-		if($res->isEvent()){
-			return 100;
-		}
-		
-		$rFrom = strtotime($res->time_from);
-		$rTo = strtotime($res->time_to);
-		$rLength = $rTo - $rFrom;
+		$rLength = $res->getTimeLength();
 		$h = date('H', $rLength);
 		$m = date('i', $rLength);
 		$rTime = 60 * $h + $m;

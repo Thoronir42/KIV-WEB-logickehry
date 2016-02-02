@@ -33,11 +33,7 @@
 									</div>
 									<div class="col-xs-6">
 										<span class="glyphicon glyphicon-time"></span>
-										{% if not r.isEvent %}
-											{{ resRend.time(r.time_from) }} - {{ resRend.time(r.time_to) }}
-										{% else %}
-											Celý den
-										{% endif %}
+										{{ resRend.time(r.time_from) }} - {{ resRend.time(r.time_to) }}
 									</div>
 								</div>
 							</li>
@@ -71,10 +67,10 @@
 								{% if r.reservee_user_id != user.user_id %}
 									{% if signAction['newVal'] %}
 										<a href="{{ urlgen.url(signAction['url']) }}" class="btn btn-info pull-right"><span class="glyphicon glyphicon-plus"></span></a>
-									{% else %}
+										{% else %}
 										<a href="{{ urlgen.url(signAction['url']) }}" class="btn btn-warning pull-right"><span class="glyphicon glyphicon-minus"></span></a>
+										{% endif %}
 									{% endif %}
-								{% endif %}
 							</div>
 							<div class="panel-body">
 								<span class="list-group">

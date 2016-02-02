@@ -7,7 +7,9 @@ namespace model\database\tables;
  *
  * @author Stepan
  */
-class Event extends \model\database\DB_Entity {
+class Event extends \model\database\DB_Entity implements \model\database\IRenderableWeekEntity {
+
+	const NO_GAME_TYPE_ID = 0;
 
 	/**
 	 * 
@@ -41,29 +43,67 @@ class Event extends \model\database\DB_Entity {
 		return $event;
 	}
 
+	public static function addNoGame($game_types) {
+		$noGame = new \model\database\views\GameTypeExtended();
+		$noGame->game_name = "Žádná hra";
+		$noGame->game_type_id = self::NO_GAME_TYPE_ID;
+
+		return array_merge([$noGame], $game_types);
+	}
+
 	var $event_id = false;
 	var $event_title;
 	var $event_subtitle = false;
 	var $description = false;
-	var $reservation_date;
+	var $event_date;
+	var $time_from;
+	var $time_to;
 	var $game_type_id = false;
+	var $author_user_id = false;
 
 	public function checkRequiredProperties() {
 		return parent::checkRequiredProperties(self::class);
 	}
 
-	public function getTime($type) {
-		switch ($type) {
-			case 'from':
-				$time = $this->time_from;
-				break;
-			case 'to':
-				$time = $this->time_to;
-				break;
-			default:
-				return 'Nesprávný čas';
-		}
-		return date(\model\DatetimeManager::HUMAN_TIME_ONLY, strtotime($time));
+	///
+	public function getDate() {
+		return $this->event_date;
+	}
+
+	public function getTimeFrom() {
+		return $this->time_from;
+	}
+
+	public function getTimeLength() {
+		return $this->time_to - $this->time_from;
+	}
+
+	public function getTimeTo() {
+		return $this->time_to;
+	}
+
+	public function getSubtitle() {
+		return $this->event_subtitle;
+	}
+
+	public function getTitle() {
+		return $this->event_title;
+	}
+
+	public function getType() {
+		return "reservation";
+	}
+
+	public function hasGameAssigned() {
+		return !$this->game_type_id;
+	}
+
+	public function getGameTypeID() {
+		$this->game_type_id;
+	}
+
+	public function isEvent() {
+		return true;
 	}
 
 }
