@@ -14,6 +14,7 @@ class RezervaceController extends Controller {
 
 	public function startUp() {
 		parent::startUp();
+		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);
 	}
 
 	protected function buildSubmenu() {
@@ -51,7 +52,6 @@ class RezervaceController extends Controller {
 		$this->template["reservationDays"] = $rw['reservationDays'];
 		$this->template["pageTitle"] = $rw['pageTitle'];
 		$this->template["timeSpan"] = DatetimeManager::format($rw['timePars'], DatetimeManager::HUMAN_DATE_ONLY);
-		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);
 		
 		$this->template["reservationTypes"] = Tables\Reservation::getTypes($this->user->isSupervisor());
 		$this->template['games'] = $this->prepareGames($dbTimePars);
@@ -75,6 +75,11 @@ class RezervaceController extends Controller {
 		return $ret;
 	}
 
+	/**
+	 * 
+	 * @param mixed[] $timePars
+	 * @return Views\GameTypeExtended[]
+	 */
 	private function prepareGames($timePars) {
 		$games = Views\GameTypeExtended::fetchAllWithCounts($this->pdo);
 		$resCounts = Views\ReservationExtended::countByGametypeWithinTimespan($this->pdo, $timePars);
@@ -108,7 +113,7 @@ class RezervaceController extends Controller {
 		}
 		$this->redirectPars('rezervace');
 	}
-
+	
 	/**
 	 * 
 	 * @param Tables\Reservation $reservation

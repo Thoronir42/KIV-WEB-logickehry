@@ -135,19 +135,4 @@ class Reservation extends \model\database\DB_Entity {
 	public function hasDesk() {
 		return !empty($this->desk_id);
 	}
-
-	public function getTime($type) {
-		switch ($type) {
-			case 'from':
-				$time = $this->time_from;
-				break;
-			case 'to':
-				$time = $this->time_to;
-				break;
-			default:
-				return 'Nesprávný čas';
-		}
-		return date(\model\DatetimeManager::HUMAN_TIME_ONLY, strtotime($time));
-	}
-
 }

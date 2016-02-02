@@ -59,11 +59,8 @@ class ReservationRenderer {
 		return DatetimeManager::format($iTime, DatetimeManager::HUMAN_TIME_ONLY);
 	}
 
-	public function getDay($n, $type = \libs\Localizer::DAY_FORMAT_FULL){
-		switch($type){
-			default:
-			return \libs\Localizer::getDayName($n, $type);
-		}
+	public function getDay($n, $type = \libs\Localizer::DAY_FORMAT_FULL) {
+		return \libs\Localizer::getDayName($n, $type);
 	}
 
 	public function getWeekStartDay() {

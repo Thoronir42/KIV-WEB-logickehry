@@ -38,8 +38,8 @@ class ReservationExtended extends Reservation {
 		return null;
 	}
 
-	public static function fetchWithinTimespanByUser($pdo, $dbTimePars, $user_id) {
-		
+	public static function fetchWithinTimespanByUser($pdo, $pars, $user_id) {
+		return self::fetchWithinTimespan($pdo, $pars, $user_id);
 	}
 
 	/**

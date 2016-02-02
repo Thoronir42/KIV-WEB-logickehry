@@ -29,7 +29,7 @@ class GameTypeExtended extends GameType {
 	/**
 	 * 
 	 * @param \PDO $pdo
-	 * @return GameTypeExtended
+	 * @return GameTypeExtended[]
 	 */
 	public static function fetchAllWithCounts($pdo) {
 		$result = $pdo->query("SELECT "
