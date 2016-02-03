@@ -56,7 +56,7 @@ $(document).ready(function () {
 		var month = split[1],
 				day = split[0];
 
-		$('input[name=reservation_date]').val(year + '-' + month + '-' + day);
+		$('input[type=date]').val(year + '-' + month + '-' + day);
 		setReservationTimes(true);
 	});
 
