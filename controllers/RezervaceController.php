@@ -37,7 +37,7 @@ class RezervaceController extends Controller {
 
 		$timePars = DatetimeManager::getWeeksBounds($week);
 		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FULL);
-		
+
 		$game_types = $this->prepareGames($dbTimePars);
 
 		$game_type_id = $this->getParam("game_id");
@@ -48,13 +48,13 @@ class RezervaceController extends Controller {
 		$this->template['reservationFormAction'] = ['controller' => 'rezervace', 'action' => 'rezervovat'];
 		$this->template['eventFormAction'] = ['controller' => 'udalost', 'action' => 'pridat'];
 		$this->template['eventGameList'] = Tables\Event::addNoGame($game_types);
-		
+
 
 		$rw = \model\ReservationManager::prepareReservationWeek($this->pdo, $week);
 		$this->template["reservationDays"] = $rw['reservationDays'];
 		$this->template["pageTitle"] = $rw['pageTitle'];
 		$this->template["timeSpan"] = DatetimeManager::format($rw['timePars'], DatetimeManager::HUMAN_DATE_ONLY);
-		
+
 		$this->template["reservationTypes"] = Tables\Reservation::getTypes();
 		$this->template['games'] = $game_types;
 		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
@@ -115,28 +115,19 @@ class RezervaceController extends Controller {
 		}
 		$this->redirectPars('rezervace');
 	}
-	
+
 	/**
 	 * 
 	 * @param Tables\Reservation $reservation
 	 * @return mixed[]
 	 */
 	private function validateReservation($reservation, $game_type_id) {
-		$resCounts = Views\ReservationExtended::countReservationsOn($this->pdo, $reservation->reservation_date);
-
-		if (!empty($resCounts) && !empty($resCounts[Tables\Reservation::RES_TYPE_EVENT])) {
-			return ['result' => false, 'message' =>
-				sprtintf('V den %s je naplánovaná událost a nelze tedy přidat %s.', date(DatetimeManager::HUMAN_DATE_ONLY, strtotime($reservation->reservation_date)), $reservation->isEvent() ? 'událost' : 'rezervaci')];
+		$isEvent = Tables\Event::existsDuring($this->pdo, DatetimeManager::format($reservation->reservation_date, DatetimeManager::DB_DATE_ONLY), DatetimeManager::format(['from' => $reservation->time_from, 'to' => $reservation->time_to], DatetimeManager::DB_TIME_ONLY));
+		if ($isEvent) {
+			return ['result' => false, 'message' => sprtintf('Ve vámi zvolený čas je již naplánovaná událost a nelze tedy uložit rezervaci.')];
 		}
 
-		if ($reservation->isEvent()) {
-			if (!empty($resCounts)) {
-				$total = $resCounts['total'];
-				return ['result' => false, 'message' =>
-					\sprintf('V den %s není možné vytvořit událost, vytvoření blokuje %d %s', date(DatetimeManager::HUMAN_DATE_ONLY, strtotime($reservation->reservation_date)), $total, $total >= 5 ? 'rezervací' : 'rezervace')];
-			}
-		} else if ($reservation->desk_id != Tables\Desk::NO_DESK) {
-			echo $reservation->desk_id;
+		if ($reservation->desk_id != Tables\Desk::NO_DESK) {
 			if (Views\ReservationExtended::checkDeskAvailable($this->pdo, $reservation->reservation_date, $reservation->time_from, $reservation->time_to)) {
 				return ['result' => false, 'message' => \sprintf("Stůl č %02d je ve vámi zvolený čas obsazený", $reservation->desk_id)];
 			}
@@ -201,7 +192,7 @@ class RezervaceController extends Controller {
 	private function changeAttendancy($reservation_id, $newVal) {
 		$reservation = $this->prepareReservation($reservation_id);
 		if (empty($reservation)) {
-			return ['result' => true, 'message' => "Rezervace č $id není k dispozici a nelze u níměni vaší účast."];
+			return ['result' => true, 'message' => "Rezervace č $reservation_id není k dispozici a nelze u níměni vaší účast."];
 		}
 		$delOk = Tables\Reservation::deleteAttendee($this->pdo, $this->user->user_id, $reservation_id);
 		if (!$newVal) {
