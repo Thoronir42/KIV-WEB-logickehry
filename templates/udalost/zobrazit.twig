@@ -1,0 +1,92 @@
+{# udalost/zobrazit.twig #}
+{% extends "rezervace/detail.twig" %}
+
+
+{% block panelHeadingContent %}
+	<div class="col-xs-9">
+		<div class="event_title">{{ event.getTitle }}</div>
+		{% if event.hasSubtitle %}<small class="game_subtitle">{{ r.game_subtitle }}</small>{% endif %}
+	</div>
+{% endblock %}
+{% block panelBodyContent %}
+	<div class="row">
+		<div class="col-md-4">
+			<div class="well well-sm">
+				<div class="alert alert-info">
+					{{ r.reservation_type }}
+				</div>
+
+				<ul class="list-group">
+					<li class="list-group-item">
+						<div class="row">
+							<div class="col-xs-6">
+								<span class="glyphicon glyphicon-calendar"></span>
+								{{ r.reservation_date }}
+							</div>
+							<div class="col-xs-6">
+								<span class="glyphicon glyphicon-time"></span>
+								{{ resRend.time(r.time_from) }} - {{ resRend.time(r.time_to) }}
+							</div>
+						</div>
+					</li>
+					<li class="list-group-item">
+						{% if r.desk_id %}
+							Číslo stolu: {{ '%02d'|format(r.desk_id) }}
+							<span class="pull-right">Míst k sezení: {{ r.desk_capacity }}</span>
+						{% else %}
+							Bez rezervace stolu
+						{% endif %}
+					</li>
+				</ul>
+
+				<ul class="list-group">
+					<li class="list-group-item">
+						Doporučený počet hráčů: {{ r.game.getPlayerCount() }}
+					</li>
+					{% if r.isOpen %}
+						<li class="list-group-item">
+							Počet účastnících se hráčů {{ r.signed_players }}
+						</li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+		{% if user.isLoggedIn() %}
+			<div class="col-lg-4">
+				<div class="panel panel-info users">
+					<div class="panel-heading">
+						Přihlášení uživatelé
+						{% if r.reservee_user_id != user.user_id %}
+							{% if signAction['newVal'] %}
+								<a href="{{ urlgen.url(signAction['url']) }}" class="btn btn-info pull-right"><span class="glyphicon glyphicon-plus"></span></a>
+								{% else %}
+								<a href="{{ urlgen.url(signAction['url']) }}" class="btn btn-warning pull-right"><span class="glyphicon glyphicon-minus"></span></a>
+								{% endif %}
+							{% endif %}
+					</div>
+					<div class="panel-body">
+						<span class="list-group">
+							{% for u in r.allUsers %}
+								<a href="{{ urlgen.uProfile(u.orion_login) }}" class="list-group-item">{{ u.getFullName }}</a>
+							{% endfor %}
+						</span>
+					</div>
+				</div>
+
+
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}
+
+
+{% block pageStyle %}
+	{% if event.hasGameAssigned() %}
+		<style>
+			.panel-heading, .panel-body{ border-color: #{{ g.getColor() }}
+			}
+			.panel-body .well{ background: #{{ g.getColor() }}
+			}
+		</style>
+	{% endif %}
+{% endblock %}

@@ -14,7 +14,7 @@
 		<div class="row resRow">
 			{% set rd = reservationDays[i] %}
 			<div class="col-sm-1 dateCol">
-				<span class="btn btn-default" data-year="{{ rd['year'] }}">
+				<span class="btn btn-default{% if not user.isLoggedIn %} disabled{% endif %}" data-year="{{ rd['year'] }}">
 					{{ resRend.getDay(i, 'abbr') }}
 					<br>
 					<span class="date">{{ rd['date'] }}</span>
