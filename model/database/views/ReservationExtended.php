@@ -133,13 +133,22 @@ class ReservationExtended extends Reservation implements \model\database\IRender
 	 * 
 	 * @param \PDO $pdo
 	 * @param Date $date
+	 * @param Time[] $time
 	 * @return mixed[]
 	 */
-	public static function countReservationsOn($pdo, $date) {
+	public static function countReservationsOn($pdo, $date, $time = null) {
 		$statement = $pdo->prepare('SELECT reservation_type_id, count(reservation_id) AS count FROM reservation_extended '
 				. 'WHERE reservation_date = :date '
+				. ($time ?
+						'AND ( ( time_from <= :time_from1 AND :time_from2 <= time_to ) OR'
+						. '    ( time_from <= :time_to1   AND :time_to2   <= time_to )	)' : '')
 				. 'GROUP BY reservation_type_id');
-		if (!$statement->execute(['date' => $date])) {
+		$pars = ['date' => $date];
+		if($time){
+			$pars['time_from1'] = $pars['time_from2'] = $time['from'];
+			$pars['time_to1'] = $pars['time_to2'] = $time['to'];
+		}
+		if (!$statement->execute($pars)) {
 			return false;
 		}
 		$return = [];
@@ -212,7 +221,7 @@ class ReservationExtended extends Reservation implements \model\database\IRender
 	public function getType() {
 		return "reservation";
 	}
-	
+
 	public function hasGameAssigned() {
 		return true;
 	}

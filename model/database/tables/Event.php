@@ -14,19 +14,19 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 	/**
 	 * 
 	 * @param \PDO $pdo
-	 * @param Reservation $res
+	 * @param Event $evt
 	 */
-	public static function insert($pdo, $res) {
-		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`event` "
-				. "(`game_box_id`, `reservee_user_id`, `reservation_type_id`, `reservation_date`, `time_from`, `time_to`, `desk_id`) "
-				. "VALUES ( :game_box_id , :reservee_user_id,  :reservation_type_id,  :reservation_date,  :time_from,  :time_to,  :desk_id )");
+	public static function insert($pdo, $evt) {
+		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`event`"
+				. "       (`event_title`, `event_subtitle`, `description`, `game_type_id`, `author_user_id`, `event_date`, `time_from`, `time_to`) "
+				. "VALUES (:event_title,  :event_subtitle,  :description,  :game_type_id,  :author_user_id,  :event_date,  :time_from,  :time_to )");
 		$pars = [
-			'game_box_id' => $res->game_box_id, 'reservee_user_id' => $res->reservee_user_id,
-			'reservation_type_id' => $res->reservation_type_id, 'reservation_date' => $res->reservation_date,
-			'reservation_date' => date(\model\DatetimeManager::DB_DATE_ONLY, strtotime($res->reservation_date)),
-			'time_to' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($res->time_to)),
-			'time_from' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($res->time_from)),
-			'desk_id' => $res->desk_id];
+			'event_title' => $evt->event_title, 'event_subtitle' => $evt->event_subtitle,
+			'description' => $evt->description, 'game_type_id' => $evt->reservation_date,
+			'author_user_id' => $evt->author_user_id,
+			'event_date' => date(\model\DatetimeManager::DB_DATE_ONLY, strtotime($evt->event_date)),
+			'time_from' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($evt->time_from)),
+			'time_to' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($evt->time_to))];
 		if (!$statement->execute($pars)) {
 			var_dump($statement->errorInfo());
 			return false;
@@ -36,10 +36,46 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 
 	/**
 	 * 
-	 * @return Reservation
+	 * @param \PDO $pdo
+	 * @param int $id
+	 */
+	public static function fetchById($pdo, $id) {
+		$result = $pdo->query("SELECT * FROM `web_logickehry_db`.`event`");
+		return $result->fetchAll(\PDO::FETCH_CLASS, Event::class);
+	}
+	
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param Date $date
+	 * @param Time[] $time
+	 * @return boolean
+	 */
+	public static function existsDuring($pdo, $date, $time) {
+		$statement = $pdo->prepare('SELECT * FROM event '
+				. 'reservation_date = :date AND ( '
+				. ' ( time_from <= :time_from1 AND :time_from2 <= time_to ) OR'
+				. ' ( time_from <= :time_to1   AND :time_to2   <= time_to )'
+				. ')');
+		$pars = ['date' => $date];
+		$pars['time_from1'] = $pars['time_from2'] = $time['from'];
+		$pars['time_to1'] = $pars['time_to2'] = $time['to'];
+		if (!$statement->execute($pars)) {
+			var_dump($statement->errorInfo());
+			return false;
+		}
+		return(!empty($statement->fetchAll(\PDO::FETCH_CLASS, Event::class)));
+	}
+
+	/**
+	 * 
+	 * @return Event
 	 */
 	public static function fromPOST() {
 		$event = parent::fromPOST(self::class);
+		if(!$event->game_type_id){
+			$event->game_type_id = NULL;
+		}
 		return $event;
 	}
 
