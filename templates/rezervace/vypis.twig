@@ -33,10 +33,10 @@
 	</div>
 
 	{% if user.isLoggedIn() %}
-		<div class="panel panel-default" id="addReservation">
+		<div class="panel panel-default" id="addReservation" data-toggle="false" data-start-on-evt="{{ (refill and refill['type'] == 'evnt') ? 'true' : 'false' }}">
 			<div class="panel-heading">
 				<span class="panel-title">Přidat rezervaci</span>
-				{% if user.isAdministrator() %}<a class="btn btn-info pull-right" id="toggleEvent" data-toggle="false"><span class="label">Událost</span> <span class="glyphicon glyphicon-retweet"></span></a>{% endif %}
+				{% if user.isAdministrator() %}<a class="btn btn-info pull-right" id="toggleEvent"><span class="label">Událost</span> <span class="glyphicon glyphicon-retweet"></span></a>{% endif %}
 			</div>
 			<div class="panel-body" id="reservationBody">
 				<form class="form-horizontal" action="{{ urlgen.url(reservationFormAction) }}" method="post">

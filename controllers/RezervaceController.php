@@ -34,6 +34,7 @@ class RezervaceController extends Controller {
 		if (!is_numeric($week)) {
 			$week = 0;
 		}
+		$this->template['refill'] = $this->pickRefill();
 
 		$timePars = DatetimeManager::getWeeksBounds($week);
 		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FULL);
@@ -62,6 +63,22 @@ class RezervaceController extends Controller {
 		$this->template['resListColSize'] = $this->colSizeFromGet();
 	}
 
+	private function pickRefill(){
+		$detail = $this->getParam('detail');
+		$arr = ['type' => 'none', 'evnt' => new Tables\Event(), 'rsrv' => new Tables\Reservation()];
+		switch($detail){
+			case 'udalost':
+				$arr['type'] = 'evnt';
+				$arr['evnt'] = Tables\Event::fromPOST();
+				break;
+			case 'rezervace':
+				$arr['type'] = 'rsrv';
+				$arr['rsrv'] = Tables\Reservation::fromPOST();
+				break;
+		}
+		return $arr;
+	}
+	
 	private function makeWeekLinks($week) {
 		$ret = [];
 		$ret['next'] = $ret['curr'] = $ret['prev'] = [ 'url' => ['controller' => 'rezervace', 'action' => 'vypis']];

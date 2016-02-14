@@ -36,6 +36,33 @@ function setReservationTimes(checkStartTime) {
 
 }
 
+function toggleSlide(instant) {
+	var newVal, newLbl, bodyHide, bodyShow;
+	var switchPanel = $("#addReservation");
+	if (switchPanel.attr("data-toggle") === "false") {
+		newVal = "true";
+		newLbl = "Rezervace";
+		bodyHide = "reservation";
+		bodyShow = "event";
+	} else {
+		newVal = "false";
+		newLbl = "Událost";
+		bodyHide = "event";
+		bodyShow = "reservation";
+	}
+	switchPanel.attr("data-toggle", newVal);
+	switchPanel.find(".label").html(newLbl);
+	
+	if (instant) {
+		$("#" + bodyHide + "Body").hide();
+		$("#" + bodyShow + "Body").show();
+	} else {
+		$("#" + bodyHide + "Body").slideUp();
+		$("#" + bodyShow + "Body").slideDown();
+	}
+
+}
+
 $(document).ready(function () {
 	$(document).on("click", '.game-type-list-group .list-group-item', function () {
 		setReservationTimes(true);
@@ -75,24 +102,13 @@ $(document).ready(function () {
 
 	$("#eventBody").hide();
 
-	$("#toggleEvent").click(function () {
-		var newVal, newLbl, bodyHide, bodyShow;
-		if ($(this).attr("data-toggle") === "false") {
-			newVal = "true";
-			newLbl = "Rezervace";
-			bodyHide = "reservation";
-			bodyShow = "event";
-		} else {
-			newVal = "false";
-			newLbl = "Událost";
-			bodyHide = "event";
-			bodyShow = "reservation";
-		}
-		$(this).attr("data-toggle", newVal);
-		$(this).find(".label").html(newLbl);
-		$("#"+bodyHide+"Body").slideUp();
-		$("#"+bodyShow+"Body").slideDown();
-		
+	$("#toggleEvent").click(function(){
+		toggleSlide(false);
 	});
+	
+	if ($("#addReservation").attr("data-start-on-evt") === "true") {
+		toggleSlide(true);
+	}
+
 
 });
