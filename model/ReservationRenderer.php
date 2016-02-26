@@ -2,7 +2,8 @@
 
 namespace model;
 
-use model\database\IRenderableWeekEntity;
+use model\database\IRenderableWeekEntity,
+	model\database\tables\Reservation;
 
 /**
  * Description of ReservationRenderer
@@ -10,6 +11,10 @@ use model\database\IRenderableWeekEntity;
  * @author Stepan
  */
 class ReservationRenderer {
+
+	public static function getInstance() {
+		return new ReservationRenderer(Reservation::EARLY_RESERVATION, Reservation::LATE_RESERVATION);
+	}
 
 	public $dayStart,
 			$dayEnd;

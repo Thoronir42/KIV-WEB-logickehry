@@ -5,9 +5,9 @@
 	<div class="reservation panel panel-default">
 		<div class="panel-heading">
 			{% block panelHeadingContent %}
-				<div class="row" style="height: 100%;">
+				<div class="row">
 					<span class="col-xs-9">
-						<div class="reservation_title">Rezervace uživatele {{ r.user.getFullName }}</div>
+						<div class="event_title">Rezervace uživatele {{ r.user.getFullName }}</div>
 						<a href="{{ urlgen.gDet(r.game_type_id) }}">
 							<div class="game_name">{{ r.game_name }}{% if r.game_subtitle is not empty %} <small class="game_subtitle">{{ r.game_subtitle }}</small>{% endif %}</div>
 						</a>

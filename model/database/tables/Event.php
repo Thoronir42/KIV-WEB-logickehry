@@ -15,6 +15,8 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 	 * 
 	 * @param \PDO $pdo
 	 * @param Event $evt
+	 * 
+	 * @return int id of inserted event
 	 */
 	public static function insert($pdo, $evt) {
 		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`event`"
@@ -29,19 +31,21 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 			'time_to' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($evt->time_to))];
 		if (!$statement->execute($pars)) {
 			var_dump($statement->errorInfo());
-			return false;
+			return 0;
 		}
-		return true;
+		return $pdo->lastInsertId();
 	}
 
 	/**
 	 * 
 	 * @param \PDO $pdo
 	 * @param int $id
+	 * 
+	 * @return Event instance with specified id
 	 */
 	public static function fetchById($pdo, $id) {
 		$result = $pdo->query("SELECT * FROM `web_logickehry_db`.`event`");
-		return $result->fetchAll(\PDO::FETCH_CLASS, Event::class);
+		return $result->fetchObject(Event::class);
 	}
 	
 	/**
@@ -118,6 +122,10 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 		return $this->time_to;
 	}
 
+	public function hasSubtitle(){
+		return !(empty($this->event_subtitle));
+	}
+	
 	public function getSubtitle() {
 		return $this->event_subtitle;
 	}

@@ -27,6 +27,7 @@ class ReservationManager {
 	private static function prepareReservationDays($pdo, $timeFrom, $dbTimePars, $user_id = null) {
 		$reservations = ReservationExtended::fetchWithinTimespan(
 						$pdo, $dbTimePars, $user_id);
+		//$events = database\tables\Event::fetchWithinTimespan($pdo, $dbTimePars);
 		$reservationDays = [];
 
 		for ($i = 0; $i < 7; $i++) {

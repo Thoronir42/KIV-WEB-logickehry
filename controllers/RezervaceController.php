@@ -14,7 +14,7 @@ class RezervaceController extends Controller {
 
 	public function startUp() {
 		parent::startUp();
-		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);
+		$this->template['resRend'] = \model\ReservationRenderer::getInstance();
 	}
 
 	protected function buildSubmenu() {
