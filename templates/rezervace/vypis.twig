@@ -35,8 +35,22 @@
 	{% if user.isLoggedIn() %}
 		<div class="panel panel-default" id="addReservation" data-toggle="false" data-start-on-evt="{{ (refill and refill['type'] == 'evnt') ? 'true' : 'false' }}">
 			<div class="panel-heading">
-				<span class="panel-title">Přidat rezervaci</span>
-				{% if user.isAdministrator() %}<a class="btn btn-info pull-right" id="toggleEvent"><span class="label">Událost</span> <span class="glyphicon glyphicon-retweet"></span></a>{% endif %}
+				<span class="panel-title">
+					{% if not user.isAdministrator() %}
+						Přidat rezervaci
+					{% else %}
+						Přidat
+						<div class="btn-group" data-toggle="buttons">
+							<label id='label_res' class="btn btn-primary active">
+								<input type="radio" name="rb_add_type" value="res" checked> rezervaci
+							</label>
+							<label id='label_evt' class="btn btn-default">
+								<input type="radio" name="rb_add_type" value="evt"> událost
+							</label>
+						</div>
+					{% endif %}
+				</span>
+				
 			</div>
 			<div class="panel-body" id="reservationBody">
 				<form class="form-horizontal" action="{{ urlgen.url(reservationFormAction) }}" method="post">

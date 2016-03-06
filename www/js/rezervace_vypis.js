@@ -36,22 +36,24 @@ function setReservationTimes(checkStartTime) {
 
 }
 
-function toggleSlide(instant) {
-	var newVal, newLbl, bodyHide, bodyShow;
-	var switchPanel = $("#addReservation");
-	if (switchPanel.attr("data-toggle") === "false") {
-		newVal = "true";
-		newLbl = "Rezervace";
+function toggleSlide(instant, val) {
+	var bodyHide, bodyShow;
+	var showEvent = val === "evt";
+	if (showEvent) {
 		bodyHide = "reservation";
 		bodyShow = "event";
 	} else {
-		newVal = "false";
-		newLbl = "Událost";
 		bodyHide = "event";
 		bodyShow = "reservation";
 	}
-	switchPanel.attr("data-toggle", newVal);
-	switchPanel.find(".label").html(newLbl);
+	
+	var butPrimary = $(showEvent ? "#label_evt" : "#label_res");
+	var butDefault = $(showEvent ? "#label_res" : "#label_evt");
+	
+	butPrimary.removeClass("btn-default");
+	butPrimary.addClass("btn-primary");
+	butDefault.removeClass("btn-primary");
+	butDefault.addClass("btn-default");
 	
 	if (instant) {
 		$("#" + bodyHide + "Body").hide();
@@ -102,12 +104,12 @@ $(document).ready(function () {
 
 	$("#eventBody").hide();
 
-	$("#toggleEvent").click(function(){
-		toggleSlide(false);
+	$("input[name=rb_add_type]").change(function(){
+		toggleSlide(false, this.value);
 	});
 	
 	if ($("#addReservation").attr("data-start-on-evt") === "true") {
-		toggleSlide(true);
+		toggleSlide(true, 'evt');
 	}
 
 
