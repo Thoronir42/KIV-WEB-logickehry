@@ -45,6 +45,10 @@ class UdalostController extends Controller {
 		
 		$this->template['resRend'] = \model\ReservationRenderer::getInstance();
 		$this->template['event'] = $event;
+		if($event->hasGameAssigned()){
+			$this->template['game'] = Views\GameTypeExtended::fetchById($this->pdo, $event->getGameTypeID());	
+		}
+		
 	}
 
 }

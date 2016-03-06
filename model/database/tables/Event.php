@@ -44,8 +44,12 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 	 * @return Event instance with specified id
 	 */
 	public static function fetchById($pdo, $id) {
-		$result = $pdo->query("SELECT * FROM `web_logickehry_db`.`event`");
-		return $result->fetchObject(Event::class);
+		$statement = $pdo->prepare("SELECT * FROM `web_logickehry_db`.`event` "
+				. "WHERE event_id = :id ");
+		if ($statement->execute(['id' => $id])) {
+			return $statement->fetchObject(Event::class);
+		}
+		return null;
 	}
 
 	/**
@@ -74,11 +78,12 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 	 * @return boolean
 	 */
 	public static function existsDuring($pdo, $date, $time) {
-		$statement = $pdo->prepare('SELECT * FROM event '
-				. 'reservation_date = :date AND ( '
+		$statement = $pdo->prepare('SELECT * FROM event'
+				. ' WHERE event_date = :date AND ( '
 				. ' ( time_from <= :time_from1 AND :time_from2 <= time_to ) OR'
 				. ' ( time_from <= :time_to1   AND :time_to2   <= time_to )'
 				. ')');
+		
 		$pars = ['date' => $date];
 		$pars['time_from1'] = $pars['time_from2'] = $time['from'];
 		$pars['time_to1'] = $pars['time_to2'] = $time['to'];
@@ -157,11 +162,11 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 	}
 
 	public function hasGameAssigned() {
-		return !$this->game_type_id;
+		return !!$this->game_type_id;
 	}
 
 	public function getGameTypeID() {
-		$this->game_type_id;
+		return $this->game_type_id;
 	}
 
 	public function isEvent() {

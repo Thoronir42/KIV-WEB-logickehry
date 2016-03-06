@@ -9,6 +9,7 @@
 
 {% block panelBodyContent %}
 	<div class="row">
+		{# postranní info #}
 		<div class="col-md-4">
 			<div class="well well-sm">
 				<ul class="list-group">
@@ -24,10 +25,19 @@
 							</div>
 						</div>
 					</li>
+					{% if game is defined %}
+						<li class="list-group-item" style="border: 5px #{{ game.getColor }} solid;">
+							Událost se týká hry<br/>
+							<b>{{ game.getFullName() }}</b>
+						</li>
+					{% endif %}
 				</ul>
 			</div>
 		</div>
-		{{ event.description }}
+		{# detailní popis #}
+		<div class="coll-md-8">
+			{{ event.description }}
+		</div>
 	</div>
 {% endblock %}
 

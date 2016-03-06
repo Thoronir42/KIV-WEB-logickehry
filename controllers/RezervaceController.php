@@ -60,37 +60,36 @@ class RezervaceController extends Controller {
 		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
 		$this->template['weekShift'] = $this->makeWeekLinks($week);
 		$this->template['resListColSize'] = $this->colSizeFromGet();
-		
+
 		$refill = $this->pickRefill();
 		$this->template['refill'] = $refill;
-		if($this->user->isAdministrator()){
+		if ($this->user->isAdministrator()) {
 			$this->template['switchButtons'] = [
 				'res' => ['label' => 'rezervaci'],
 				'evt' => ['label' => 'událost'],
 			];
-			if($refill){
-				$this->template['switchButtons'][$refill['type']]['active'] = true;
-			}
+			$this->template['switchButtons'][$refill ? $refill['type'] : 'res']['active'] = true;
 		}
-		
 	}
 
-	private function pickRefill(){
+	private function pickRefill() {
 		$detail = $this->getParam('detail');
-		$arr = ['type' => 'none', 'evnt' => new Tables\Event(), 'rsrv' => new Tables\Reservation()];
-		switch($detail){
+		$arr = ['type' => 'none'];
+		switch ($detail) {
+			default:
+				return null;
 			case 'udalost':
 				$arr['type'] = 'evt';
-				$arr['evnt'] = Tables\Event::fromPOST();
+				$arr['evt'] = Tables\Event::fromPOST();
 				break;
 			case 'rezervace':
 				$arr['type'] = 'res';
-				$arr['rsrv'] = Tables\Reservation::fromPOST();
+				$arr['res'] = Tables\Reservation::fromPOST();
 				break;
 		}
 		return $arr;
 	}
-	
+
 	private function makeWeekLinks($week) {
 		$ret = [];
 		$ret['next'] = $ret['curr'] = $ret['prev'] = [ 'url' => ['controller' => 'rezervace', 'action' => 'vypis']];
@@ -129,6 +128,12 @@ class RezervaceController extends Controller {
 		if (!$reservation->readyForInsert()) {
 			$this->message('Vstupní pole rezervace nebyla správně vyplněna - rezervae nebyla přidána');
 			$this->redirectPars('rezervace', 'vypis');
+		}
+
+		$exists = Tables\Event::existsDuring($this->pdo, $reservation->reservation_date, DatetimeManager::reformat(['from' => $reservation->time_from, 'to' => $reservation->time_to], DatetimeManager::DB_TIME_ONLY));
+		if ($exists) {
+			$this->message("Ve vámi zadaný čas nebylo možné vytvořit rezervaci protože by se překrývala s událostí");
+			$this->redirectPars("rezervace", "vypis");
 		}
 
 		$v = $this->validateReservation($reservation, $game_type_id);

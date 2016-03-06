@@ -40,14 +40,26 @@ class DatetimeManager {
 	}
 
 	public static function format($timePars, $format) {
-		$return = [];
 		if (!is_array($timePars)) {
 			return date($format, $timePars);
 		}
+		$return = [];
 		foreach ($timePars as $key => $val) {
 			$return[$key] = date($format, $val);
 		}
 		return $return;
+	}
+	
+	public static function reformat($timePars, $format){
+		if (!is_array($timePars)) {
+			return date($format, strtotime($timePars));
+		}
+		$return = [];
+		foreach ($timePars as $key => $val) {
+			$return[$key] = strtotime($val);
+		}
+		
+		return self::format($return, $format);
 	}
 
 }
