@@ -24,14 +24,6 @@
 							</div>
 						</div>
 					</li>
-					<li class="list-group-item">
-						{% if r.desk_id %}
-							Číslo stolu: {{ '%02d'|format(r.desk_id) }}
-							<span class="pull-right">Míst k sezení: {{ r.desk_capacity }}</span>
-						{% else %}
-							Bez rezervace stolu
-						{% endif %}
-					</li>
 				</ul>
 			</div>
 		</div>

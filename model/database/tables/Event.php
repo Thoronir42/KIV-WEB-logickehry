@@ -47,7 +47,25 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 		$result = $pdo->query("SELECT * FROM `web_logickehry_db`.`event`");
 		return $result->fetchObject(Event::class);
 	}
-	
+
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param mixed[] $pars
+	 * @return Event[]
+	 */
+	public static function fetchWithinTimespan($pdo, $pars) {
+		$sql = "SELECT * FROM `event` "
+				. "WHERE event_date >= :time_from AND event_date < :time_to "
+				. "ORDER BY time_from ASC";
+		$statement = $pdo->prepare($sql);
+		if ($statement->execute($pars)) {
+			return $statement->fetchAll(\PDO::FETCH_CLASS, Event::class);
+		}
+		var_dump($statement->errorInfo());
+		return null;
+	}
+
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -77,7 +95,7 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 	 */
 	public static function fromPOST() {
 		$event = parent::fromPOST(self::class);
-		if(!$event->game_type_id){
+		if (!$event->game_type_id) {
 			$event->game_type_id = NULL;
 		}
 		return $event;
@@ -122,10 +140,10 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 		return $this->time_to;
 	}
 
-	public function hasSubtitle(){
+	public function hasSubtitle() {
 		return !(empty($this->event_subtitle));
 	}
-	
+
 	public function getSubtitle() {
 		return $this->event_subtitle;
 	}

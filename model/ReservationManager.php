@@ -25,8 +25,9 @@ class ReservationManager {
 	}
 
 	private static function prepareReservationDays($pdo, $timeFrom, $dbTimePars, $user_id = null) {
-		$reservations = ReservationExtended::fetchWithinTimespan(
-						$pdo, $dbTimePars, $user_id);
+		$reservations = ReservationExtended::fetchWithinTimespan($pdo, $dbTimePars, $user_id);
+		$events = database\tables\Event::fetchWithinTimespan($pdo, $dbTimePars);
+		
 		//$events = database\tables\Event::fetchWithinTimespan($pdo, $dbTimePars);
 		$reservationDays = [];
 
@@ -38,10 +39,14 @@ class ReservationManager {
 				'year' => date('Y', $day),
 			];
 		}
-
+		
 		foreach ($reservations as $r) {
-			$day = date("w", strtotime($r->reservation_date));
+			$day = date("w", strtotime($r->getDate()));
 			$reservationDays[$day]['reservations'][] = $r;
+		}
+		foreach ($events as $e) {
+			$day = date("w", strtotime($e->getDate()));
+			$reservationDays[$day]['reservations'][] = $e;
 		}
 		for($i = 6; $i >= 0; $i--){
 			if(!empty($reservationDays[$i]['reservations'])){

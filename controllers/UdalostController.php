@@ -16,8 +16,7 @@ class UdalostController extends Controller {
 	public function doPridat() {
 		$event = Tables\Event::fromPOST();
 		$event->author_user_id = $this->user->user_id;
-		var_dump($event);
-		die;
+		
 		$resrvations = Views\ReservationExtended::fetchWithinTimespan($this->pdo, DatetimeManager::format(['time_from' => strtotime($event->time_from), 'time_to' => strtotime($event->time_to)], DatetimeManager::DB_FULL));
 		$total = count($resrvations);
 		if ($total > 0) {
