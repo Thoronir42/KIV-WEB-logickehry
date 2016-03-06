@@ -33,7 +33,7 @@
 	</div>
 
 	{% if user.isLoggedIn() %}
-		<div class="panel panel-default" id="addReservation" data-toggle="false" data-start-on-evt="{{ (refill and refill['type'] == 'evnt') ? 'true' : 'false' }}">
+		<div class="panel panel-default" id="addReservation" data-toggle="false" data-start-on-evt="{{ (refill and refill['type'] == 'evt') ? 'true' : 'false' }}">
 			<div class="panel-heading">
 				<span class="panel-title">
 					{% if not user.isAdministrator() %}
@@ -41,12 +41,11 @@
 					{% else %}
 						Přidat
 						<div class="btn-group" data-toggle="buttons">
-							<label id='label_res' class="btn btn-primary active">
-								<input type="radio" name="rb_add_type" value="res" checked> rezervaci
+							{% for key, but in switchButtons %}
+							<label id='label_{{ key }}' class="btn {% if but['active'] %}btn-primary active{% else %}btn-default{% endif %}">
+								<input type="radio" name="rb_add_type" value="{{ key }}" {% if but['active'] %}checked{% endif %}> {{ but['label'] }}
 							</label>
-							<label id='label_evt' class="btn btn-default">
-								<input type="radio" name="rb_add_type" value="evt"> událost
-							</label>
+							{% endfor %}
 						</div>
 					{% endif %}
 				</span>

@@ -34,7 +34,6 @@ class RezervaceController extends Controller {
 		if (!is_numeric($week)) {
 			$week = 0;
 		}
-		$this->template['refill'] = $this->pickRefill();
 
 		$timePars = DatetimeManager::getWeeksBounds($week);
 		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FULL);
@@ -61,6 +60,19 @@ class RezervaceController extends Controller {
 		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
 		$this->template['weekShift'] = $this->makeWeekLinks($week);
 		$this->template['resListColSize'] = $this->colSizeFromGet();
+		
+		$refill = $this->pickRefill();
+		$this->template['refill'] = $refill;
+		if($this->user->isAdministrator()){
+			$this->template['switchButtons'] = [
+				'res' => ['label' => 'rezervaci'],
+				'evt' => ['label' => 'událost'],
+			];
+			if($refill){
+				$this->template['switchButtons'][$refill['type']]['active'] = true;
+			}
+		}
+		
 	}
 
 	private function pickRefill(){
@@ -68,11 +80,11 @@ class RezervaceController extends Controller {
 		$arr = ['type' => 'none', 'evnt' => new Tables\Event(), 'rsrv' => new Tables\Reservation()];
 		switch($detail){
 			case 'udalost':
-				$arr['type'] = 'evnt';
+				$arr['type'] = 'evt';
 				$arr['evnt'] = Tables\Event::fromPOST();
 				break;
 			case 'rezervace':
-				$arr['type'] = 'rsrv';
+				$arr['type'] = 'res';
 				$arr['rsrv'] = Tables\Reservation::fromPOST();
 				break;
 		}
