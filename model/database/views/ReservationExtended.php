@@ -11,6 +11,8 @@ use \model\database\tables\Reservation;
  */
 class ReservationExtended extends Reservation implements \model\database\IRenderableWeekEntity {
 
+	const TYPE = 'reservation';
+	
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -193,7 +195,11 @@ class ReservationExtended extends Reservation implements \model\database\IRender
 		return $this->signed_players + 1;
 	}
 
-	//
+	public function getID() {
+		return $this->reservation_id;
+	}
+
+	
 	public function getDate() {
 		return $this->reservation_date;
 	}
@@ -219,7 +225,11 @@ class ReservationExtended extends Reservation implements \model\database\IRender
 	}
 
 	public function getType() {
-		return "reservation";
+		return self::TYPE;
+	}
+	
+	public function getLabel(){
+		return 'Rezervace';
 	}
 
 	public function hasGameAssigned() {

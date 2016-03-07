@@ -35,21 +35,21 @@ class ReservationManager {
 			$day = strtotime(("+ $i days"), $timeFrom);
 			$reservationDays[$i + 1] = [
 				'date' => date('d.m.', $day),
-				'reservations' => [],
+				'weekEntities' => [],
 				'year' => date('Y', $day),
 			];
 		}
 		
 		foreach ($reservations as $r) {
 			$day = date("w", strtotime($r->getDate()));
-			$reservationDays[$day]['reservations'][] = $r;
+			$reservationDays[$day]['weekEntities'][] = $r;
 		}
 		foreach ($events as $e) {
 			$day = date("w", strtotime($e->getDate()));
-			$reservationDays[$day]['reservations'][] = $e;
+			$reservationDays[$day]['weekEntities'][] = $e;
 		}
 		for($i = 6; $i >= 0; $i--){
-			if(!empty($reservationDays[$i]['reservations'])){
+			if(!empty($reservationDays[$i]['weekEntities'])){
 				$reservationDays[$i]['last'] = true;
 				break;
 			}

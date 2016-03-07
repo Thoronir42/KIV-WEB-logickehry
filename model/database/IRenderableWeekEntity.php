@@ -8,7 +8,10 @@ namespace model\database;
  */
 interface IRenderableWeekEntity {
 	
+	public function getID();
+	
 	public function getType();
+	public function getLabel();
 	
 	public function getTitle();
 	public function getSubtitle();

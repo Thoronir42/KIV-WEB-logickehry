@@ -11,6 +11,8 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 
 	const NO_GAME_TYPE_ID = 0;
 
+	const TYPE = 'event';
+	
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -128,7 +130,11 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 		return parent::checkRequiredProperties(self::class);
 	}
 
-	///
+	
+	public function getID() {
+		return $this->event_id;
+	}
+	
 	public function getDate() {
 		return $this->event_date;
 	}
@@ -158,7 +164,11 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 	}
 
 	public function getType() {
-		return "reservation";
+		return self::TYPE;
+	}
+	
+	public function getLabel(){
+		return 'Událost';
 	}
 
 	public function hasGameAssigned() {

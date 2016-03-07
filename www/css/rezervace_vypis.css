@@ -43,13 +43,20 @@
 	margin-right: 0px;
 }
 
-.reservation{
+.week-entity{
 	position:absolute;
 	top:0px;
 	height:44px;
-	background:skyblue;
 	display:inline-block;
 	border:2px solid transparent;
+}
+
+.reservation{
+	background:skyblue;
+}
+.event{
+	background:#ffd800;
+	border-color: #4e4848;
 }
 
 

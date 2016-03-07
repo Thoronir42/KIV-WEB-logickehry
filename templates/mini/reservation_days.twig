@@ -1,21 +1,21 @@
 {# mini/game_rating.twig #}
-{% for i in (resRend.getWeekStartDay())..(resRend.getWeekEndDay()) if reservationDays[i]['reservations'] is not empty %}
+{% for i in (resRend.getWeekStartDay())..(resRend.getWeekEndDay()) if reservationDays[i]['weekEntities'] is not empty %}
 	<div class="dayLists{% if loop.first %} first{% endif %}{% if reservationDays[i]['last'] %} last{% endif %}" id="dl_{{ i }}">
 		<h3>{{ resRend.getDay(i, 'full') }}</h3>
 		<div class="row smartRow">
 			{% set rd = reservationDays[i] %}
-			{% for r in rd['reservations'] %}
-				{% set rGame = games[r.game_type_id] %}
-				<div class="col-md-{% if not rd['reservations']|first.isEvent() %}{{ resListColSize }}{% else %}12{% endif %}">
-					<div class="media" style="border: 8px solid #{{ games[r.game_type_id].getColor }}; margin-bottom: 4px;">
+			{% for we in rd['weekEntities'] %}
+				{% set rGame = games[we.game_type_id] %}
+				<div class="col-md-{% if we.isEvent() %}12{% else %}{{ resListColSize }}{% endif %}">
+					<div class="media" style="border: 8px solid #{{ we.hasGameAssigned() ? games[we.getGameTypeID()].getColor : '4e4848'}}; margin-bottom: 4px;">
 						<div class="media-left">
-							<img class="media-object" src="{{ urlgen.gImg(r.game_type_id) }}" alt="...">
+							<img class="media-object" src="{{ we.hasGameAssigned() ? urlgen.gImg(we.getGameTypeID()) : urlgen.appLogo() }}" alt="...">
 						</div>
 						<div class="media-body">
 							<div class="row">
 								<div class="col-xs-6">
-									<a href="{{ urlgen.rdet(r.reservation_id) }}"
-									   <small>Rezervace #{{ "%04d"|format(r.reservation_id) }}</small>
+									<a href="{{ urlgen.weDetail(we.getType(), we.getID()) }}"
+									   <small>{{ we.getLabel() }} #{{ "%04d"|format(we.getID()) }}</small>
 									</a>
 								</div>
 								{% if r.isOpen %}

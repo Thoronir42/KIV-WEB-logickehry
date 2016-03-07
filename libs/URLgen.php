@@ -8,6 +8,7 @@ use model\ImageManager,
 class URLgen {
 
 	const ADDR_SEP = '/';
+	const LOGO_FILENAME = 'clh.png';
 
 	var $urlPrefix;
 
@@ -109,6 +110,10 @@ class URLgen {
 		return $this->img($path);
 	}
 
+	public function appLogo() {
+		return $this->img(self::LOGO_FILENAME);
+	}
+
 	public function gDet($game_type_id, $highlight = null) {
 		$args = [ 'controller' => 'vypis',
 			'action' => 'detailHry',
@@ -119,10 +124,21 @@ class URLgen {
 		return $this->url($args);
 	}
 
-	public function rDet($reservation_id) {
-		$args = [ 'controller' => 'rezervace',
-			'action' => 'detail',
-			'id' => $reservation_id];
+	public function weDetail($type, $reservation_id) {
+		switch ($type) {
+			default: 
+				return null;
+			case \model\database\views\ReservationExtended::TYPE:
+				$args = [ 'controller' => 'rezervace',
+					'action' => 'detail',
+					'id' => $reservation_id];
+				break;
+			case \model\database\tables\Event::TYPE:
+				$args = [ 'controller' => 'udalost',
+					'action' => 'zobrazit',
+					'id' => $reservation_id];
+				break;
+		}
 		return $this->url($args);
 	}
 

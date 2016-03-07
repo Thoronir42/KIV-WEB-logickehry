@@ -21,10 +21,10 @@
 				</span>
 			</div>
 			<div class="col-sm-11 resCol">
-				{% for res in rd['reservations'] %}
+				{% for res in rd['weekEntities'] %}
 					{{ resRend.renderEntity(res)|raw }}
 				{% else %}
-					{{ resRend.getDay(i, 'on_day') }} nejsou žádné rezervace
+					{{ resRend.getDay(i, 'on_day') }} se nic neplánuje
 				{% endfor %}
 			</div>
 		</div>
