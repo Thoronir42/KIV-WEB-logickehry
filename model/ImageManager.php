@@ -9,7 +9,8 @@ namespace model;
  */
 class ImageManager {
 
-	const IMG_FOLDER = "../www/images/";
+	const IMG_WWW_FOLDER = "files/images/";
+	const IMG_FOLDER	 = "../files/images/";
 	const ALLOWED_FILE_TYPES = ["jpg", "jpeg", "png"];
 	const MIN_IMG_SIZE = 150;
 	const MAX_IMG_SIZE = 2000;

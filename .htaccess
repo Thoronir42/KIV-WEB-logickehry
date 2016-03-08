@@ -1,0 +1,8 @@
+RewriteEngine On
+RewriteBase /
+RewriteRule ^(webauth) - [L]
+RewriteRule ^(files*) - [L]
+
+RewriteRule ^.*(css|js|fonts)/(.*)$ www/$1/$2 [L,QSA]
+
+RewriteRule ^(.*)$ www/index.php?q=$1 [L,QSA]

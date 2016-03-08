@@ -101,7 +101,7 @@ class URLgen {
 	}
 
 	public function img($file) {
-		return $this->urlPrefix . "images/" . $file;
+		return $this->urlPrefix . ImageManager::IMG_WWW_FOLDER . $file;
 	}
 
 	public function gImg($game_type_id) {
