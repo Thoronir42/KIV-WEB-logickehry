@@ -1,5 +1,5 @@
 body{
-    background-image: url("../images/bg_body.png");
+    background-image: url("/files/images/bg_body.png");
 	background-attachment: fixed;
 
 }
@@ -7,12 +7,12 @@ body{
 .game .panel-body .grp-edit,
 .game .panel-body .grp-info,
 .game .well{
-	background-image: url("../images/bg_type.png");
+	background-image: url("/files/images/bg_type.png");
 }
 
 .navbar,
 .navbar .dropdown-menu{
-	background-image: url("../images/bg_nav.png");
+	background-image: url("/files/images/bg_nav.png");
 	background-attachment: fixed;
 }
 #page_title{
