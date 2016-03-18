@@ -71,13 +71,19 @@ class UdalostController extends Controller {
 	
 	public function doUlozit(){
 		$event = Tables\Event::fromPOST();
+		$event->author_user_id = $this->user->user_id;
 		
 		if(!$event->readyForInsert()){
 			$this->message('Pole události nebyla vyplněna správně, tato obsahovala chyby: '.implode(", ", array_keys($event->misc['missing'])));
 			$this->redirectPars('udalost', 'upravit', ['id' => $event->event_id]);
 		}
 		
-		Tables\Event::update($this->pdo, $event);
+		$values = $event->asArray();
+		$id = $event->event_id;
+		unset($values['event_id']);
+		
+		Tables\Event::update($this->pdo, $values, $id);
+		$this->redirectPars("udalost", "zobrazit", ['id' => $id]);
 	}	
 
 }

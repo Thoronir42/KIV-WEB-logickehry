@@ -38,8 +38,44 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 		return $pdo->lastInsertId();
 	}
 	
-	public static function update($pdo, $evt){
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param mixed[] $values
+	 * @param int $id
+	 */
+	public static function update($pdo, $values, $id){
+		$sql = 'UPDATE `event` SET ';
+		$i = 0;
+		$len = count($values);
 		
+		foreach($values as $key => $value){
+			if(is_null($value)){
+				$sql .= sprintf('`%s` = NULL', $key);
+				unset($values[$key]);
+			} else {
+				$sql .= sprintf('`%s` = :%s', $key, $key);
+			}
+			if(++$i != $len){
+				$sql.= ', ';
+			}
+		}
+		
+		$sql .= " WHERE `event_id` = :event_id;";
+		
+		$values['event_id'] = $id;
+		
+		$statement = $pdo->prepare($sql);
+		
+		if(!$statement->execute($values)){
+			var_dump($values);
+			echo "<br>";
+			var_dump($sql);
+			echo "<br>";
+			var_dump($statement->errorInfo());
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -106,7 +142,7 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 	 */
 	public static function fromPOST() {
 		$event = parent::fromPOST(self::class);
-		if (!$event->game_type_id) {
+		if ($event->game_type_id == self::NO_GAME_TYPE_ID) {
 			$event->game_type_id = NULL;
 		}
 		return $event;
