@@ -2,6 +2,7 @@
 
 namespace model\database\views;
 
+use model\database\DB_Entity;
 use model\database\tables\GameBox;
 
 /**
@@ -19,11 +20,11 @@ class GameBoxExtended extends GameBox {
 	 */
 	public static function fetchByCode($pdo, $code) {
 		$statement = $pdo->prepare("SELECT * FROM game_box_extended WHERE tracking_code = :code");
-		if ($statement->execute(['code' => $code])) {
-			$result = $statement->fetchObject(GameBoxExtended::class);
-			return $result;
+		if (!$statement->execute(['code' => $code])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $statement->fetchObject(GameBoxExtended::class);
 	}
 
 	/**
@@ -38,10 +39,11 @@ class GameBoxExtended extends GameBox {
 			$sql .= " WHERE retired = 0";
 		}
 		$statement = $pdo->prepare($sql);
-		if ($statement->execute()) {
-			return $statement->fetchAll(\PDO::FETCH_CLASS, GameBoxExtended::class);
+		if (!$statement->execute()) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $statement->fetchAll(\PDO::FETCH_CLASS, GameBoxExtended::class);
 	}
 
 	/**
@@ -56,6 +58,7 @@ class GameBoxExtended extends GameBox {
 				. "AND game_type_id = :gid "
 				. "ORDER BY times_reserved ASC");
 		if (!$statement->execute(['gid' => $game_type_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		$result = $statement->fetchAll(\PDO::FETCH_CLASS, GameBoxExtended::class);

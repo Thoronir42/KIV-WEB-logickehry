@@ -20,5 +20,7 @@ class Config {
 	const FEEDBACK_ENABLED = true;
 	
 	const BADGE = 'mini/badge/testing.twig';
+	
+	const LOG_DB_ERRORS = true;
 
 }

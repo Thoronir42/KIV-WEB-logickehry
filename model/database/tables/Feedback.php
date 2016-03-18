@@ -2,12 +2,13 @@
 
 namespace model\database\tables;
 
+use model\database\DB_Entity;
 /**
  * Description of User
  *
  * @author Stepan
  */
-class Feedback extends \model\database\DB_Entity {
+class Feedback extends DB_Entity {
 
 	const TYPE_BUG = 1;
 	const TYPE_SUGGESTION = 2;
@@ -36,13 +37,11 @@ class Feedback extends \model\database\DB_Entity {
 		$statement = $pdo->prepare('INSERT INTO `web_logickehry_db`.`feedback` '
 				. '(`feedback_type`, `user_id`, `label`, `description`, `created`) '
 				. 'VALUES (:feedback_type, :user_id, :label, :description, :created);');
-		if ($statement->execute($pars)) {
-			return true;
+		if (!$statement->execute($pars)) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
-		var_dump($pars);
-		echo '<br>';
-		var_dump($statement->errorInfo());
-		return false;
+		return true;
 	}
 
 	/**
@@ -54,9 +53,11 @@ class Feedback extends \model\database\DB_Entity {
 		$statement = $pdo->prepare('UPDATE `web_logickehry_db`.`feedback` '
 				. 'SET resolved = NOW() '
 				. 'WHERE feedback_id = :fid');
-		if ($statement->execute(['fid' => $feedback_id])) {
-			return true;
+		if (!$statement->execute(['fid' => $feedback_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
+		return true;
 	}
 
 	/**
@@ -68,10 +69,11 @@ class Feedback extends \model\database\DB_Entity {
 		$statement = $pdo->prepare('UPDATE `web_logickehry_db`.`feedback` '
 				. 'SET resolved = NULL '
 				. 'WHERE feedback_id = :fid');
-		if ($statement->execute(['fid' => $feedback_id])) {
-			return true;
+		if (!$statement->execute(['fid' => $feedback_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
-		var_dump($statement->errorInfo());
+		return true;
 	}
 
 	/**
@@ -89,10 +91,11 @@ class Feedback extends \model\database\DB_Entity {
 
 
 		$statement = $pdo->prepare($sql);
-		if ($statement->execute($pars)) {
-			return $statement->fetchAll(\PDO::FETCH_CLASS, Feedback::class);
+		if (!$statement->execute($pars)) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $statement->fetchAll(\PDO::FETCH_CLASS, Feedback::class);
 	}
 
 	/**
@@ -103,10 +106,11 @@ class Feedback extends \model\database\DB_Entity {
 	public static function fetchById($pdo, $id) {
 		$statement = $pdo->prepare("SELECT * FROM feedback "
 				. "WHERE feedback_id = :id");
-		if ($statement->execute(['id' => $id])) {
-			$statement->fetch(\PDO::FETCH_CLASS, Feedback::class);
+		if (!$statement->execute(['id' => $id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return $statement;
+		return $statement->fetch(\PDO::FETCH_CLASS, Feedback::class);
 	}
 
 	public function isBugReport() {

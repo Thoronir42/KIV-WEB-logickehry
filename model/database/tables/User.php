@@ -3,13 +3,14 @@
 namespace model\database\tables;
 
 use config\Config;
+use model\database\DB_Entity;
 
 /**
  * Description of User
  *
  * @author Stepan
  */
-class User extends \model\database\DB_Entity {
+class User extends DB_Entity {
 
 	const ROLE_USER = 1;
 	const ROLE_SUPERVISOR = 2;
@@ -24,7 +25,11 @@ class User extends \model\database\DB_Entity {
 	public static function insert($pdo, $orion_login) {
 		$statement = $pdo->prepare(
 				"INSERT INTO `web_logickehry_db`.`user` (`orion_login`) VALUES (:ol)");
-		return ($statement->execute(['ol' => $orion_login]));
+		if(!$statement->execute(['ol' => $orion_login])){
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -39,7 +44,11 @@ class User extends \model\database\DB_Entity {
 				. "`nickname` = :nickname "
 				. "WHERE `user`.`orion_login` = :orion_login"
 		);
-		return $statement->execute($pars);
+		if(!$statement->execute($pars)){
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -74,7 +83,11 @@ class User extends \model\database\DB_Entity {
 				. "`last_active` = :time "
 				. "WHERE `user`.`orion_login` = :orion_login"
 		);
-		return $statement->execute(['time' => $time, 'orion_login' => $orion_login]);
+		if(!$statement->execute(['time' => $time, 'orion_login' => $orion_login])){
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -90,11 +103,11 @@ class User extends \model\database\DB_Entity {
 				. "`role_id` = :role "
 				. "WHERE `user`.`orion_login` = :orion_login"
 		);
-		if ($statement->execute(['role' => $role_id, 'orion_login' => $orion_login])) {
-			return true;
+		if (!$statement->execute(['role' => $role_id, 'orion_login' => $orion_login])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
-		var_dump($statement->errorInfo());
-		die;
+		return true;
 	}
 
 	public static function fromPOST() {

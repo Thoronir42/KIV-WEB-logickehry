@@ -2,12 +2,15 @@
 
 namespace model\database\tables;
 
+use \model\database\DB_Entity;
+use \model\database\IRenderableWeekEntity;
+
 /**
  * Description of Reservation
  *
  * @author Stepan
  */
-class Event extends \model\database\DB_Entity implements \model\database\IRenderableWeekEntity {
+class Event extends DB_Entity implements IRenderableWeekEntity {
 
 	const NO_GAME_TYPE_ID = 0;
 
@@ -22,7 +25,7 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 	 */
 	public static function insert($pdo, $evt) {
 		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`event`"
-				. "       (`event_title`, `event_subtitle`, `description`, `game_type_id`, `author_user_id`, `event_date`, `time_from`, `time_to`) "
+				. "       (`eventt_title`, `event_subtitle`, `description`, `game_type_id`, `author_user_id`, `event_date`, `time_from`, `time_to`) "
 				. "VALUES (:event_title,  :event_subtitle,  :description,  :game_type_id,  :author_user_id,  :event_date,  :time_from,  :time_to )");
 		$pars = [
 			'event_title' => $evt->event_title, 'event_subtitle' => $evt->event_subtitle,
@@ -32,7 +35,7 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 			'time_from' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($evt->time_from)),
 			'time_to' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($evt->time_to))];
 		if (!$statement->execute($pars)) {
-			var_dump($statement->errorInfo());
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return 0;
 		}
 		return $pdo->lastInsertId();
@@ -68,11 +71,7 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 		$statement = $pdo->prepare($sql);
 		
 		if(!$statement->execute($values)){
-			var_dump($values);
-			echo "<br>";
-			var_dump($sql);
-			echo "<br>";
-			var_dump($statement->errorInfo());
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;
@@ -86,11 +85,7 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 		$statement = $pdo->prepare('DELETE FROM `event` WHERE `event_id` = :event_id;');
 		
 		if(!$statement->execute(['event_id' => $id])){
-			var_dump($id);
-			echo "<br>";
-			var_dump($sql);
-			echo "<br>";
-			var_dump($statement->errorInfo());
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		
@@ -107,10 +102,11 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 	public static function fetchById($pdo, $id) {
 		$statement = $pdo->prepare("SELECT * FROM `web_logickehry_db`.`event` "
 				. "WHERE event_id = :id ");
-		if ($statement->execute(['id' => $id])) {
-			return $statement->fetchObject(Event::class);
+		if (!$statement->execute(['id' => $id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $statement->fetchObject(Event::class);
 	}
 
 	/**
@@ -124,11 +120,11 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 				. "WHERE event_date >= :time_from AND event_date < :time_to "
 				. "ORDER BY time_from ASC";
 		$statement = $pdo->prepare($sql);
-		if ($statement->execute($pars)) {
-			return $statement->fetchAll(\PDO::FETCH_CLASS, Event::class);
+		if (!$statement->execute($pars)) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		var_dump($statement->errorInfo());
-		return null;
+		return $statement->fetchAll(\PDO::FETCH_CLASS, Event::class);
 	}
 
 	/**
@@ -149,7 +145,7 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 		$pars['time_from1'] = $pars['time_from2'] = $time['from'];
 		$pars['time_to1'] = $pars['time_to2'] = $time['to'];
 		if (!$statement->execute($pars)) {
-			var_dump($statement->errorInfo());
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return(!empty($statement->fetchAll(\PDO::FETCH_CLASS, Event::class)));

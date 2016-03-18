@@ -2,6 +2,7 @@
 
 namespace model\database\views;
 
+use model\database\DB_Entity;
 use \model\database\tables\User;
 
 /**
@@ -20,10 +21,11 @@ class UserExtended extends User {
 	public static function fetch($pdo, $orion_login) {
 		$statement = $pdo->prepare("SELECT * FROM user_extended
 			WHERE orion_login = :ol");
-		if ($statement->execute(['ol' => $orion_login])) {
-			return $statement->fetchObject(UserExtended::class);
+		if (!$statement->execute(['ol' => $orion_login])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $statement->fetchObject(UserExtended::class);
 	}
 	
 	/**
@@ -35,10 +37,11 @@ class UserExtended extends User {
 	public static function fetchById($pdo, $user_id) {
 		$statement = $pdo->prepare("SELECT * FROM user_extended
 			WHERE user_id = :id");
-		if ($statement->execute(['id' => $user_id])) {
-			return $statement->fetchObject(UserExtended::class);
+		if (!$statement->execute(['id' => $user_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $statement->fetchObject(UserExtended::class);
 	}
 
 	/**

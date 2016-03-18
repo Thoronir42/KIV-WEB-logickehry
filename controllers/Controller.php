@@ -6,6 +6,7 @@ use libs\URLgen,
 	libs\MessageBuffer;
 use model\database\views\UserExtended;
 use model\UserManager;
+use model\database\DB_Entity;
 
 /**
  * Description of Controler
@@ -194,7 +195,8 @@ abstract class Controller {
 	}
 
 	public function preRender() {
-		$this->template['alert_messages'] = $this->mb->getLog();
+		$messages = array_merge(DB_Entity::$message_buffer->getLog(), $this->mb->getLog());
+		$this->template['alert_messages'] = $messages;
 	}
 
 }

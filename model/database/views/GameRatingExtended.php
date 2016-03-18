@@ -4,12 +4,15 @@ namespace model\database\views;
 
 use config\Config;
 
+use model\database\DB_Entity;
+use \model\database\tables\GameRating;
+
 /**
  * Description of GameRatingExtended
  *
  * @author Stepan
  */
-class GameRatingExtended extends \model\database\tables\GameRating {
+class GameRatingExtended extends GameRating {
 
 	/**
 	 * 
@@ -21,11 +24,11 @@ class GameRatingExtended extends \model\database\tables\GameRating {
 	public static function fetchOne($pdo, $user_id, $game_type_id) {
 		$statement = $pdo->prepare("SELECT * FROM `web_logickehry_db`.`game_rating_extended` "
 				. "WHERE `game_type_id` = :gid AND `user_id` = :uid;");
-		if ($statement->execute(['gid' => $game_type_id, 'uid' => $user_id])) {
-			return $statement->fetchObject(self::class);
+		if (!$statement->execute(['gid' => $game_type_id, 'uid' => $user_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return true;
 		}
-		var_dump($statement->errorInfo());
-		return false;
+		return $statement->fetchObject(self::class);
 	}
 
 	/**
@@ -37,11 +40,11 @@ class GameRatingExtended extends \model\database\tables\GameRating {
 	public static function fetchAllByUser($pdo, $user_id) {
 		$statement = $pdo->prepare("SELECT * FROM `web_logickehry_db`.`game_rating_extended` "
 				. "WHERE `user_id` = :uid;");
-		if ($statement->execute(['uid' => $user_id])) {
-			return $statement->fetchAll(\PDO::FETCH_CLASS, self::class);
+		if (!$statement->execute(['uid' => $user_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
-		var_dump($statement->errorInfo());
-		return false;
+		return $statement->fetchAll(\PDO::FETCH_CLASS, self::class);
 	}
 
 	/**
@@ -53,11 +56,11 @@ class GameRatingExtended extends \model\database\tables\GameRating {
 	public static function fetchAllByGameType($pdo, $game_type_id) {
 		$statement = $pdo->prepare("SELECT * FROM `web_logickehry_db`.`game_rating_extended` "
 				. "WHERE `game_type_id` = :gid;");
-		if ($statement->execute(['gid' => $game_type_id])) {
-			return $statement->fetchAll(\PDO::FETCH_CLASS, self::class);
+		if (!$statement->execute(['gid' => $game_type_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
-		var_dump($statement->errorInfo());
-		return false;
+		return $statement->fetchAll(\PDO::FETCH_CLASS, self::class);
 	}
 
 	var $nickname;

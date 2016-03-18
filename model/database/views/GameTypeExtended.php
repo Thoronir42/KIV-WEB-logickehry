@@ -3,6 +3,7 @@
 namespace model\database\views;
 
 use \model\database\tables\GameType;
+use model\database\DB_Entity;
 
 /**
  * Description of GamyTypeWithScore
@@ -63,11 +64,11 @@ class GameTypeExtended extends GameType {
 	 */
 	public static function fetchById($pdo, $game_id) {
 		$statement = $pdo->prepare("SELECT * FROM game_type_extended WHERE game_type_id = :id");
-		if ($statement->execute(['id' => $game_id])) {
-			return $statement->fetchObject(GameTypeExtended::class);
-			
+		if (!$statement->execute(['id' => $game_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $statement->fetchObject(GameTypeExtended::class);
 	}
 
 	var $average_score;

@@ -2,12 +2,14 @@
 
 namespace model\database\tables;
 
+use model\database\DB_Entity;
+
 /**
  * Description of GameType
  *
  * @author Stepan
  */
-class GameType extends \model\database\DB_Entity {
+class GameType extends DB_Entity {
 
 	public static function getExportColumns() {
 		return ['game_name', 'game_subtitle', 'avg_playtime', 'min_players', 'max_players'];
@@ -19,8 +21,7 @@ class GameType extends \model\database\DB_Entity {
 	 * @return GameType[]
 	 */
 	public static function fetchAll($pdo) {
-		return $pdo->query("SELECT * FROM `game_type`")
-						->fetchAll(\PDO::FETCH_CLASS, self::class);
+		return $pdo->query("SELECT * FROM `game_type`")->fetchAll(\PDO::FETCH_CLASS, self::class);
 	}
 
 	/**
@@ -32,12 +33,11 @@ class GameType extends \model\database\DB_Entity {
 		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`game_type` "
 				. "(`game_type_id`, `game_name`, `game_subtitle`, `avg_playtime`, `max_players`, `min_players`) "
 				. "VALUES ( :game_type_id,  :game_name,  :game_subtitle,  :avg_playtime,  :max_players,  :min_players )");
-		if ($statement->execute($pars)) {
-			return true;
+		if (!$statement->execute($pars)) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
-		var_dump($pars);
-		echo '<br/>';
-		var_dump($statement->queryString);
+		return true;
 	}
 
 	/**
@@ -55,11 +55,10 @@ class GameType extends \model\database\DB_Entity {
 				. "`min_players` = :min_players "
 				. "WHERE `game_type_id` = :game_type_id ");
 		if ($statement->execute($pars)) {
-			return true;
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
-		var_dump($pars);
-		echo '<br/>';
-		var_dump($statement->queryString);
+		return true;
 	}
 
 	public static function prepareExport($pdo) {
@@ -67,9 +66,9 @@ class GameType extends \model\database\DB_Entity {
 		$games = self::fetchAll($pdo);
 
 		$gamesArray = [];
-		foreach($games as $g) {
+		foreach ($games as $g) {
 			$ga = [];
-			foreach($columns as $c){
+			foreach ($columns as $c) {
 				$ga[$c] = $g->$c;
 			}
 			$gamesArray[] = $ga;

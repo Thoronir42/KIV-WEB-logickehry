@@ -2,12 +2,14 @@
 
 namespace model\database\tables;
 
+use model\database\DB_Entity;
+
 /**
  * Description of User
  *
  * @author Stepan
  */
-class GameRating extends \model\database\DB_Entity {
+class GameRating extends DB_Entity {
 
 	const SCORE_MIN = 1;
 	const SCORE_DEF = 3;
@@ -34,11 +36,11 @@ class GameRating extends \model\database\DB_Entity {
 		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`game_rating` "
 				. "(`game_type_id`, `user_id`, `score`, `review`) "
 				. "VALUES (:game_type_id,  :user_id,  :score,  :review);");
-		if ($statement->execute($pars)) {
-			return true;
+		if (!$statement->execute($pars)) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
-		var_dump($statement->errorInfo());
-		return false;
+		return true;
 	}
 
 	/**
@@ -51,11 +53,11 @@ class GameRating extends \model\database\DB_Entity {
 	public static function delete($pdo, $user_id, $game_type_id) {
 		$statement = $pdo->prepare("DELETE FROM `web_logickehry_db`.`game_rating` "
 				. "WHERE `game_type_id` = :gid AND `user_id` = :uid;");
-		if ($statement->execute(['gid' => $game_type_id, 'uid' => $user_id])) {
-			return true;
+		if (!$statement->execute(['gid' => $game_type_id, 'uid' => $user_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
-		var_dump($statement->errorInfo());
-		return false;
+		return true;
 	}
 
 	public static function fromPOST() {

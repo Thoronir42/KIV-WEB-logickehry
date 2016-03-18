@@ -2,6 +2,8 @@
 
 namespace model\database;
 
+use libs\MessageBuffer;
+
 /**
  * Description of DbEntityModel
  *
@@ -9,6 +11,22 @@ namespace model\database;
  */
 abstract class DB_Entity {
 
+	/**
+	 * @var MessageBuffer
+	 */
+	public static $message_buffer;
+	
+	public static function logError($errorInfo, $function, $sql = null){
+		if(!\config\Config::LOG_DB_ERRORS){
+			return;
+		}
+		$message = sprintf("DB error <strong>%s</strong> in function <strong>%s</strong>", $errorInfo[2], $function);
+		if(!is_null($sql)){
+			$message .= "<br/>SQL: ".$sql;
+		}
+		self::$message_buffer->log($message, MessageBuffer::LVL_DNG);
+	}
+	
 	/**
 	 * 
 	 * @param String $class required DB_Entity class to be instantiated

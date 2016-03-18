@@ -32,7 +32,7 @@
 						<div class="alerts">
 							{% for msg in alert_messages %}
 								<div class="alert alert-{{ msg['level'] }}">
-									{{ msg['text'] }}
+									{{ msg['text']|raw }}
 									{% if msg['link'] %}
 										<a href="{{ msg['link']['url'] }}" class="alert-link pull-right">{{ msg['link']['label'] }}</a>
 									{% endif %}

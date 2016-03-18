@@ -2,12 +2,14 @@
 
 namespace model\database\tables;
 
+use model\database\DB_Entity;
+
 /**
  * Description of Reservation
  *
  * @author Stepan
  */
-class Reservation extends \model\database\DB_Entity {
+class Reservation extends DB_Entity {
 
 	const EARLY_RESERVATION = 7;
 	const LATE_RESERVATION = 19;
@@ -41,7 +43,7 @@ class Reservation extends \model\database\DB_Entity {
 			'time_from' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($res->time_from)),
 			'desk_id' => $res->desk_id];
 		if (!$statement->execute($pars)) {
-			var_dump($statement->errorInfo());
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;
@@ -56,9 +58,11 @@ class Reservation extends \model\database\DB_Entity {
 	public static function deleteAttendee($pdo, $user_id, $reservation_id) {
 		$statement = $pdo->prepare('DELETE FROM `web_logickehry_db`.`reservation_users` '
 				. 'WHERE user_id = :uid AND reservation_id = :rid');
-		if ($statement->execute(['uid' => $user_id, 'rid' => $reservation_id])) {
-			return true;
+		if (!$statement->execute(['uid' => $user_id, 'rid' => $reservation_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
+		return true;
 	}
 
 	/**
@@ -70,9 +74,11 @@ class Reservation extends \model\database\DB_Entity {
 	public static function insertAttendee($pdo, $user_id, $reservation_id) {
 		$statement = $pdo->prepare('INSERT INTO `web_logickehry_db`.`reservation_users` '
 				. '(`user_id`, `reservation_id`) VALUES ( :uid, :rid )');
-		if ($statement->execute(['uid' => $user_id, 'rid' => $reservation_id])) {
-			return true;
+		if (!$statement->execute(['uid' => $user_id, 'rid' => $reservation_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
+		return true;
 	}
 
 	/**

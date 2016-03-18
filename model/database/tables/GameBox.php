@@ -2,12 +2,14 @@
 
 namespace model\database\tables;
 
+use model\database\DB_Entity;
+
 /**
  * Description of GameBox
  *
  * @author Stepan
  */
-class GameBox extends \model\database\DB_Entity {
+class GameBox extends DB_Entity {
 
 	const MIN_CODE_LENGTH = 5;
 
@@ -21,12 +23,11 @@ class GameBox extends \model\database\DB_Entity {
 		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`game_box` "
 				. "(`tracking_code`, `game_type_id`) "
 				. "VALUES ( :tracking_code,  :game_type_id);");
-		if ($statement->execute($pars)) {
-			return true;
-		} else {
-			var_dump($statement->errorInfo());
-			echo "<br>" . $statement->queryString;
+		if (!$statement->execute($pars)) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
+		return true;
 	}
 
 	/**
@@ -45,10 +46,11 @@ class GameBox extends \model\database\DB_Entity {
 				. "`retired` = 1 "
 				. "WHERE `game_box`.`tracking_code` = :tracking_code"
 		);
-		if ($statement->execute(['tracking_code' => $code])) {
-			return $box;
+		if (!$statement->execute(['tracking_code' => $code])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $box;
 	}
 
 	var $game_box_id;

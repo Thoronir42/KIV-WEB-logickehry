@@ -2,6 +2,8 @@
 
 namespace model\database\views;
 
+use model\database\DB_Entity;
+
 /**
  * Description of Subscription
  *
@@ -18,10 +20,11 @@ class Subscription {
 	public static function fetchGamesByUser($pdo, $user_id) {
 		$statement = $pdo->prepare("SELECT game_type_id FROM subscription
 			WHERE user_id = :uid");
-		if ($statement->execute(['uid' => $user_id])) {
-			return $statement->fetchAll(\PDO::FETCH_COLUMN);
+		if (!$statement->execute(['uid' => $user_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $statement->fetchAll(\PDO::FETCH_COLUMN);
 	}
 
 	/**
@@ -33,10 +36,11 @@ class Subscription {
 	public static function fetchUsersByGame($pdo, $game_type_id) {
 		$statement = $pdo->prepare("SELECT orion_login FROM subscribees "
 				. "WHERE game_type_id = :gid");
-		if ($statement->execute(['gid' => $game_type_id])) {
-			return $statement->fetchAll(\PDO::FETCH_COLUMN);
+		if (!$statement->execute(['gid' => $game_type_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $statement->fetchAll(\PDO::FETCH_COLUMN);
 	}
 
 	/**
@@ -49,10 +53,11 @@ class Subscription {
 		$statement = $pdo->prepare("SELECT game_type_extended.* FROM game_type_extended "
 				. "JOIN subscription ON subscription.game_type_id = game_type_extended.game_type_id "
 				. "WHERE subscription.user_id = :uid");
-		if ($statement->execute(['uid' => $user_id])) {
-			return $statement->fetchAll(\PDO::FETCH_CLASS, GameTypeExtended::class);
+		if (!$statement->execute(['uid' => $user_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $statement->fetchAll(\PDO::FETCH_CLASS, GameTypeExtended::class);
 	}
 
 	/**
@@ -65,11 +70,11 @@ class Subscription {
 	public static function remove($pdo, $user_id, $game_type_id) {
 		$statement = $pdo->prepare("DELETE FROM subscription "
 				. "WHERE user_id = :uid AND game_type_id = :gid");
-		if ($statement->execute(['uid' => $user_id, 'gid' => $game_type_id])) {
-			return true;
-		} else {
-			var_dump($statement->errorInfo());
+		if (!$statement->execute(['uid' => $user_id, 'gid' => $game_type_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
+		return true;
 	}
 
 	/**
@@ -82,11 +87,11 @@ class Subscription {
 		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`subscription` "
 				. "(`user_id`, `game_type_id`) "
 				. "VALUES (:uid, :gid)");
-		if ($statement->execute(['uid' => $user_id, 'gid' => $game_type_id])) {
-			return true;
-		} else {
-			var_dump($statement->errorInfo());
+		if (!$statement->execute(['uid' => $user_id, 'gid' => $game_type_id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
+		return true;
 	}
 
 #	Mirror of model\database\tables\User

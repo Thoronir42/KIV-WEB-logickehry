@@ -2,14 +2,16 @@
 
 namespace model\database\views;
 
+use model\database\DB_Entity;
 use \model\database\tables\Reservation;
 
+use \model\database\IRenderableWeekEntity;
 /**
  * Description of GamyTypeWithScore
  *
  * @author Stepan
  */
-class ReservationExtended extends Reservation implements \model\database\IRenderableWeekEntity {
+class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 
 	const TYPE = 'reservation';
 	
@@ -33,10 +35,11 @@ class ReservationExtended extends Reservation implements \model\database\IRender
 			$pars['uid1'] = $pars['uid2'] = $user_id;
 		}
 		$statement = $pdo->prepare($sql);
-		if ($statement->execute($pars)) {
-			return $statement->fetchAll(\PDO::FETCH_CLASS, ReservationExtended::class);
+		if (!$statement->execute($pars)) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $statement->fetchAll(\PDO::FETCH_CLASS, ReservationExtended::class);
 	}
 
 	public static function fetchWithinTimespanByUser($pdo, $pars, $user_id) {
@@ -52,10 +55,11 @@ class ReservationExtended extends Reservation implements \model\database\IRender
 	public static function fetchById($pdo, $id) {
 		$statement = $pdo->prepare("SELECT * FROM `reservation_extended` "
 				. "WHERE reservation_id = :id ");
-		if ($statement->execute(['id' => $id])) {
-			return $statement->fetchObject(ReservationExtended::class);
+		if (!$statement->execute(['id' => $id])) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $statement->fetchObject(ReservationExtended::class);
 	}
 
 	/**
@@ -68,10 +72,11 @@ class ReservationExtended extends Reservation implements \model\database\IRender
 		$statement = $pdo->prepare("SELECT game_type_id, count(reservation_id) as count FROM `reservation_extended` "
 				. "WHERE reservation_date >= :time_from AND reservation_date <= :time_to "
 				. "GROUP BY game_type_id");
-		if ($statement->execute($pars)) {
-			return $statement->fetchAll(\PDO::FETCH_ASSOC);
+		if (!$statement->execute($pars)) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
 		}
-		return null;
+		return $statement->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
 	/**
@@ -92,11 +97,12 @@ class ReservationExtended extends Reservation implements \model\database\IRender
 		$pars = ['desk_id' => $desk_id, 'date' => $date,
 			'time_from1' => $time_from, 'time_from2' => $time_from,
 			'time_to1' => $time_to, 'time_to2' => $time_to];
-		if ($statement->execute($pars)) {
-			return $statement->fetch(\PDO::FETCH_COLUMN)['count'];
+		if (!$statement->execute($pars)) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
 		}
-		var_dump($statement->errorInfo());
-		return false;
+		return $statement->fetch(\PDO::FETCH_COLUMN)['count'];
+		
 	}
 
 	/**
@@ -121,7 +127,7 @@ class ReservationExtended extends Reservation implements \model\database\IRender
 			'time_from1' => $time_from, 'time_from2' => $time_from,
 			'time_to1' => $time_to, 'time_to2' => $time_to];
 		if (!$statement->execute($pars)) {
-			var_dump($statement->errorInfo());
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		$boxesInUse = $statement->fetchAll(\PDO::FETCH_COLUMN);
@@ -151,6 +157,7 @@ class ReservationExtended extends Reservation implements \model\database\IRender
 			$pars['time_to1'] = $pars['time_to2'] = $time['to'];
 		}
 		if (!$statement->execute($pars)) {
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		$return = [];

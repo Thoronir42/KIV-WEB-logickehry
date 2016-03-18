@@ -84,6 +84,10 @@ class MessageBuffer {
 	 */
 	protected function __construct($session_key) {
 		$this->session_key = $session_key;
+		
+		if (!isset($_SESSION[$this->session_key])) {
+			$_SESSION[$this->session_key] = [];
+		}
 	}
 
 	/**
@@ -97,9 +101,6 @@ class MessageBuffer {
 	public function log($message, $level = self::LVL_INF, $link = null) {
 		if (!$this->validLevel($level)) {
 			$level = self::LVL_INF;
-		}
-		if (!isset($_SESSION[$this->session_key])) {
-			$_SESSION[$this->session_key] = [];
 		}
 		$msg = [self::PRT_MSG => $message, self::PRT_LVL => $level];
 		if (is_array($link)) {
@@ -127,7 +128,7 @@ class MessageBuffer {
 	 */
 	public function getLog($levelFilter = self::LVL_ALL) {
 		if (!isset($_SESSION[$this->session_key])) {
-			return null;
+			return [];
 		}
 		if ($levelFilter == self::LVL_ALL) {
 			$filteredMessages = $_SESSION[$this->session_key];
