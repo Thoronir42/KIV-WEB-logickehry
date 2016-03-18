@@ -1,0 +1,72 @@
+{# udalost/upravit.twig #}
+{% extends "udalost/zobrazit.twig" %}
+
+
+{% block panelHeadingContent %}
+	<div class="event_title">Úprava události</div>
+	<div class="event_subtitle">{{ event.getTitle }} {% if event.hasSubtitle() %}<small class="event_subtitle">{{ event.getSubtitle }}</small>{% endif %}</div>
+{% endblock %}
+
+{% block panelBodyContent %}
+	<form class="form form-horizontal" method="post" action="{{ urlgen.url(links['submit'])  }}">
+		<div class="row">
+			{# postranní info #}
+			<div class="col-md-4">
+				<div class="well well-sm">
+					<label for="game_type_id">Změnit výběr hry? Aktuálně zvolená hra:<br/>{{ game.getFullName() }}</label>
+
+					{% include "mini/game_type_list_group.twig" with {'games':games, 'active':event.getGameTypeID(), 'count': false} %}
+				</div>
+			</div>
+			{# detailní popis #}
+			<div class="col-md-8">
+				<ul class="list-group">
+					<li class="list-group-item">
+						<label for="event_title">Nadpis události</label>
+						<input type="text" name="event_title" class="form-control" value="{{ event.event_title }}">
+					</li>
+					<li class="list-group-item">
+						<label for="event_subtitle">Podnadpis událost</label>
+						<input type="text" name="event_subtitle" class="form-control" value="{{ event.event_subtitle }}">
+					</li>
+					<li class="list-group-item">
+						<label for="event_date">Datum konání události</label>
+						<input type="date" name="event_date" class="form-control" value="{{ event.event_date }}">
+					</li>
+					<li class="list-group-item">
+						<div class="row">
+							<div class="col-sm-6">
+								<label for="time_from">Čas začátku události</label>
+								<input type="time" name="time_from" class="form-control" value="{{ resRend.time(event.time_from) }}">
+							</div>
+							<div class="col-sm-6">
+								<label for="time_from">Čas konce události</label>
+								<input type="time" name="time_to" class="form-control" value="{{ resRend.time(event.time_to) }}">
+							</div>
+						</div>
+					</li>
+					<textarea name="description" class="form-control" rows="6">{{ event.description }}</textarea>
+				</ul>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<a href="{{urlgen.url(links['back'])}}" class="btn btn-info pull-left">Zrušit úpravy</a>
+				<input type="submit" value="Uložit změny" class="btn btn-primary pull-right">
+			</div>
+		</div>
+		<input type="hidden" name="event_id" value="{{ event.getID() }}">
+	</form>
+{% endblock %}
+
+
+{% block pageStyle %}
+	{% if event.hasGameAssigned() %}
+		<style>
+			.panel-heading, .panel-body{ border-color: #{{ g.getColor() }}
+			}
+			.panel-body .well{ background: #{{ g.getColor() }}
+			}
+		</style>
+	{% endif %}
+{% endblock %}

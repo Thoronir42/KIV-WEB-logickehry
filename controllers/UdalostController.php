@@ -48,7 +48,36 @@ class UdalostController extends Controller {
 		if($event->hasGameAssigned()){
 			$this->template['game'] = Views\GameTypeExtended::fetchById($this->pdo, $event->getGameTypeID());	
 		}
-		
+		$this->template['links'] = [
+			'edit' => ['controller' => 'udalost', 'action' => 'upravit', 'id' => $id],
+			'delete' => ['controller' => 'udalost', 'action' => 'smazat', 'id' => $id],
+		];
 	}
+	
+	public function renderUpravit(){
+		$this->addCss("input-specific.css");
+		$this->addJs("input-specific.js");
+		
+		$this->renderZobrazit();
+		
+		$event = $this->template['event'];
+		
+		$this->template['games'] = Tables\Event::addNoGame(Views\GameTypeExtended::fetchAll($this->pdo));
+		$this->template['links'] = [
+			'back' => ['controller' => 'udalost', 'action' => 'zobrazit', 'id' => $this->getParam('id')],
+			'submit' => ['controller' => 'udalost', 'action' => 'ulozit'],
+		];
+	}
+	
+	public function doUlozit(){
+		$event = Tables\Event::fromPOST();
+		
+		if(!$event->readyForInsert()){
+			$this->message('Pole události nebyla vyplněna správně, tato obsahovala chyby: '.implode(", ", array_keys($event->misc['missing'])));
+			$this->redirectPars('udalost', 'upravit', ['id' => $event->event_id]);
+		}
+		
+		Tables\Event::update($this->pdo, $event);
+	}	
 
 }

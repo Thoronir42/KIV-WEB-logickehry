@@ -37,6 +37,10 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 		}
 		return $pdo->lastInsertId();
 	}
+	
+	public static function update($pdo, $evt){
+		
+	}
 
 	/**
 	 * 
@@ -172,11 +176,11 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 	}
 
 	public function hasGameAssigned() {
-		return !!$this->game_type_id;
+		return $this->game_type_id != self::NO_GAME_TYPE_ID;
 	}
 
 	public function getGameTypeID() {
-		return $this->game_type_id;
+		return $this->hasGameAssigned() ? $this->game_type_id : self::NO_GAME_TYPE_ID;
 	}
 
 	public function isEvent() {

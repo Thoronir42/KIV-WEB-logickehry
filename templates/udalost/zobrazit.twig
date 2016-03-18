@@ -15,11 +15,11 @@
 				<ul class="list-group">
 					<li class="list-group-item">
 						<div class="row">
-							<div class="col-xs-6">
+							<div class="col-sm-6">
 								<span class="glyphicon glyphicon-calendar"></span>
 								{{ event.event_date }}
 							</div>
-							<div class="col-xs-6">
+							<div class="col-sm-6">
 								<span class="glyphicon glyphicon-time"></span>
 								{{ resRend.time(event.time_from) }} - {{ resRend.time(event.time_to) }}
 							</div>
@@ -32,10 +32,16 @@
 						</li>
 					{% endif %}
 				</ul>
+				{% if user.isAdministrator() %}
+					<div class="btn-group btn-group-justified">
+						<a href="{{urlgen.url(links['edit'])}}" class="btn btn-warning"><span class='glyphicon glyphicon-edit'></span></a>
+						<a href="{{urlgen.url(links['delete'])}}" class="btn btn-danger"><span class='glyphicon glyphicon-trash'></span></a>
+					</div>
+				{% endif %}
 			</div>
 		</div>
 		{# detailní popis #}
-		<div class="coll-md-8">
+		<div class="col-md-8">
 			{{ event.description }}
 		</div>
 	</div>
