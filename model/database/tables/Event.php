@@ -77,6 +77,25 @@ class Event extends \model\database\DB_Entity implements \model\database\IRender
 		}
 		return true;
 	}
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param int $id
+	 */
+	public static function delete($pdo, $id){
+		$statement = $pdo->prepare('DELETE FROM `event` WHERE `event_id` = :event_id;');
+		
+		if(!$statement->execute(['event_id' => $id])){
+			var_dump($id);
+			echo "<br>";
+			var_dump($sql);
+			echo "<br>";
+			var_dump($statement->errorInfo());
+			return false;
+		}
+		
+		return true;
+	}
 
 	/**
 	 * 

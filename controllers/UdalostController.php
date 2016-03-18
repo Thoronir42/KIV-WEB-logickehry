@@ -82,8 +82,20 @@ class UdalostController extends Controller {
 		$id = $event->event_id;
 		unset($values['event_id']);
 		
-		Tables\Event::update($this->pdo, $values, $id);
+		if(Tables\Event::update($this->pdo, $values, $id)){
+			$this->message("Událost byla úspěšně upravena");
+		} else {
+			$this->message("Při ukládání úprav nastala neočekávaná chyba");
+		}
+		
 		$this->redirectPars("udalost", "zobrazit", ['id' => $id]);
-	}	
+	}
+	
+	public function doSmazat(){
+		$id = $this->getParam('id');
+		
+		Tables\Event::delete($this->pdo, $id);
+		$this->redirectPars("rezervace", "vypis");
+	}
 
 }
