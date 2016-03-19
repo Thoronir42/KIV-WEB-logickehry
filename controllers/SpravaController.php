@@ -63,8 +63,11 @@ class SpravaController extends Controller {
 			$this->message("Nebylo možné přidat hru, nebyla vyplněna následující pole: " . $gameType->getMissingParameters());
 			$this->redirectPars('sprava', 'hry');
 		}
-
-		if (Tables\GameType::update($this->pdo, $gameType->asArray())) {
+		$pars = $gameType->asArray();
+		$id = $pars['game_type_id'];
+		unset($pars['game_type_id']);
+		
+		if (Tables\GameType::update($this->pdo, $pars, $id)) {
 			$this->message("Úpravy na hře " . $gameType->getFullName() . " byly úspěšně uloženy", \libs\MessageBuffer::LVL_SUC);
 		} else {
 			$this->message("Úpravy na hře " . $gameType->getFullName() . " se nepodařilo uložit", \libs\MessageBuffer::LVL_WAR);

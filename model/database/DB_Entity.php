@@ -15,18 +15,18 @@ abstract class DB_Entity {
 	 * @var MessageBuffer
 	 */
 	public static $message_buffer;
-	
-	public static function logError($errorInfo, $function, $sql = null){
-		if(!\config\Config::LOG_DB_ERRORS){
+
+	public static function logError($errorInfo, $function, $sql = null) {
+		if (!\config\Config::LOG_DB_ERRORS) {
 			return;
 		}
 		$message = sprintf("DB error <strong>%s</strong> in function <strong>%s</strong>", $errorInfo[2], $function);
-		if(!is_null($sql)){
-			$message .= "<br/>SQL: ".$sql;
+		if (!is_null($sql)) {
+			$message .= "<br/>SQL: " . $sql;
 		}
 		self::$message_buffer->log($message, MessageBuffer::LVL_DNG);
 	}
-	
+
 	/**
 	 * 
 	 * @param String $class required DB_Entity class to be instantiated
@@ -43,7 +43,7 @@ abstract class DB_Entity {
 		$missing = [];
 		foreach ($properties as $prp) {
 			$prpName = $prp->name;
-			if ($prpName == 'misc') {
+			if ($prpName == 'misc' || $prpName == 'message_buffer') {
 				continue;
 			}
 			$val = \filter_input(INPUT_POST, $prpName);
@@ -85,11 +85,11 @@ abstract class DB_Entity {
 
 	public function asArray($includeMissing = false) {
 		$ret = [];
-		foreach ($this as $prpKey => $prpVal) {
-			if ($prpKey === "misc") {
+		foreach ($this as $prpName => $prpVal) {
+			if ($prpName == 'misc' || $prpName == 'message_buffer') {
 				continue;
 			}
-			$ret[$prpKey] = $prpVal;
+			$ret[$prpName] = $prpVal;
 		}
 		if ($includeMissing && isset($this->missing)) {
 			$ret['missing'] = $this->missing;

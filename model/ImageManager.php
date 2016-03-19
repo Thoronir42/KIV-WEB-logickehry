@@ -98,7 +98,10 @@ class ImageManager {
 		if ($check === false) {
 			return ['result' => false, 'message' => "Nahraný soubor není obrázek"];
 		}
-		if ($check[0] != $check[1]) {
+		$a = $check[0];
+		$b = $check[1];
+		$d = abs($a - $b);
+		if ($d / max($a, $b) > .2 ) {
 			return ['result' => false, 'message' => "Nahraný obrázek není čtvercový"];
 		}
 		if ($check[0] < self::MIN_IMG_SIZE) {

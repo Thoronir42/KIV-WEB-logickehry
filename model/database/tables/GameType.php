@@ -46,14 +46,16 @@ class GameType extends DB_Entity {
 	 * @param mixed[] $pars
 	 * @return boolean
 	 */
-	public static function update($pdo, $pars) {
-		$statement = $pdo->prepare("UPDATE `web_logickehry_db`.`game_type` SET "
-				. "`game_name` = :game_name, "
-				. "`game_subtitle` = :game_subtitle, "
-				. "`avg_playtime` = :avg_playtime, "
-				. "`max_players` = :max_players, "
-				. "`min_players` = :min_players "
-				. "WHERE `game_type_id` = :game_type_id ");
+	public static function update($pdo, $pars, $id) {
+		
+		$sql = "UPDATE `web_logickehry_db`.`game_type` SET ";
+		foreach($pars as $par => $val){
+			$sql .="`$par` = :$par, ";
+		}
+		$sql .= "WHERE `game_type_id` = :id ";
+		$statement = $pdo->prepare($sql);
+		
+		$pars['id'] = $id;
 		if ($statement->execute($pars)) {
 			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
