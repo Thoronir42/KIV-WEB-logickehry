@@ -33,18 +33,18 @@ class GameTypeExtended extends GameType {
 	 * @return GameTypeExtended[]
 	 */
 	public static function fetchAllWithCounts($pdo) {
-		$result = $pdo->query("SELECT "
-						. "game_type_extended.*, "
-						. "COUNT(DISTINCT game_box.game_box_id) AS total_boxes, "
-						. "COUNT(DISTINCT case game_box.retired when '0' then game_box.game_box_id else null end) AS active_boxes, "
-						. "COUNT(DISTINCT reservation_extended.reservation_id) AS total_reservations "
-						. " FROM `game_type_extended` "
-						. "LEFT JOIN game_box "
-						. "ON game_type_extended.game_type_id = game_box.game_type_id "
-						. "LEFT JOIN reservation_extended "
-						. "ON game_type_extended.game_type_id = reservation_extended.game_type_id "
-						. "GROUP BY game_type_extended.game_type_id")
-				->fetchAll(\PDO::FETCH_ASSOC);
+		$sql = "SELECT "
+				. "game_type_extended.*, "
+				. "COUNT(DISTINCT game_box.game_box_id) AS total_boxes, "
+				. "COUNT(DISTINCT case game_box.retired when '0' then game_box.game_box_id else null end) AS active_boxes, "
+				. "COUNT(DISTINCT reservation_extended.reservation_id) AS total_reservations "
+				. " FROM `game_type_extended` "
+				. "LEFT JOIN game_box "
+				. "ON game_type_extended.game_type_id = game_box.game_type_id "
+				. "LEFT JOIN reservation_extended "
+				. "ON game_type_extended.game_type_id = reservation_extended.game_type_id "
+				. "GROUP BY game_type_extended.game_type_id";
+		$result = $pdo->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
 		$games = [];
 		foreach ($result as $r) {
 			$i = new GameTypeExtended();
