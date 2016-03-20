@@ -35,7 +35,7 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 			'time_from' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($evt->time_from)),
 			'time_to' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($evt->time_to))];
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return 0;
 		}
 		return $pdo->lastInsertId();
@@ -44,18 +44,18 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 	/**
 	 * 
 	 * @param \PDO $pdo
-	 * @param mixed[] $values
+	 * @param mixed[] $pars
 	 * @param int $id
 	 */
-	public static function update($pdo, $values, $id){
+	public static function update($pdo, $pars, $id){
 		$sql = 'UPDATE `event` SET ';
 		$i = 0;
-		$len = count($values);
+		$len = count($pars);
 		
-		foreach($values as $key => $value){
+		foreach($pars as $key => $value){
 			if(is_null($value)){
 				$sql .= sprintf('`%s` = NULL', $key);
-				unset($values[$key]);
+				unset($pars[$key]);
 			} else {
 				$sql .= sprintf('`%s` = :%s', $key, $key);
 			}
@@ -66,12 +66,12 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 		
 		$sql .= " WHERE `event_id` = :event_id;";
 		
-		$values['event_id'] = $id;
+		$pars['event_id'] = $id;
 		
 		$statement = $pdo->prepare($sql);
 		
-		if(!$statement->execute($values)){
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+		if(!$statement->execute($pars)){
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		return true;
@@ -84,8 +84,9 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 	public static function delete($pdo, $id){
 		$statement = $pdo->prepare('DELETE FROM `event` WHERE `event_id` = :event_id;');
 		
-		if(!$statement->execute(['event_id' => $id])){
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+		$pars = ['event_id' => $id];
+		if(!$statement->execute($pars)){
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		
@@ -121,7 +122,7 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 				. "ORDER BY time_from ASC";
 		$statement = $pdo->prepare($sql);
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return null;
 		}
 		return $statement->fetchAll(\PDO::FETCH_CLASS, Event::class);
@@ -145,7 +146,7 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 		$pars['time_from1'] = $pars['time_from2'] = $time['from'];
 		$pars['time_to1'] = $pars['time_to2'] = $time['to'];
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		return(!empty($statement->fetchAll(\PDO::FETCH_CLASS, Event::class)));

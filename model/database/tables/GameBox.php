@@ -24,7 +24,7 @@ class GameBox extends DB_Entity {
 				. "(`tracking_code`, `game_type_id`) "
 				. "VALUES ( :tracking_code,  :game_type_id);");
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		return true;

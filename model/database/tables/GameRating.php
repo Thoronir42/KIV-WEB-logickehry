@@ -37,7 +37,7 @@ class GameRating extends DB_Entity {
 				. "(`game_type_id`, `user_id`, `score`, `review`) "
 				. "VALUES (:game_type_id,  :user_id,  :score,  :review);");
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		return true;

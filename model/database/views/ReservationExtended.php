@@ -36,7 +36,7 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 		}
 		$statement = $pdo->prepare($sql);
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return null;
 		}
 		return $statement->fetchAll(\PDO::FETCH_CLASS, ReservationExtended::class);
@@ -73,7 +73,7 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 				. "WHERE reservation_date >= :time_from AND reservation_date <= :time_to "
 				. "GROUP BY game_type_id");
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return null;
 		}
 		return $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -98,7 +98,7 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 			'time_from1' => $time_from, 'time_from2' => $time_from,
 			'time_to1' => $time_to, 'time_to2' => $time_to];
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		return $statement->fetch(\PDO::FETCH_COLUMN)['count'];
@@ -127,7 +127,7 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 			'time_from1' => $time_from, 'time_from2' => $time_from,
 			'time_to1' => $time_to, 'time_to2' => $time_to];
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		$boxesInUse = $statement->fetchAll(\PDO::FETCH_COLUMN);
@@ -157,7 +157,7 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 			$pars['time_to1'] = $pars['time_to2'] = $time['to'];
 		}
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		$return = [];

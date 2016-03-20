@@ -38,7 +38,7 @@ class Feedback extends DB_Entity {
 				. '(`feedback_type`, `user_id`, `label`, `description`, `created`) '
 				. 'VALUES (:feedback_type, :user_id, :label, :description, :created);');
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		return true;
@@ -92,7 +92,7 @@ class Feedback extends DB_Entity {
 
 		$statement = $pdo->prepare($sql);
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return null;
 		}
 		return $statement->fetchAll(\PDO::FETCH_CLASS, Feedback::class);

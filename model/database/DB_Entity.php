@@ -16,13 +16,20 @@ abstract class DB_Entity {
 	 */
 	public static $message_buffer;
 
-	public static function logError($errorInfo, $function, $sql = null) {
+	public static function logError($errorInfo, $function, $sql = null, $pars = null) {
 		if (!\config\Config::LOG_DB_ERRORS) {
 			return;
 		}
 		$message = sprintf("DB error <strong>%s</strong> in function <strong>%s</strong>", $errorInfo[2], $function);
 		if (!is_null($sql)) {
-			$message .= "<br/>SQL: " . $sql;
+			$message .= "<br/>SQL: $sql";
+		}
+		if (!is_null($pars)) {
+			$message .= "<br/>Querry was called with following parameters:<br/>";
+			foreach($pars as $key => $val){
+				$message .= "$key => $val <br/>";
+			}
+			
 		}
 		self::$message_buffer->log($message, MessageBuffer::LVL_DNG);
 	}
@@ -89,6 +96,10 @@ abstract class DB_Entity {
 			if ($prpName == 'misc' || $prpName == 'message_buffer') {
 				continue;
 			}
+			if(empty($this->$prpName)){
+				continue;
+			}
+			
 			$ret[$prpName] = $prpVal;
 		}
 		if ($includeMissing && isset($this->missing)) {

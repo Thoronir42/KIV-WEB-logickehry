@@ -43,7 +43,7 @@ class Reservation extends DB_Entity {
 			'time_from' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($res->time_from)),
 			'desk_id' => $res->desk_id];
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		return true;
