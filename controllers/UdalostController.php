@@ -94,7 +94,9 @@ class UdalostController extends Controller {
 	public function doSmazat(){
 		$id = $this->getParam('id');
 		
-		Tables\Event::delete($this->pdo, $id);
+		if(Tables\Event::delete($this->pdo, $id)){
+			$this->message("Událost byla odstraněna");
+		}
 		$this->redirectPars("rezervace", "vypis");
 	}
 

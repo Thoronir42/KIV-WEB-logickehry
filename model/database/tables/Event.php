@@ -25,7 +25,7 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 	 */
 	public static function insert($pdo, $evt) {
 		$statement = $pdo->prepare("INSERT INTO `web_logickehry_db`.`event`"
-				. "       (`eventt_title`, `event_subtitle`, `description`, `game_type_id`, `author_user_id`, `event_date`, `time_from`, `time_to`) "
+				. "       (`event_title`, `event_subtitle`, `description`, `game_type_id`, `author_user_id`, `event_date`, `time_from`, `time_to`) "
 				. "VALUES (:event_title,  :event_subtitle,  :description,  :game_type_id,  :author_user_id,  :event_date,  :time_from,  :time_to )");
 		$pars = [
 			'event_title' => $evt->event_title, 'event_subtitle' => $evt->event_subtitle,
