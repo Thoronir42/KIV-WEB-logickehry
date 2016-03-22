@@ -2,7 +2,9 @@
 
 namespace controllers;
 
-use model\UserManager;
+use model\Users,
+ libs\ReservationManager;
+
 use \model\database\tables as Tables,
 	\model\database\views as Views;
 
@@ -65,7 +67,7 @@ class UzivatelController extends Controller {
 		$this->addCss('rezervace_vypis.css');
 		$this->template['rUser'] = $user;
 
-		$rw = \model\ReservationManager::prepareReservationWeek($this->pdo, 0, $user->user_id);
+		$rw = ReservationManager::prepareReservationWeek($this->pdo, 0, $user->user_id);
 		$this->template["reservationDays"] = $rw['reservationDays'];
 		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);
 		
@@ -108,7 +110,7 @@ class UzivatelController extends Controller {
 	}
 
 	public function doOdhlasitSe() {
-		UserManager::logout();
+		Users::logout();
 		$this->message("Vaše odhlášení z aplikace proběhlo úspěšně.", \libs\MessageBuffer::LVL_INF);
 		$this->message("Pro přihlášení pod jiným účtem se nejdříve odhlašte z orion loginu", \libs\MessageBuffer::LVL_WAR, ['label' => "Odhlásit se", 'url' => self::PORTAL_LOGOUT_URL]);
 		$this->redirectPars();
@@ -128,16 +130,16 @@ class UzivatelController extends Controller {
 		$orion_login = $_SESSION["orion_login"];
 		unset($_SESSION['orion_login']);
 
-		$user = UserManager::login($this->pdo, $orion_login);
+		$user = Users::login($this->pdo, $orion_login);
 		if (!$user) {
 			$this->message("Nepodařilo se pro vás vytvořit uživatelský účet", \libs\MessageBuffer::LVL_DNG);
 			$this->redirectPars();
 		}
 		switch ($user->loginStatus) {
-			case UserManager::LOGIN_NEW:
+			case Users::LOGIN_NEW:
 				$this->message("Váš uživatelský účet byl úspěšně vytvořen, vítejte $orion_login", \libs\MessageBuffer::LVL_SUC);
 				break;
-			case UserManager::LOGIN_SUCCESS:
+			case Users::LOGIN_SUCCESS:
 				$this->message("Vítejte zpět, $orion_login!", \libs\MessageBuffer::LVL_SUC);
 				break;
 		}

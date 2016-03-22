@@ -2,7 +2,7 @@
 
 namespace controllers;
 
-use model\DatetimeManager;
+use libs\DatetimeManager;
 use \model\database\tables as Tables,
 	\model\database\views as Views;
 

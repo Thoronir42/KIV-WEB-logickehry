@@ -1,8 +1,9 @@
 <?php
 
 namespace model\database\tables;
-
 use model\database\DB_Entity;
+
+use libs\DatetimeManager;
 /**
  * Description of User
  *
@@ -130,7 +131,7 @@ class Feedback extends DB_Entity {
 			default: return 'date error';
 			case 'created':
 			case 'resolved':
-				return date(\model\DatetimeManager::HUMAN_FULL, strtotime($this->$type));
+				return date(DatetimeManager::HUMAN_FULL, strtotime($this->$type));
 		}
 	}
 

@@ -5,6 +5,8 @@ namespace model\database\tables;
 use \model\database\DB_Entity;
 use \model\database\IRenderableWeekEntity;
 
+use libs\DatetimeManager;
+
 /**
  * Description of Reservation
  *
@@ -31,9 +33,9 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 			'event_title' => $evt->event_title, 'event_subtitle' => $evt->event_subtitle,
 			'description' => $evt->description, 'game_type_id' => $evt->reservation_date,
 			'author_user_id' => $evt->author_user_id,
-			'event_date' => date(\model\DatetimeManager::DB_DATE_ONLY, strtotime($evt->event_date)),
-			'time_from' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($evt->time_from)),
-			'time_to' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($evt->time_to))];
+			'event_date' => date(DatetimeManager::DB_DATE_ONLY, strtotime($evt->event_date)),
+			'time_from' => date(DatetimeManager::DB_TIME_ONLY, strtotime($evt->time_from)),
+			'time_to' => date(DatetimeManager::DB_TIME_ONLY, strtotime($evt->time_to))];
 		if (!$statement->execute($pars)) {
 			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return 0;

@@ -4,6 +4,8 @@ namespace controllers;
 
 use \model\database\tables as Tables,
 	\model\database\views as Views;
+use libs\DatetimeManager;
+
 use config\Config;
 
 /**
@@ -43,7 +45,7 @@ class OhlasController extends Controller {
 	public function doVlozit() {
 		$fb = Tables\Feedback::fromPOST();
 		$fb->user_id = $this->user->user_id;
-		$fb->created = date(\model\DatetimeManager::DB_FULL);
+		$fb->created = date(DatetimeManager::DB_FULL);
 		if (Tables\Feedback::insert($this->pdo, $fb->asArray())) {
 			$this->message('Vaše zpětná vazba byla úspěšně uložena. Děkujeme.');
 		} else {

@@ -4,6 +4,8 @@ namespace model\database\tables;
 
 use model\database\DB_Entity;
 
+use libs\DatetimeManager;
+
 /**
  * Description of Reservation
  *
@@ -38,9 +40,9 @@ class Reservation extends DB_Entity {
 		$pars = [
 			'game_box_id' => $res->game_box_id, 'reservee_user_id' => $res->reservee_user_id,
 			'reservation_type_id' => $res->reservation_type_id, 'reservation_date' => $res->reservation_date,
-			'reservation_date' => date(\model\DatetimeManager::DB_DATE_ONLY, strtotime($res->reservation_date)),
-			'time_to' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($res->time_to)),
-			'time_from' => date(\model\DatetimeManager::DB_TIME_ONLY, strtotime($res->time_from)),
+			'reservation_date' => date(DatetimeManager::DB_DATE_ONLY, strtotime($res->reservation_date)),
+			'time_to' => date(DatetimeManager::DB_TIME_ONLY, strtotime($res->time_to)),
+			'time_from' => date(DatetimeManager::DB_TIME_ONLY, strtotime($res->time_from)),
 			'desk_id' => $res->desk_id];
 		if (!$statement->execute($pars)) {
 			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);

@@ -4,7 +4,8 @@ namespace controllers;
 
 use \model\database\views as Views,
 	\model\database\tables as Tables;
-use model\DatetimeManager;
+use libs\DatetimeManager,
+	libs\ReservationManager;
 
 class LetisteController extends Controller {
 
@@ -28,7 +29,7 @@ class LetisteController extends Controller {
 			$week = 0;
 		}
 		
-		$rw = \model\ReservationManager::prepareReservationWeek($this->pdo, $week);
+		$rw = ReservationManager::prepareReservationWeek($this->pdo, $week);
 		$this->template["reservationDays"] = $rw['reservationDays'];
 		$this->template["pageTitle"] = $rw['pageTitle'];
 		$this->template["timeSpan"] = DatetimeManager::format($rw['timePars'], DatetimeManager::HUMAN_DATE_ONLY);

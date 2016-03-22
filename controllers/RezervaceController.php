@@ -2,7 +2,8 @@
 
 namespace controllers;
 
-use model\DatetimeManager;
+use libs\DatetimeManager,
+	libs\ReservationManager;
 use \model\database\tables as Tables,
 	\model\database\views as Views;
 
@@ -50,7 +51,7 @@ class RezervaceController extends Controller {
 		$this->template['eventGameList'] = Tables\Event::addNoGame($game_types);
 
 
-		$rw = \model\ReservationManager::prepareReservationWeek($this->pdo, $week);
+		$rw = ReservationManager::prepareReservationWeek($this->pdo, $week);
 		$this->template["reservationDays"] = $rw['reservationDays'];
 		$this->template["pageTitle"] = $rw['pageTitle'];
 		$this->template["timeSpan"] = DatetimeManager::format($rw['timePars'], DatetimeManager::HUMAN_DATE_ONLY);

@@ -3,9 +3,11 @@
 namespace controllers;
 
 use libs\URLgen,
-	libs\MessageBuffer;
+	libs\MessageBuffer,
+	libs\DatetimeManager;
+
 use model\database\views\UserExtended;
-use model\UserManager;
+use model\Users;
 use model\database\DB_Entity;
 
 /**
@@ -59,7 +61,7 @@ abstract class Controller {
 			$this->action = $support['url']['action'];
 		}
 
-		$this->user = UserManager::getCurrentUser($this->pdo);
+		$this->user = Users::getCurrentUser($this->pdo);
 		$this->navbar = [];
 		$this->navbar['app-name'] = \config\Config::APP_NAME;
 		if ($this->user->isLoggedIn()) {
@@ -67,7 +69,7 @@ abstract class Controller {
 		} else {
 			$this->navbar['login_url'] = ['controller' => 'uzivatel', 'action' => 'PrihlasitSe'];
 		}
-		$this->navbar['session_time'] = date(\model\DatetimeManager::HUMAN_FULL, $_SESSION['LAST_ACTIVITY']);
+		$this->navbar['session_time'] = date(DatetimeManager::HUMAN_FULL, $_SESSION['LAST_ACTIVITY']);
 		$this->layout = "layout.twig";
 		$this->template = [
 			'css' => ['bootstrap.css'],

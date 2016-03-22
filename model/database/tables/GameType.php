@@ -3,6 +3,7 @@
 namespace model\database\tables;
 
 use model\database\DB_Entity;
+use libs\ColorManager;
 
 /**
  * Description of GameType
@@ -113,7 +114,7 @@ class GameType extends DB_Entity {
 	}
 
 	public function getColor() {
-		return \model\ColorManager::numberToColor($this->game_type_id);
+		return ColorManager::numberToColor($this->game_type_id);
 	}
 
 	public function getFullName() {

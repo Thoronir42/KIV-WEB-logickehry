@@ -2,7 +2,7 @@
 
 namespace libs;
 
-use model\ImageManager,
+use libs\ImageManager,
 	config\Config;
 
 class URLgen {
