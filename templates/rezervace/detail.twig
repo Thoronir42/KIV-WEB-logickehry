@@ -24,7 +24,8 @@
 					<div class="col-md-4">
 						<div class="well well-sm">
 							<div class="alert alert-info">
-								{{ r.reservation_type }}
+								<span>{{ r.reservation_type }}</span>
+								{% if deleteLink is defined %}<a href="{{ urlgen.url(deleteLink) }}" class="btn btn-danger btn-panel pull-right"><span class="glyphicon glyphicon-trash"></span></a>{% endif %}
 							</div>
 
 							<ul class="list-group">

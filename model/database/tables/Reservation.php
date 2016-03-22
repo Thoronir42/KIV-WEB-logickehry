@@ -83,6 +83,39 @@ class Reservation extends DB_Entity {
 
 	/**
 	 * 
+	 * @param \PDO $pdo
+	 * @param int $id
+	 */
+	public static function fetchAttendees($pdo, $id) {
+		$sql = "SELECT u.orion_login FROM `web_logickehry_db`.`reservation_users` ru "
+				. "JOIN user u ON ru.user_id = u.user_id "
+				. "WHERE ru.reservation_id = :rid";
+		$statement = $pdo->prepare($sql);
+		
+		if(!$statement->execute(['rid' => $id])){
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
+		}
+		return $statement->fetchAll(\PDO::FETCH_COLUMN);
+	}
+	
+	
+	/**
+	 * 
+	 * @param \PDO $pdo
+	 * @param int $id
+	 */
+	public static function delete($pdo, $id) {
+		$statement = $pdo->prepare("DELETE FROM reservation WHERE reservation_id = :rid");
+		if(!$statement->execute(['rid' => $id])){
+			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * 
 	 * @return Reservation
 	 */
 	public static function fromPOST() {

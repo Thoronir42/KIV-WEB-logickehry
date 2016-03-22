@@ -35,3 +35,7 @@ body{
 textarea{
 	resize:none;
 }
+
+.btn-panel{
+	margin-top: -6px;
+}

@@ -150,6 +150,34 @@ class RezervaceController extends Controller {
 		$this->redirectPars('rezervace');
 	}
 
+	public function doSmazat(){
+		$id = $this->getParam('id');
+		$reservation = Views\ReservationExtended::fetchById($this->pdo, $id);
+		
+		if(!$reservation){
+			$this->message("Reservace nebyla nalezena.", \libs\MessageBuffer::LVL_WAR);
+			$this->redirectPars("rezervace", $this->getDefaultAction());
+		}
+		
+		if(!$this->user->isAdministrator() && $this->user->user_id != $reservation->reservee_user_id){
+			$this->message("Pro odstranění rezervace nemáte dostatečná oprávnění", \libs\MessageBuffer::LVL_WAR);
+			$this->redirectPars('rezervace', 'detail', ['id' => $id]);
+		}
+		
+		// send mail?
+		// $attendees = Tables\Reservation::fetchAttendees($this->pdo, $id);
+		
+		
+		
+		if(!Tables\Reservation::delete($this->pdo, $id)){
+			$this->message("Při odstraňování rezervace nastaly neočekávané potíže.", \libs\MessageBuffer::LVL_WAR);
+			$this->redirectPars('rezervace', 'detail', ['id' => $id]);
+		} 
+		$this->message("Rezervae byla úspěšně odstraněna", \libs\MessageBuffer::LVL_SUC);
+		$this->redirectPars("rezervace", $this->getDefaultAction());
+				
+	}
+	
 	/**
 	 * 
 	 * @param Tables\Reservation $reservation
@@ -188,6 +216,9 @@ class RezervaceController extends Controller {
 		$curUserSigned = array_key_exists($this->user->user_id, $reservation->allUsers);
 		$this->template['signAction'] = ['newVal' => !$curUserSigned,
 			'url' => ['controller' => 'rezervace', 'action' => 'ucast', 'id' => $id, 'co' => $curUserSigned ? 'odhlasit' : 'prihlasit']];
+		if($this->user->isAdministrator() || $this->user->user_id == $reservation->reservee_user_id){
+			$this->template['deleteLink'] = ['controller' => 'rezervace', 'action' => 'smazat', 'id' => $id]; 
+		}
 	}
 
 	private function prepareReservation($id) {
