@@ -3,7 +3,7 @@
 namespace controllers;
 
 use \model\ImageManager,
-	\model\MailManager;
+	libs\MailManager;
 use \model\database\tables as Tables,
 	\model\database\views as Views;
 

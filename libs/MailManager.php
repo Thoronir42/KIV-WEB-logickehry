@@ -1,6 +1,6 @@
 <?php
 
-namespace model;
+namespace libs;
 
 /**
  * Description of MailManager
@@ -20,6 +20,7 @@ class MailManager {
 	private static function getMailBoner() {
 		$mail = new \PHPMailer();
 		$mail->setLanguage('cz');
+		$mail->CharSet = 'UTF-8';
 		$mail->setFrom(self::FROM_ADDRESS, self::FROM_NAME);
 		return $mail;
 	}
