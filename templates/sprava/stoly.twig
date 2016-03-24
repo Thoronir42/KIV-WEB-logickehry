@@ -1,0 +1,29 @@
+{# sprava/stoly.twig #}
+
+{% extends layout %}
+
+{% block bodyContent %}
+	<div class="panel panel-default">
+		<div class="panel-heading">Správa rezervovatelných stolů</div>
+		<div class="panel-body">
+			<div class="row">
+				{% for desk in desks %}
+					<div class="col-md-4">
+						<span class="input-group">
+							<span class="input-group-addon">
+								{{ desk.desk_number }}
+							</span>
+							<input type="text" name="table_number" class="form-control" value="{{ desk.capacity }}">
+							<span class="input-group-btn">
+								<input type="submit" class="btn btn-primary">
+							</span>
+						</span>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="panel-footer">
+			Počet rezervovatelných stolů: {{ desks|length }}
+		</div>
+	</div>
+{% endblock%}

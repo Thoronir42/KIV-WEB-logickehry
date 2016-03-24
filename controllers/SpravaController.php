@@ -21,6 +21,8 @@ class SpravaController extends Controller {
 			"label" => "Hry"];
 		$menu[] = ["urlParams" => ["controller" => "sprava", "action" => "inventar"],
 			"label" => "Inventář"];
+		$menu[] = ["urlParams" => ["controller" => "sprava", "action" => "stoly"],
+			"label" => "Stoly"];
 		if ($this->user->isAdministrator()) {
 			$menu[] = ["separator" => true];
 			$menu[] = ["urlParams" => ["controller" => "sprava", "action" => "uzivatele"],
@@ -52,7 +54,7 @@ class SpravaController extends Controller {
 		$this->template['game_edit_form_action'] = ['controller' => 'sprava', 'action' => 'upravitHru'];
 		$this->template['mailLink'] = ['controller' => 'sprava', 'action' => 'hromadnyMail', 'id' => 0];
 		$this->template['img_fileTypes'] = ImageManager::fileTypes();
-		
+
 		$this->template['games'] = Views\GameTypeExtended::fetchAllWithCounts($this->pdo);
 	}
 
@@ -66,7 +68,7 @@ class SpravaController extends Controller {
 		$pars = $gameType->asArray();
 		$id = $pars['game_type_id'];
 		unset($pars['game_type_id']);
-		
+
 		if (Tables\GameType::update($this->pdo, $pars, $id)) {
 			$this->message("Úpravy na hře " . $gameType->getFullName() . " byly úspěšně uloženy", \libs\MessageBuffer::LVL_SUC);
 		} else {
@@ -156,6 +158,10 @@ class SpravaController extends Controller {
 		$this->redirectPars('sprava', 'uzivatele');
 	}
 
+	public function renderStoly() {
+		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
+	}
+
 	public function renderInventar() {
 		$retired = $this->getParam("retired");
 		$this->addCss("hra.css");
@@ -212,7 +218,7 @@ class SpravaController extends Controller {
 		$gameTypes = Tables\GameType::prepareExport($this->pdo);
 		$df = fopen("php://output", 'w');
 
-		\libs\Headders::download_send_headers("CLH_hry_" . date('d_m_Y').'.csv');
+		\libs\Headders::download_send_headers("CLH_hry_" . date('d_m_Y') . '.csv');
 
 		ob_start();
 		$df = fopen("php://output", 'w');

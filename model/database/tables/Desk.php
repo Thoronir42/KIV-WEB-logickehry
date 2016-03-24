@@ -23,6 +23,7 @@ class Desk extends \model\database\DB_Entity {
 	}
 
 	var $desk_id;
+	var $desk_number;
 	var $capacity;
 
 }
