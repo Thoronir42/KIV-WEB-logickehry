@@ -50,7 +50,9 @@ class MailManager {
 		if (!$mail->send()) {
 			return ['result' => false, 'message' => sprintf("Mail se nepodařilo odeslat: " . $mail->ErrorInfo)];
 		}
-		return ['result' => true, 'message' => sprintf("Mail byl odeslán následujícím uživatelům: %s", implode($users, ", "))];
+		$count = count($users);
+		$label = (count($users) < 2) ? 'adresátovi' : 'adresátům';
+		return ['result' => true, 'message' => sprintf("Mail byl odeslán %d %s", $count, $label)];
 	}
 
 	public static function getDefaultSubject() {

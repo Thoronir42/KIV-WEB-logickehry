@@ -4,6 +4,7 @@ namespace model;
 
 use model\database\IRenderableWeekEntity,
 	model\database\tables\Reservation;
+use libs\DatetimeManager;
 
 /**
  * Description of ReservationRenderer
