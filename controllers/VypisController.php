@@ -44,7 +44,7 @@ class VypisController extends Controller {
 		$id = $this->getParam("id");
 		$gameType = Views\GameTypeExtended::fetchById($this->pdo, $id);
 		if (!$gameType) {
-			$this->message("Požadovaná hra nebyla nalezena.", \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning("Požadovaná hra nebyla nalezena.");
 			$this->redirectPars('vypis', 'hry');
 		}
 		$this->addCss("hra.css");
@@ -80,9 +80,9 @@ class VypisController extends Controller {
 		];
 
 		if (Tables\GameRating::delete($this->pdo, $pars['user_id'], $pars['game_type_id']) && (Tables\GameRating::insert($this->pdo, $pars))) {
-			$this->message($is_edit ? "Vaše hodnocení bylo úspěšně upraveno." : "Hodnocení bylo přidáno.", \libs\MessageBuffer::LVL_SUC);
+			$this->message->success($is_edit ? "Vaše hodnocení bylo úspěšně upraveno." : "Hodnocení bylo přidáno.");
 		} else {
-			$this->message("Při ukládání vašeho hodnocení nastala chyba.", \libs\MessageBuffer::LVL_WAR);
+			$this->message->danger("Při ukládání vašeho hodnocení nastala chyba.");
 		}
 		$redirect = ['controller' => 'vypis', 'action' => 'detailHry', 'id' => $pars['game_type_id']];
 		$this->redirect($this->urlGen->url($redirect));

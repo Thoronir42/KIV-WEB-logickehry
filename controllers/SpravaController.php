@@ -38,7 +38,7 @@ class SpravaController extends Controller {
 	public function startUp() {
 		parent::startUp();
 		if (!$this->user->isSupervisor()) {
-			$this->message("Do sekce Správa nemáte přístup", \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning("Do sekce Správa nemáte přístup", \libs\MessageBuffer::LVL_WAR);
 			$this->redirectPars(Controller::DEFAULT_CONTROLLER);
 		}
 	}
@@ -62,7 +62,7 @@ class SpravaController extends Controller {
 		$keepPicture = $this->getParam('keepPicture', INPUT_POST);
 		$gameType = Tables\GameType::fromPOST();
 		if (!$gameType->readyForInsert()) {
-			$this->message("Nebylo možné přidat hru, nebyla vyplněna následující pole: " . $gameType->getMissingParameters());
+			$this->message->warning("Nebylo možné přidat hru, nebyla vyplněna následující pole: " . $gameType->getMissingParameters());
 			$this->redirectPars('sprava', 'hry');
 		}
 		$pars = $gameType->asArray();
@@ -70,15 +70,15 @@ class SpravaController extends Controller {
 		unset($pars['game_type_id']);
 
 		if (Tables\GameType::update($this->pdo, $pars, $id)) {
-			$this->message("Úpravy na hře " . $gameType->getFullName() . " byly úspěšně uloženy", \libs\MessageBuffer::LVL_SUC);
+			$this->message->success("Úpravy na hře " . $gameType->getFullName() . " byly úspěšně uloženy");
 		} else {
-			$this->message("Úpravy na hře " . $gameType->getFullName() . " se nepodařilo uložit", \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning("Úpravy na hře " . $gameType->getFullName() . " se nepodařilo uložit");
 		}
 
 		if (!$keepPicture) {
 			$imgRes = ImageManager::put("picture", sprintf("game_%03d", $gameType->game_type_id));
 			if (!$imgRes['result']) {
-				$this->message($imgRes['message'], \libs\MessageBuffer::LVL_WAR);
+				$this->message->warning($imgRes['message']);
 			}
 		}
 		$this->redirectPars('sprava', 'hry');
@@ -88,28 +88,28 @@ class SpravaController extends Controller {
 		$nextId = Tables\GameType::nextId($this->pdo);
 		$gameType = Tables\GameType::fromPOST();
 		if (!$gameType->readyForInsert()) {
-			$this->message("Nebylo možné přidat hru, nebyla vyplněna následující pole: " . $gameType->getMissingParameters());
+			$this->message->warning("Nebylo možné přidat hru, nebyla vyplněna následující pole: " . $gameType->getMissingParameters());
 			$this->redirectPars();
 		}
 		$pars = $gameType->asArray();
 		$pars['game_type_id'] = $nextId;
 		if (!Tables\GameType::insert($this->pdo, $pars)) {
-			$this->message("Nebylo možné přidat hru na úrovni databáze", \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning("Nebylo možné přidat hru na úrovni databáze");
 			$this->redirectPars('sprava', 'hry');
 		} else {
-			$this->message("Hra $gameType->game_name byla úspěšně přidána do databáze", \libs\MessageBuffer::LVL_SUC);
+			$this->message->success("Hra $gameType->game_name byla úspěšně přidána do databáze");
 		}
 
 		$imgRes = ImageManager::put("picture", sprintf("game_%03d", $nextId));
 		if (!$imgRes['result']) {
-			$this->message($imgRes['message'], \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning($imgRes['message']);
 		}
 		$this->redirectPars('sprava', 'hry');
 	}
 
 	public function renderUzivatele() {
 		if (!$this->user->isAdministrator()) {
-			$this->message("Do správy uživatelů nemáte přístup.", \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning("Do správy uživatelů nemáte přístup.");
 			$this->redirectPars("sprava", $this->getDefaultAction());
 		}
 
@@ -142,18 +142,18 @@ class SpravaController extends Controller {
 
 		$targetUser = Views\UserExtended::fetch($this->pdo, $orion_login);
 		if ($targetUser->isAdministrator()) {
-			$this->message("Administrátoři si vzájemně nemohou upravovat role. Pokud máte problém s $orion_login, kontaktujte prosím CIV.", \libs\MessageBuffer::LVL_DNG);
+			$this->message->danger("Administrátoři si vzájemně nemohou upravovat role. Pokud máte problém s $orion_login, kontaktujte prosím CIV.");
 			$this->redirectPars('sprava', 'uzivatele');
 		}
 
 		if (Tables\User::setUserRole($this->pdo, $orion_login, $role)) {
 			if ($role == Tables\User::ROLE_SUPERVISOR) {
-				$this->message("Uživateli $orion_login byl přidělen statut správce");
+				$this->message->info("Uživateli $orion_login byl přidělen statut správce");
 			} else {
-				$this->message("Uživateli $orion_login byl odebrán statut správce");
+				$this->message->info("Uživateli $orion_login byl odebrán statut správce");
 			}
 		} else {
-			$this->message("Nastala chyba při úpravě statutu uživatele $orion_login", \libs\MessageBuffer::LVL_DNG);
+			$this->message->warning("Nastala chyba při úpravě statutu uživatele $orion_login");
 		}
 		$this->redirectPars('sprava', 'uzivatele');
 	}
@@ -168,7 +168,7 @@ class SpravaController extends Controller {
 	public function doPridatStul(){
 		$desk = Tables\Desk::fromPOST();
 		if(!$desk->readyForInsert()){
-			$this->message('Některé položky nebyly vyplněny správně');
+			$this->message->warning('Některé položky nebyly vyplněny správně');
 			$this->redirectPars('sprava', 'stoly');
 		}
 		
@@ -177,10 +177,10 @@ class SpravaController extends Controller {
 				];
 		$result = Tables\Desk::insertMany($this->pdo, $desks);
 		if($result['added']){
-			$this->message('Stůl byl úspěšně přidán');	
+			$this->message->success('Stůl byl úspěšně přidán');	
 		}
 		if($result['duplicate']){
-			$this->message->error('Stůl s číslem '.$desk->desk_id.' nemohl být přidán protože je již existuje');
+			$this->message->warning('Stůl s číslem '.$desk->desk_id.' nemohl být přidán protože je již existuje');
 		}
 		
 		$this->redirectPars('sprava', 'stoly');
@@ -204,12 +204,12 @@ class SpravaController extends Controller {
 		
 		$updated = Tables\Desk::updateMany($this->pdo, $desks['update']);
 		if($updated > 0){
-			$this->message("$updated bylo upraveno.");
+			$this->message->info("$updated stolů bylo upraveno.");
 		}
 		
 		$deleted = Tables\Desk::deleteMany($this->pdo, $desks['delete']);
 		if($deleted > 0){
-			$this->message("$deleted stolů bylo smazáno.");
+			$this->message->info("$deleted stolů bylo smazáno.");
 		}
 		
 		$this->redirectPars('sprava', 'stoly');
@@ -315,9 +315,9 @@ class SpravaController extends Controller {
 
 		$result = MailManager::send($users, $body, $subject);
 		if ($result['result']) {
-			$this->message($result['message'], \libs\MessageBuffer::LVL_SUC);
+			$this->message->success($result['message']);
 		} else {
-			$this->message($result['message'], \libs\MessageBuffer::LVL_DNG);
+			$this->message->danger($result['message']);
 		}
 
 		$this->redirectPars('sprava', $this->getDefaultAction());

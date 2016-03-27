@@ -127,26 +127,26 @@ class RezervaceController extends Controller {
 
 
 		if (!$reservation->readyForInsert()) {
-			$this->message('Vstupní pole rezervace nebyla správně vyplněna - rezervae nebyla přidána');
+			$this->message->warning('Vstupní pole rezervace nebyla správně vyplněna - rezervae nebyla přidána');
 			$this->redirectPars('rezervace', 'vypis');
 		}
 
 		$exists = Tables\Event::existsDuring($this->pdo, $reservation->reservation_date, DatetimeManager::reformat(['from' => $reservation->time_from, 'to' => $reservation->time_to], DatetimeManager::DB_TIME_ONLY));
 		if ($exists) {
-			$this->message("Ve vámi zadaný čas nebylo možné vytvořit rezervaci protože by se překrývala s událostí");
+			$this->message->warning("Ve vámi zadaný čas nebylo možné vytvořit rezervaci protože by se překrývala s událostí");
 			$this->redirectPars("rezervace", "vypis");
 		}
 
 		$v = $this->validateReservation($reservation, $game_type_id);
 		if (!$v['result']) {
-			$this->message($v['message'], \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning($v['message']);
 			$this->redirectPars('rezervace', 'vypis');
 		}
 		$reservation->game_box_id = $v['box']->game_box_id;
 		if (!Tables\Reservation::insert($this->pdo, $reservation)) {
-			$this->message('Při ukládání rezervace nastaly neočekávané potíže.', \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning('Při ukládání rezervace nastaly neočekávané potíže.');
 		} else {
-			$this->message('Rezervace byla úspěšně uložena.', \libs\MessageBuffer::LVL_SUC);
+			$this->message->success('Rezervace byla úspěšně uložena.');
 		}
 		$this->redirectPars('rezervace');
 	}
@@ -156,12 +156,12 @@ class RezervaceController extends Controller {
 		$reservation = Views\ReservationExtended::fetchById($this->pdo, $id);
 		
 		if(!$reservation){
-			$this->message("Reservace nebyla nalezena.", \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning("Reservace nebyla nalezena.");
 			$this->redirectPars("rezervace", $this->getDefaultAction());
 		}
 		
 		if(!$this->user->isAdministrator() && $this->user->user_id != $reservation->reservee_user_id){
-			$this->message("Pro odstranění rezervace nemáte dostatečná oprávnění", \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning("Pro odstranění rezervace nemáte dostatečná oprávnění");
 			$this->redirectPars('rezervace', 'detail', ['id' => $id]);
 		}
 		
@@ -171,10 +171,10 @@ class RezervaceController extends Controller {
 		
 		
 		if(!Tables\Reservation::delete($this->pdo, $id)){
-			$this->message("Při odstraňování rezervace nastaly neočekávané potíže.", \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning("Při odstraňování rezervace nastaly neočekávané potíže.");
 			$this->redirectPars('rezervace', 'detail', ['id' => $id]);
 		} 
-		$this->message("Rezervae byla úspěšně odstraněna", \libs\MessageBuffer::LVL_SUC);
+		$this->message->info("Rezervae byla úspěšně odstraněna");
 		$this->redirectPars("rezervace", $this->getDefaultAction());
 				
 	}
@@ -210,7 +210,7 @@ class RezervaceController extends Controller {
 		$id = $this->getParam('id');
 		$reservation = $this->prepareReservation($id);
 		if (empty($reservation)) {
-			$this->message("Požadovaná rezeravce číslo $id není k dispozici.");
+			$this->message->warning("Požadovaná rezeravce číslo $id není k dispozici.");
 			$this->redirectPars('rezervace', 'vypis');
 		}
 		$this->template['r'] = $reservation;
@@ -251,7 +251,11 @@ class RezervaceController extends Controller {
 			case 'odhlasit':
 				$result = $this->changeAttendancy($id, false);
 		}
-		$this->message($result['message'], $result['result'] ? \libs\MessageBuffer::LVL_SUC : \libs\MessageBuffer::LVL_WAR);
+		if($result['result']){
+			$this->message->success($result['message']);
+		} else {
+			$this->message->warning($result['message']);
+		}
 		$this->redirectPars('rezervace', 'detail', ['id' => $id]);
 	}
 

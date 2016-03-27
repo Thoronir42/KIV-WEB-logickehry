@@ -26,11 +26,11 @@ class OhlasController extends Controller {
 	public function startUp() {
 		parent::startUp();
 		if (!$this->user->isLoggedIn()) {
-			$this->message('Pro psaní ohlasů musíte být přihlášeni.');
+			$this->message->warning('Pro psaní ohlasů musíte být přihlášeni.');
 			$this->redirectPars();
 		}
 		if (!Config::FEEDBACK_ENABLED) {
-			$this->message('Ohlasy zpětné vazby nejsou v tento moment povoleny');
+			$this->message->info('Ohlasy zpětné vazby nejsou v tento moment povoleny');
 			$this->redirectPars();
 		}
 		$this->template['pageTitle'] = 'Zpětná vazba';
@@ -47,16 +47,16 @@ class OhlasController extends Controller {
 		$fb->user_id = $this->user->user_id;
 		$fb->created = date(DatetimeManager::DB_FULL);
 		if (Tables\Feedback::insert($this->pdo, $fb->asArray())) {
-			$this->message('Vaše zpětná vazba byla úspěšně uložena. Děkujeme.');
+			$this->message->success('Vaše zpětná vazba byla úspěšně uložena. Děkujeme.');
 		} else {
-			$this->message('Při ukládání vaší zpětné vazby nastaly potíže.', \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning('Při ukládání vaší zpětné vazby nastaly potíže.');
 		}
 		$this->redirectPars('ohlas', 'pridat');
 	}
 
 	public function renderZobrazitVsechny() {
 		if (!$this->user->isAdministrator()) {
-			$this->message('Detailní výpis ohlasů je dostupný pouze administrátorům', \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning('Detailní výpis ohlasů je dostupný pouze administrátorům');
 			$this->redirectPars();
 		}
 		$this->template['feedbackItems'] = Tables\Feedback::fetchAll($this->pdo);

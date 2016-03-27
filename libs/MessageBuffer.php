@@ -163,3 +163,35 @@ class MessageBuffer {
 	}
 
 }
+
+class MessageBufferInsertor{
+	
+	private $messageBuffer;
+	
+	public function __construct(MessageBuffer $messageBuffer) {
+		$this->messageBuffer = $messageBuffer;
+	}
+	
+	public function primary($message, $link = null){
+		$this->messageBuffer->log($message, MessageBuffer::LVL_PRI, $link);
+	}
+	
+	public function success($message, $link = null){
+		$this->messageBuffer->log($message, MessageBuffer::LVL_SUC, $link);
+	}
+	
+	public function info($message, $link = null){
+		$this->messageBuffer->log($message, MessageBuffer::LVL_INF, $link);
+	}
+	
+	public function warning($message, $link = null){
+		$this->messageBuffer->log($message, MessageBuffer::LVL_WAR, $link);
+	}
+	
+	public function danger($message, $link = null){
+		$this->messageBuffer->log($message, MessageBuffer::LVL_DNG, $link);
+	}
+	
+	
+}
+

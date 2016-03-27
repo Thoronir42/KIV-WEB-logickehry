@@ -20,16 +20,16 @@ class UdalostController extends Controller {
 		$resrvations = Views\ReservationExtended::fetchWithinTimespan($this->pdo, DatetimeManager::format(['time_from' => strtotime($event->time_from), 'time_to' => strtotime($event->time_to)], DatetimeManager::DB_FULL));
 		$total = count($resrvations);
 		if ($total > 0) {
-			$this->message(sprintf('V den %s není možné vytvořit událost, vytvoření blokuje %d %s.', date(DatetimeManager::HUMAN_DATE_ONLY, strtotime($event->event_date)), $total, $total >= 5 ? 'rezervací' : 'rezervace'), \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning(sprintf('V den %s není možné vytvořit událost, vytvoření blokuje %d %s.', date(DatetimeManager::HUMAN_DATE_ONLY, strtotime($event->event_date)), $total, $total >= 5 ? 'rezervací' : 'rezervace'));
 			$this->redirectPars('rezervace', 'vypis');
 		}
 		$id = Tables\Event::insert($this->pdo, $event);
 		if ($id) {
-			$this->message("Událost $event->event_title byla úspěšně vytvořena.", \libs\MessageBuffer::LVL_SUC);
+			$this->message->success("Událost $event->event_title byla úspěšně vytvořena.");
 			$this->redirectPars('udalost', 'zobrazit', ['id' => $id]);
 		}
 
-		$this->message("Při vytváření události nastaly potíže.", \libs\MessageBuffer::LVL_WAR);
+		$this->message->warning("Při vytváření události nastaly potíže.");
 		$this->redirectPars("rezervace", "vypis");
 	}
 
@@ -39,7 +39,7 @@ class UdalostController extends Controller {
 		$id = $this->getParam('id');
 		$event = Tables\Event::fetchById($this->pdo, $id);
 		if (!$event) {
-			$this->message("Událost č. $id nebyla nalezena");
+			$this->message->warning("Událost č. $id nebyla nalezena");
 			$this->redirectPars('rezervace', 'vypis');
 		}
 		
@@ -74,7 +74,7 @@ class UdalostController extends Controller {
 		$event->author_user_id = $this->user->user_id;
 		
 		if(!$event->readyForInsert()){
-			$this->message('Pole události nebyla vyplněna správně, tato obsahovala chyby: '.implode(", ", array_keys($event->misc['missing'])));
+			$this->message->warning('Pole události nebyla vyplněna správně, tato obsahovala chyby: '.implode(", ", array_keys($event->misc['missing'])));
 			$this->redirectPars('udalost', 'upravit', ['id' => $event->event_id]);
 		}
 		
@@ -83,9 +83,9 @@ class UdalostController extends Controller {
 		unset($values['event_id']);
 		
 		if(Tables\Event::update($this->pdo, $values, $id)){
-			$this->message("Událost byla úspěšně upravena");
+			$this->message->success("Událost byla úspěšně upravena");
 		} else {
-			$this->message("Při ukládání úprav nastala neočekávaná chyba");
+			$this->message->danger("Při ukládání úprav nastala neočekávaná chyba");
 		}
 		
 		$this->redirectPars("udalost", "zobrazit", ['id' => $id]);
@@ -95,7 +95,7 @@ class UdalostController extends Controller {
 		$id = $this->getParam('id');
 		
 		if(Tables\Event::delete($this->pdo, $id)){
-			$this->message("Událost byla odstraněna");
+			$this->message->info("Událost byla odstraněna");
 		}
 		$this->redirectPars("rezervace", "vypis");
 	}

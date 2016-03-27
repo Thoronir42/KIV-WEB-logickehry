@@ -42,7 +42,7 @@ class UzivatelController extends Controller {
 			if ($check == 'prihlas') {
 				return;
 			}
-			$this->message("Do uživatelské sekce mají přístup jen přihlášení uživatelé.");
+			$this->message->info("Do uživatelské sekce mají přístup jen přihlášení uživatelé.");
 			$this->redirectPars(Controller::DEFAULT_CONTROLLER);
 		}
 	}
@@ -57,7 +57,7 @@ class UzivatelController extends Controller {
 		$orion_login = $this->getParam('login');
 		$user = Views\UserExtended::fetch($this->pdo, $orion_login);
 		if (!$user) {
-			$this->message("Uživatel s loginem $orion_login není veden.");
+			$this->message->warning("Uživatel s loginem $orion_login není veden v systému.");
 			$this->redirectPars();
 		}
 		$this->renderProfile($user);
@@ -101,9 +101,9 @@ class UzivatelController extends Controller {
 			"nickname" => trim($this->getParam("nickname", INPUT_POST)),
 		];
 		if (Tables\User::update($this->pdo, $pars)) {
-			$this->message("Vaše údaje byly zpracovány...", \libs\MessageBuffer::LVL_SUC);
+			$this->message->success("Vaše údaje byly zpracovány a uloženy");
 		} else {
-			$this->message("Při ukládání vašich údajů nastala chyba.", \libs\MessageBuffer::LVL_DNG);
+			$this->message->danger("Při ukládání vašich údajů nastala chyba.");
 		}
 
 		$this->redirectPars("uzivatel", $this->getDefaultAction());
@@ -111,8 +111,8 @@ class UzivatelController extends Controller {
 
 	public function doOdhlasitSe() {
 		Users::logout();
-		$this->message("Vaše odhlášení z aplikace proběhlo úspěšně.", \libs\MessageBuffer::LVL_INF);
-		$this->message("Pro přihlášení pod jiným účtem se nejdříve odhlašte z orion loginu", \libs\MessageBuffer::LVL_WAR, ['label' => "Odhlásit se", 'url' => self::PORTAL_LOGOUT_URL]);
+		$this->message->info("Vaše odhlášení z aplikace proběhlo úspěšně.");
+		$this->message->warning("Pro přihlášení pod jiným účtem se nejdříve odhlašte z orion loginu", ['label' => "Odhlásit se", 'url' => self::PORTAL_LOGOUT_URL]);
 		$this->redirectPars();
 	}
 
@@ -124,7 +124,7 @@ class UzivatelController extends Controller {
 
 	public function doPrihlaseni() {
 		if (!isset($_SESSION['orion_login'])) {
-			$this->message("Neplatny pokus o přihlášení!", \libs\MessageBuffer::LVL_WAR);
+			$this->message->warning("Neplatny pokus o přihlášení!");
 			$this->redirectPars();
 		}
 		$orion_login = $_SESSION["orion_login"];
@@ -132,15 +132,15 @@ class UzivatelController extends Controller {
 
 		$user = Users::login($this->pdo, $orion_login);
 		if (!$user) {
-			$this->message("Nepodařilo se pro vás vytvořit uživatelský účet", \libs\MessageBuffer::LVL_DNG);
+			$this->message->danger("Nepodařilo se pro vás vytvořit uživatelský účet");
 			$this->redirectPars();
 		}
 		switch ($user->loginStatus) {
 			case Users::LOGIN_NEW:
-				$this->message("Váš uživatelský účet byl úspěšně vytvořen, vítejte $orion_login", \libs\MessageBuffer::LVL_SUC);
+				$this->message->success("Váš uživatelský účet byl úspěšně vytvořen, vítejte $orion_login");
 				break;
 			case Users::LOGIN_SUCCESS:
-				$this->message("Vítejte zpět, $orion_login!", \libs\MessageBuffer::LVL_SUC);
+				$this->message->success("Vítejte zpět, $orion_login!");
 				break;
 		}
 		$this->redirectPars();

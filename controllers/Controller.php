@@ -4,7 +4,8 @@ namespace controllers;
 
 use libs\URLgen,
 	libs\MessageBuffer,
-	libs\DatetimeManager;
+	libs\DatetimeManager,
+	libs\MessageBufferInsertor;
 
 use model\database\views\UserExtended;
 use model\Users;
@@ -31,6 +32,9 @@ abstract class Controller {
 
 	/** @var MessageBuffer */
 	var $mb;
+	
+	/**	@var MessageBufferInsertor */
+	var $message;
 
 	/** @var array */
 	var $template;
@@ -55,6 +59,7 @@ abstract class Controller {
 		$this->pdo = $support['pdo'];
 		$this->urlGen = $support['urlgen'];
 		$this->mb = $support['mb'];
+		$this->message = new MessageBufferInsertor($this->mb);
 
 		if (isset($support['url'])) {
 			$this->controller = $support['url']['controller'];
@@ -169,10 +174,6 @@ abstract class Controller {
 			}
 		}
 		$this->template['js'][] = $js;
-	}
-
-	public function message($text, $level = MessageBuffer::LVL_INF, $link = null) {
-		$this->mb->log($text, $level, $link);
 	}
 
 	public function redirect($location) {
