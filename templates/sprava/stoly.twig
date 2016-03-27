@@ -8,10 +8,10 @@
 		<div class="panel-body">
 			<div class="row">
 				<div class="col-md-offset-3 col-md-6">
-					<form action="action" class="form-inline">
+					<form action="{{ urlgen.url(addForm['action']) }}" method="POST" class="form-inline">
 						<span class="input-group">
 							<div class="form-group">
-								<input type="number" name="table_number" placeholder="Číslo stolu" class="form-control">
+								<input type="number" name="desk_id" placeholder="Číslo stolu" class="form-control">
 							</div>
 							<div class="form-group">    
 								<input type="number" name="capacity" placeholder="Počet míst" class="form-control">
@@ -25,30 +25,34 @@
 				</div>
 			</div>
 			<br/>
-			<form >
+			
+			<form method="post" action="{{ urlgen.url(editForm['action']) }}">
 				<div class="row">
-					{% for desk in desks %}
-						<div class="col-md-4">
+					{% for desk in editForm['desks'] %}
+						<fieldset class="col-md-3" name="desk_{{ desk.getDeskNumber() }}">
 							<span class="input-group">
-								<span class="input-group-addon">
-									{{ desk.desk_number }}
-								</span>
-								<input type="text" name="capacity" class="form-control" value="{{ desk.capacity }}">
-								<span class="input-group-addon">
-									<input type="checkbox" value="desk_enabled" class="btn btn-danger" {% if desk.is_enabled %} checked {% endif %}>
+								<span class="input-group-addon">{{ desk.getId() }}</span>
+								<input type="number" name="desk_{{ desk.getId() }}[capacity]" class="form-control" value="{{ desk.getCapacity() }}">
+								<span class="input-group-addon label-danger">
+									<label for="desk_{{ desk.getDeskNumber() }}[delete]">
+										<input type="checkbox" name="desk_{{ desk.getId() }}[delete]">
+										<span class="label  label-danger" ><span class="glyphicon glyphicon-trash"></span></span>
+									</label>
 								</span>
 							</span>
-						</div>
+						</fieldset>
 					{% endfor %}
-					<div class="col-xs-12">
-						<br/>
-						<input type="submit" class="btn btn-primary" value="Uložit vše">
-					</div>
+					{% if editForm['desks'] is not empty %}
+						<div class="col-xs-12">
+							<br/>
+							<input type="submit" class="btn btn-primary" value="Uložit vše">
+						</div>
+					{% endif %}
 				</div>
 			</form>
 		</div>
 		<div class="panel-footer">
-			Počet rezervovatelných stolů: {{ desks|length }}
+			Počet rezervovatelných stolů: {{ editForm['desks']|length }}
 		</div>
 	</div>
 {% endblock%}

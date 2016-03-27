@@ -27,6 +27,13 @@ abstract class DB_Entity {
 		if (!is_null($pars)) {
 			$message .= "<br/>Querry was called with following parameters:<br/>";
 			foreach($pars as $key => $val){
+				if(is_array($val)){
+					$str = '';
+					foreach($val as $k => $v){
+						$str .= "$k => $v";
+					}
+					$val = sprintf('[%s]', implode(', ', $str));
+				}
 				$message .= "$key => $val <br/>";
 			}
 			
@@ -113,7 +120,7 @@ abstract class DB_Entity {
 	 * 
 	 */
 	public function readyForInsert() {
-		if (!isset($this->missing)) {
+		if (empty($this->missing)) {
 			return true;
 		}
 		return $this->checkRequiredProperties();

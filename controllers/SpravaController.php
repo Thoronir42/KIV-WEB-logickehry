@@ -159,9 +159,63 @@ class SpravaController extends Controller {
 	}
 
 	public function renderStoly() {
-		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
+		$this->template['addForm'] = ['action' => ['controller' => 'sprava', 'action' => 'pridatStul']];
+		
+		$this->template['editForm'] = ['action' => ['controller' => 'sprava', 'action' => 'upravitStoly']];
+		$this->template['editForm']['desks'] = Tables\Desk::fetchAll($this->pdo);
+	}
+	
+	public function doPridatStul(){
+		$desk = Tables\Desk::fromPOST();
+		if(!$desk->readyForInsert()){
+			$this->message('Některé položky nebyly vyplněny správně');
+			$this->redirectPars('sprava', 'stoly');
+		}
+		
+		$desks = [
+			['desk_id' => $desk->desk_id, 'capacity' => $desk->capacity]
+				];
+		$result = Tables\Desk::insertMany($this->pdo, $desks);
+		if($result['added']){
+			$this->message('Stůl byl úspěšně přidán');	
+		}
+		if($result['duplicate']){
+			$this->message->error('Stůl s číslem '.$desk->desk_id.' nemohl být přidán protože je již existuje');
+		}
+		
+		$this->redirectPars('sprava', 'stoly');
+	}
+	
+	public function doUpravitStoly(){
+		$desks = ['delete' => [], 'update' => []];
+		foreach($_POST as $key => $desk){
+			$desk['desk_id'] = explode('_', $key)[1];
+			
+			$keep = !isset($desk['delete']);
+			unset($desk['delete']);
+			
+			if($keep){
+				$desks['update'][] = $desk;
+			} else {
+				$desks['delete'][] = $desk['desk_id'];
+			}
+		}
+		
+		
+		$updated = Tables\Desk::updateMany($this->pdo, $desks['update']);
+		if($updated > 0){
+			$this->message("$updated bylo upraveno.");
+		}
+		
+		$deleted = Tables\Desk::deleteMany($this->pdo, $desks['delete']);
+		if($deleted > 0){
+			$this->message("$deleted stolů bylo smazáno.");
+		}
+		
+		$this->redirectPars('sprava', 'stoly');
 	}
 
+	
 	public function renderInventar() {
 		$retired = $this->getParam("retired");
 		$this->addCss("hra.css");
