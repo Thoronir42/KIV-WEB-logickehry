@@ -311,8 +311,8 @@ class SpravaController extends Controller {
 		$subject = $this->getParam('subject', INPUT_POST);
 		$body = $this->getParam('mail_body', INPUT_POST);
 
-		$users = ($gid == self::ALL_USERS_GT_ID) ? Tables\User::fetchAllLogins($this->pdo) : Views\Subscription::fetchUsersByGame($this->pdo, $gid);
-
+		$users = ($gid == self::ALL_USERS_GT_ID) ? Views\UserExtended::fetchAll($this->pdo) : Views\Subscription::fetchUsersByGame($this->pdo, $gid);
+		
 		$result = MailManager::send($users, $body, $subject);
 		if ($result['result']) {
 			$this->message->success($result['message']);

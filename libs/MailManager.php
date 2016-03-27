@@ -2,6 +2,8 @@
 
 namespace libs;
 
+use \model\database\views\UserExtended;
+
 /**
  * Description of MailManager
  *
@@ -9,9 +11,10 @@ namespace libs;
  */
 class MailManager {
 	
-	const MAIL_SERVER = "zcu.cz";
-	const FROM_NAME = "Deskař";
-	const FROM_ADDRESS = "deskar@logickehry.zcu.cz";
+	const MAIL_SERVER = 'zcu.cz';
+	const MAIL_SERVER_STUDENT_PREFIX = 'students.';
+	const FROM_NAME = 'Deskař';
+	const FROM_ADDRESS = 'deskar@logickehry.zcu.cz';
 
 	/**
 	 * 
@@ -26,7 +29,7 @@ class MailManager {
 	}
 
 	/**
-	 * @param String[] $users
+	 * @param UserExtended[] $users
 	 * @param String $body
 	 * @return boolean
 	 */
@@ -38,7 +41,7 @@ class MailManager {
 		$mail = self::getMailBoner();
 
 		foreach ($users as $u) {
-			$mail->addAddress("$u@" . self::MAIL_SERVER);
+			$mail->addAddress(self::getAddress($u));
 		}
 
 		$mail->Subject = $subject ? : self::getDefaultSubject();
@@ -52,6 +55,18 @@ class MailManager {
 
 	public static function getDefaultSubject() {
 		return "Oznámení aplikace " . \config\Config::APP_NAME;
+	}
+
+	/**
+	 * 
+	 * @param UserExtended $u
+	 */
+	private static function getAddress($u) {
+		$mailServer = self::MAIL_SERVER;
+		if($u->isStudent()){
+			$mailServer = self::MAIL_SERVER_STUDENT_PREFIX.$mailServer;
+		}
+		return $u->getOrionLogin().'@'.$mailServer;
 	}
 
 }

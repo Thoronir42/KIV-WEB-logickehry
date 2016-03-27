@@ -71,4 +71,8 @@ class UserExtended extends User {
 		$this->subscribedGames = $items;
 	}
 
+	public function getOrionLogin() {
+		return $this->orion_login;
+	}
+
 }

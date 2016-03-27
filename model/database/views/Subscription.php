@@ -34,13 +34,14 @@ class Subscription {
 	 * @return string[]
 	 */
 	public static function fetchUsersByGame($pdo, $game_type_id) {
-		$statement = $pdo->prepare("SELECT orion_login FROM subscribees "
+		$statement = $pdo->prepare("SELECT user_extended.* FROM subscribees "
+				. "JOIN user_extended ON subscribees.user_id = user_extended.user_id "
 				. "WHERE game_type_id = :gid");
 		if (!$statement->execute(['gid' => $game_type_id])) {
 			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return null;
 		}
-		return $statement->fetchAll(\PDO::FETCH_COLUMN);
+		return $statement->fetchAll(\PDO::FETCH_CLASS, UserExtended::class);
 	}
 
 	/**

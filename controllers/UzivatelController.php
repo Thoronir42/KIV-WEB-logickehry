@@ -97,8 +97,10 @@ class UzivatelController extends Controller {
 	}
 
 	public function doUlozitUdaje() {
-		$pars = ["orion_login" => $this->user->orion_login,
-			"nickname" => trim($this->getParam("nickname", INPUT_POST)),
+		$pars = [
+			'orion_login' => $this->user->orion_login,
+			'nickname' => trim($this->getParam("nickname", INPUT_POST)),
+			'is_student' => !empty($this->getParam("is_student", INPUT_POST))
 		];
 		if (Tables\User::update($this->pdo, $pars)) {
 			$this->message->success("Vaše údaje byly zpracovány a uloženy");

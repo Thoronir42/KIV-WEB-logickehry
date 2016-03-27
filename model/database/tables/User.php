@@ -41,7 +41,8 @@ class User extends DB_Entity {
 	public static function update($pdo, $pars) {
 		$statement = $pdo->prepare(
 				"UPDATE `web_logickehry_db`.`user` SET "
-				. "`nickname` = :nickname "
+				. "`nickname` = :nickname, "
+				. "`is_student` = :is_student "
 				. "WHERE `user`.`orion_login` = :orion_login"
 		);
 		if(!$statement->execute($pars)){
@@ -58,15 +59,6 @@ class User extends DB_Entity {
 	public static function count($pdo) {
 		$result = $pdo->query('SELECT count(orion_login) as count FROM `web_logickehry_db`.`user`');
 		return $result->fetch(\PDO::FETCH_ASSOC)['count'];
-	}
-
-	/**
-	 * 
-	 * @param \PDO $pdo
-	 */
-	public static function fetchAllLogins($pdo) {
-		$result = $pdo->query('SELECT orion_login FROM user');
-		return $result->fetchAll(\PDO::FETCH_COLUMN);
 	}
 
 	/**
@@ -120,6 +112,7 @@ class User extends DB_Entity {
 	var $orion_login;
 	var $nickname;
 	var $role_id;
+	var $is_student;
 	var $last_active;
 
 	public function isSupervisor() {
@@ -136,6 +129,10 @@ class User extends DB_Entity {
 
 	public function isLoggedIn() {
 		return (!empty($this->orion_login));
+	}
+	
+	public function isStudent(){
+		return $this->is_student;
 	}
 
 	public function __sleep() {

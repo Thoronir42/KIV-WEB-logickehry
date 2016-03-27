@@ -6,13 +6,18 @@
 	<div class="panel panel-default myDetails">
 		<div class="panel-body">
 			<form class="form-horizontal" action="{{ urlgen.url(form_action) }}" method="post">
-				<label for="nickname">Přezdívka</label>
-				<div class="input-group">
-					<input type="text" name ="nickname" class="form-control" value="{{ user.nickname }}">
-					<span class="input-group-btn">
-						<input type="submit" class="form-control btn btn-primary" value="Změnit přezdívku">
-					</span>
+				<div class="row">
+					<div class="col-md-8">
+						<label for="nickname">Přezdívka</label>
+						<input type="text" name ="nickname" class="form-control" value="{{ user.nickname }}">
+					</div>
+					<div class="col-md-4">
+						<label for="is_student" data-toggle="tooltip" title="Pouze důležité pro odesílání mailových upozornění">Jsem student</label>
+						<span class="form-control-static"><input type="checkbox" id="is_student" name="is_student" class="checkbox"{% if user.isStudent() %} checked {% endif %}></span>
+					</div>
 				</div>
+				<input type="submit" class=" btn btn-primary" value="Uložit údaje">
+
 			</form>
 		</div>
 	</div>
