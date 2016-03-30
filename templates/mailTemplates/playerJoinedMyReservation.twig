@@ -1,0 +1,10 @@
+{# empty Twig template #}
+
+{% extends 'mailTemplates/generic.twig' %}
+
+{% block mailBody %}
+Účast na Vaší rezervaci oznámil uživatel {{ userName }}.
+Detail této rezervace si můžete zobrazit <a href="{{ reservationUrl }}">přímo v aplikaci</a>.
+( {{ reservationUrl }} )
+
+{% endblock %}

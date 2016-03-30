@@ -66,6 +66,8 @@ class Loader {
 		$twig = Loader::getTwig(__DIR__ . '/../templates/');
 		$urlGen = Loader::getURLgen();
 		$buffer = Loader::getMessageBuffer();
+		
+		libs\Mail\MailBuilder::$twig = $twig;
 
 		return new \Dispatcher($pdo, $twig, $urlGen, $buffer);
 	}

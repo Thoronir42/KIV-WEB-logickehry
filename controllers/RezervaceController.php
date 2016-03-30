@@ -4,6 +4,7 @@ namespace controllers;
 
 use libs\DatetimeManager,
 	libs\ReservationManager;
+use libs\Mail\MailBuilder;
 use \model\database\tables as Tables,
 	\model\database\views as Views;
 
@@ -241,12 +242,23 @@ class RezervaceController extends Controller {
 	public function doUcast() {
 		$id = $this->getParam('id');
 		$co = $this->getParam('co');
+		
+		$reservation = Views\ReservationExtended::fetchById($this->pdo, $id);
+		$reserveeUser = Views\UserExtended::fetchById($this->pdo, $reservation->reservee_user_id);
+		
 		switch ($co) {
 			default:
 				$result = ['result' => false, 'message' => "Neplatná operace účasti, jsou vaše odkazy akutální?"];
 				break;
 			case 'prihlasit':
 				$result = $this->changeAttendancy($id, true);
+				if($result['result']){
+					$pars = [
+						'userName' => $this->user->getFullName(),
+						'reservationUrl' => $this->urlGen->url(['controller' => 'rezervace', 'action' => 'detail', 'id' => $id]),
+						];
+					MailBuilder::playerJoinedMyReservation($reserveeUser, $pars);
+				}
 				break;
 			case 'odhlasit':
 				$result = $this->changeAttendancy($id, false);
@@ -274,7 +286,7 @@ class RezervaceController extends Controller {
 		} else {
 			$insOk = Tables\Reservation::insertAttendee($this->pdo, $this->user->user_id, $reservation_id);
 			if ($insOk) {
-				return ['result' => true, 'message' => 'Byli jste úspěšně přihlášeni z rezervace'];
+				return ['result' => true, 'message' => 'Byli jste úspěšně přihlášeni k rezervaci'];
 			} else {
 				return ['result' => false, 'message' => 'Při přihlašování k rezervaci nastaly potíže'];
 			}
