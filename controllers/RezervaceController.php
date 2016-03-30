@@ -142,38 +142,40 @@ class RezervaceController extends Controller {
 			$this->message->warning('Při ukládání rezervace nastaly neočekávané potíže.');
 		} else {
 			$this->message->success('Rezervace byla úspěšně uložena.');
+			if ($reservation->isOpen()) {
+				$this->reservationCreatedSendMail($reservation->game_box_id);
+			}
 		}
 		$this->redirectPars('rezervace');
 	}
 
-	public function doSmazat(){
+	public function doSmazat() {
 		$id = $this->getParam('id');
 		$reservation = Views\ReservationExtended::fetchById($this->pdo, $id);
-		
-		if(!$reservation){
+
+		if (!$reservation) {
 			$this->message->warning("Reservace nebyla nalezena.");
 			$this->redirectPars("rezervace", $this->getDefaultAction());
 		}
-		
-		if(!$this->user->isAdministrator() && $this->user->user_id != $reservation->reservee_user_id){
+
+		if (!$this->user->isAdministrator() && $this->user->user_id != $reservation->reservee_user_id) {
 			$this->message->warning("Pro odstranění rezervace nemáte dostatečná oprávnění");
 			$this->redirectPars('rezervace', 'detail', ['id' => $id]);
 		}
-		
+
 		// send mail?
 		// $attendees = Tables\Reservation::fetchAttendees($this->pdo, $id);
-		
-		
-		
-		if(!Tables\Reservation::delete($this->pdo, $id)){
+
+
+
+		if (!Tables\Reservation::delete($this->pdo, $id)) {
 			$this->message->warning("Při odstraňování rezervace nastaly neočekávané potíže.");
 			$this->redirectPars('rezervace', 'detail', ['id' => $id]);
-		} 
+		}
 		$this->message->info("Rezervae byla úspěšně odstraněna");
 		$this->redirectPars("rezervace", $this->getDefaultAction());
-				
 	}
-	
+
 	/**
 	 * 
 	 * @param Tables\Reservation $reservation
@@ -217,8 +219,8 @@ class RezervaceController extends Controller {
 		$curUserSigned = array_key_exists($this->user->user_id, $reservation->allUsers);
 		$this->template['signAction'] = ['newVal' => !$curUserSigned,
 			'url' => ['controller' => 'rezervace', 'action' => 'ucast', 'id' => $id, 'co' => $curUserSigned ? 'odhlasit' : 'prihlasit']];
-		if($this->user->isAdministrator() || $this->user->user_id == $reservation->reservee_user_id){
-			$this->template['deleteLink'] = ['controller' => 'rezervace', 'action' => 'smazat', 'id' => $id]; 
+		if ($this->user->isAdministrator() || $this->user->user_id == $reservation->reservee_user_id) {
+			$this->template['deleteLink'] = ['controller' => 'rezervace', 'action' => 'smazat', 'id' => $id];
 		}
 	}
 
@@ -241,28 +243,28 @@ class RezervaceController extends Controller {
 	public function doUcast() {
 		$id = $this->getParam('id');
 		$co = $this->getParam('co');
-		
+
 		$reservation = Views\ReservationExtended::fetchById($this->pdo, $id);
 		$reserveeUser = Views\UserExtended::fetchById($this->pdo, $reservation->reservee_user_id);
-		
+
 		switch ($co) {
 			default:
 				$result = ['result' => false, 'message' => "Neplatná operace účasti, jsou vaše odkazy akutální?"];
 				break;
 			case 'prihlasit':
 				$result = $this->changeAttendancy($id, true);
-				if($result['result']){
+				if ($result['result']) {
 					$pars = [
 						'userName' => $this->user->getFullName(),
 						'reservationUrl' => $this->urlGen->url(['controller' => 'rezervace', 'action' => 'detail', 'id' => $id]),
-						];
+					];
 					MailBuilder::playerJoinedMyReservation($reserveeUser, $pars);
 				}
 				break;
 			case 'odhlasit':
 				$result = $this->changeAttendancy($id, false);
 		}
-		if($result['result']){
+		if ($result['result']) {
 			$this->message->success($result['message']);
 		} else {
 			$this->message->warning($result['message']);
@@ -290,6 +292,26 @@ class RezervaceController extends Controller {
 				return ['result' => false, 'message' => 'Při přihlašování k rezervaci nastaly potíže'];
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @param Tables\Reservation $reservation
+	 */
+	private function reservationCreatedSendMail($reservation_id) {
+		$reservation = Views\ReservationExtended::fetchById($this->pdo, $reservation_id);
+		$gameType = Views\GameTypeExtended::fetchById($this->pdo, $reservation->game_type_id);
+		$users = Views\Subscription::fetchUsersByGame($this->pdo, $reservation->game_type_id);
+
+		$dateTime = DatetimeManager::reformat($reservation->reservation_date, DatetimeManager::HUMAN_DATE_ONLY);
+		$dateTime .= ' ' . DatetimeManager::reformat($reservation->time_from, DatetimeManager::HUMAN_TIME_ONLY);
+
+		$pars = [
+			'gameName' => $gameType->getFullName(),
+			'reservationDate' => $dateTime,
+			'reservationUrl' => $this->urlGen->url(['controller' => 'rezervace', 'action' => 'detail', 'id' => $reservation_id]),
+		];
+		MailBuilder::openReservationCreated($users, $pars);
 	}
 
 }

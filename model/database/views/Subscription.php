@@ -31,7 +31,7 @@ class Subscription {
 	 * 
 	 * @param \PDO $pdo
 	 * @param int $game_type_id
-	 * @return string[]
+	 * @return UserExtended[]
 	 */
 	public static function fetchUsersByGame($pdo, $game_type_id) {
 		$statement = $pdo->prepare("SELECT user_extended.* FROM subscribees "

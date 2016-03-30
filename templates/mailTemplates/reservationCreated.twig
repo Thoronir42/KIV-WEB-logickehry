@@ -1,0 +1,9 @@
+{# empty Twig template #}
+{% extends 'mailTemplates/generic.twig' %}
+
+{% block mailBody %}
+Byla vytvořena otevřená rezervace hry {{ gameName }}, její konání je plánováno na {{ reservationDate }}.<br/>
+Máte-li zájem se této rezervace účastnit, můžete to dát na jevo <a href="{{ reservationUrl }}">přímo v aplikaci</a>.
+( {{ reservationUrl }} )
+
+{% endblock %}
