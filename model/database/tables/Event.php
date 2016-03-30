@@ -134,10 +134,11 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 	 * 
 	 * @param \PDO $pdo
 	 * @param Date $date
-	 * @param Time[] $time
+	 * @param Time $time_from
+	 * @param Time $time_to
 	 * @return boolean
 	 */
-	public static function existsDuring($pdo, $date, $time) {
+	public static function existsDuring($pdo, $date, $time_from, $time_to) {
 		$statement = $pdo->prepare('SELECT * FROM event'
 				. ' WHERE event_date = :date AND ( '
 				. ' ( time_from <= :time_from1 AND :time_from2 <= time_to ) OR'
@@ -145,8 +146,8 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 				. ')');
 		
 		$pars = ['date' => $date];
-		$pars['time_from1'] = $pars['time_from2'] = $time['from'];
-		$pars['time_to1'] = $pars['time_to2'] = $time['to'];
+		$pars['time_from1'] = $pars['time_from2'] = $time_from;
+		$pars['time_to1'] = $pars['time_to2'] = $time_to;
 		if (!$statement->execute($pars)) {
 			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;

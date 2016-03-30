@@ -88,20 +88,23 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 	 * @param Time $time_to
 	 */
 	public static function checkDeskAvailable($pdo, $desk_id, $date, $time_from, $time_to) {
-		$statement = $pdo->prepare('SELCT count(reservation_id) as count FROM reservation_extended '
+		$statement = $pdo->prepare('SELECT count(reservation_id) as count FROM reservation_extended '
 				. 'WHERE desk_id = :desk_id AND '
 				. 'reservation_date = :date AND ( '
 				. ' ( time_from <= :time_from1 AND :time_from2 <= time_to ) OR'
 				. ' ( time_from <= :time_to1   AND :time_to2   <= time_to )'
 				. ')');
-		$pars = ['desk_id' => $desk_id, 'date' => $date,
-			'time_from1' => $time_from, 'time_from2' => $time_from,
-			'time_to1' => $time_to, 'time_to2' => $time_to];
+		$pars = ['desk_id' => $desk_id, 'date' => $date];
+		$pars['time_from1'] = $pars['time_from2'] = $time_from;
+		$pars['time_to1'] = $pars['time_to2'] = $time_to;
+		
 		if (!$statement->execute($pars)) {
 			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
-		return $statement->fetch(\PDO::FETCH_COLUMN)['count'];
+		$result = $statement->fetch(\PDO::FETCH_COLUMN);
+		// result is count of colliding reservations with same desk
+		return !($result > 0);
 		
 	}
 

@@ -132,12 +132,6 @@ class RezervaceController extends Controller {
 			$this->redirectPars('rezervace', 'vypis');
 		}
 
-		$exists = Tables\Event::existsDuring($this->pdo, $reservation->reservation_date, DatetimeManager::reformat(['from' => $reservation->time_from, 'to' => $reservation->time_to], DatetimeManager::DB_TIME_ONLY));
-		if ($exists) {
-			$this->message->warning("Ve vámi zadaný čas nebylo možné vytvořit rezervaci protože by se překrývala s událostí");
-			$this->redirectPars("rezervace", "vypis");
-		}
-
 		$v = $this->validateReservation($reservation, $game_type_id);
 		if (!$v['result']) {
 			$this->message->warning($v['message']);
@@ -186,17 +180,22 @@ class RezervaceController extends Controller {
 	 * @return mixed[]
 	 */
 	private function validateReservation($reservation, $game_type_id) {
-		$isEvent = Tables\Event::existsDuring($this->pdo, DatetimeManager::format($reservation->reservation_date, DatetimeManager::DB_DATE_ONLY), DatetimeManager::format(['from' => $reservation->time_from, 'to' => $reservation->time_to], DatetimeManager::DB_TIME_ONLY));
-		if ($isEvent) {
+		$dateTime = [
+			'date' => DatetimeManager::reformat($reservation->reservation_date, DatetimeManager::DB_DATE_ONLY),
+			'time_from' => DatetimeManager::reformat($reservation->time_from, DatetimeManager::DB_TIME_ONLY),
+			'time_to' => DatetimeManager::reformat($reservation->time_to, DatetimeManager::DB_TIME_ONLY),
+		];
+		$eventExists = Tables\Event::existsDuring($this->pdo, $dateTime['date'], $dateTime['time_from'], $dateTime['time_to']);
+		if ($eventExists) {
 			return ['result' => false, 'message' => sprtintf('Ve vámi zvolený čas je již naplánovaná událost a nelze tedy uložit rezervaci.')];
 		}
 
 		if ($reservation->desk_id != Tables\Desk::NO_DESK) {
-			if (Views\ReservationExtended::checkDeskAvailable($this->pdo, $reservation->reservation_date, $reservation->time_from, $reservation->time_to)) {
+			if (!Views\ReservationExtended::checkDeskAvailable($this->pdo, $reservation->desk_id, $dateTime['date'], $dateTime['time_from'], $dateTime['time_to'])) {
 				return ['result' => false, 'message' => \sprintf("Stůl č %02d je ve vámi zvolený čas obsazený", $reservation->desk_id)];
 			}
 		}
-		$boxes = Views\ReservationExtended::getAvailableGameBox($this->pdo, $game_type_id, $reservation->reservation_date, $reservation->time_from, $reservation->time_to);
+		$boxes = Views\ReservationExtended::getAvailableGameBox($this->pdo, $game_type_id, $dateTime['date'], $dateTime['time_from'], $dateTime['time_from']);
 
 		if ($boxes === false) {
 			return ['result' => false, 'message' => "Při kontrole použitých krabic nastala chyba."];
