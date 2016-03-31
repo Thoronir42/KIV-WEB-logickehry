@@ -17,6 +17,9 @@ class RezervaceController extends Controller {
 	public function startUp() {
 		parent::startUp();
 		$this->template['resRend'] = \model\ReservationRenderer::getInstance();
+		$this->addJs('moment-with-locales-min.js');
+		$this->addJs('bootstrap-datetimepicker.js');
+		$this->addCss('bootstrap-datetimepicker.min.css');
 	}
 
 	protected function buildSubmenu() {

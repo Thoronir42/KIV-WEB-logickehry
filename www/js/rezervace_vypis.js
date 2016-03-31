@@ -111,6 +111,24 @@ $(document).ready(function () {
 	if ($("#addReservation").attr("data-start-on-evt") === "true") {
 		toggleSlide(true, 'evt');
 	}
-
+	
+	
+	$('.clh-date-picker').each(function(){
+		$(this).datetimepicker({
+			locale: 'cs',
+			format: 'YYYY-MM-DD'
+		});
+		var dp = $(this).data('DateTimePicker');
+		dp.showTodayButton(true);
+	});
+	
+	$('.clh-time-picker').each(function(){
+		$(this).datetimepicker({
+			locale: 'cs',
+			format: 'HH:mm'
+		});
+		var dp = $(this).data('DateTimePicker');
+	});
+	
 
 });

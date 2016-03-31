@@ -1,0 +1,62 @@
+{# components/formAddEvent.twig #}
+
+<form class="form-horizontal" action="{{ urlgen.url(eventFormAction) }}" method="post">
+	<div class="row">
+		<div class="col-sm-3" id="game_type_list_res_col">
+			<label for="game_type_id" class="control-label">Spojit událost s hrou</label>
+			{% include "mini/game_type_list_group.twig" with {'games':eventGameList	, 'active':defaultGame, 'count': false} %}
+		</div>
+		<div class="col-lg-6 col-md-9">
+			<div class="row">
+				<div class="col-sm-4">
+					<label for="desk_id" class="control-label">Název události</label>
+					<input type="text" name="event_title"  class="form-control">
+				</div>
+				<div class="col-sm-4">
+					<label class="control-label" for="time_from">Začátek události</label>
+					<div class="input-group date clh-time-picker">
+						<input class="form-control" type="time" name="time_from" id="time_from">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-time"></span>
+						</span>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<label class="control-label" for="time_to">Konec události</label>
+					<div class="input-group date clh-time-picker">
+						<input class="form-control" type="time" name="time_to" id="time_to">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-time"></span>
+						</span>
+					</div>
+				</div>
+
+			</div>
+			<div class="row">
+				<div class="col-sm-7">
+					<label for="desk_id" class="control-label">Popisek události</label>
+					<input type="text" name="event_subtitle" class="form-control">
+				</div>
+				<div class="col-sm-5">
+					<label class="control-label" for="event_date">Datum události</label>
+					<div class="input-group date clh-date-picker">
+						<input type="date" name="event_date" class="form-control">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</span>
+					</div>
+				</div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-sm-offset-3 col-sm-6">
+					<input type="submit" class="form-control btn btn-primary" value="Vytvořit událost">
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12 col-lg-3">
+			<label for="description" class="control-label">Detaily události</label>
+			<textarea name="description"  class="form-control" rows="6"></textarea>
+		</div>
+	</div>
+</form>

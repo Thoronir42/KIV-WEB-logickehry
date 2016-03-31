@@ -1,0 +1,68 @@
+{# components/addReservation.twig #}
+
+<form class="form-horizontal" action="{{ urlgen.url(reservationFormAction) }}" method="post">
+	<div class="row">
+		<div class="col-sm-3" id="game_type_list_res_col">
+			<label for="game_type_id" class="control-label">Výběr hry</label>
+			{% include "mini/game_type_list_group.twig" with {'games':games, 'active':defaultGame, 'count': 'reservations'} %}
+		</div>
+		<div class="col-sm-9">
+			<div class="row">
+				<div class="col-sm-4">
+					<label for="desk_id" class="control-label">Stůl</label>
+					<select name="desk_id" class="form-control">
+						<option value="0">Nerezervovat stůl</option>
+						{% for d in desks %}
+							<option value="{{ d.desk_id}}">{{ 'Stůl %02d (míst: %d)'|format(d.desk_id, d.capacity) }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="col-sm-8">
+					<label class="control-label" for="reservation_type_id">Typ rezervace</label>
+					<select name="reservation_type_id" class="form-control">
+						{% for r in reservationTypes %}
+							<option value="{{ r.type}}">{{ r.label }}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<label class="control-label" for="reservation_date">Datum rezervace</label>
+					<div class="input-group date clh-date-picker">
+						<input type="date" name="reservation_date" class="form-control">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</span>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<label class="control-label" for="time_from">Začátek rezervace</label>
+					<div class="input-group date clh-time-picker">
+						<input class="form-control" type="time" name="time_from" id="time_from">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-time"></span>
+						</span>
+					</div>
+
+				</div>
+				<div class="col-sm-4">
+					<label class="control-label" for="time_from">Konec rezervace</label>
+					<div class="input-group date clh-time-picker">
+						<input class="form-control" type="time" name="time_to" id="time_to">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-time"></span>
+						</span>
+					</div>
+
+				</div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-sm-offset-3 col-sm-6">
+					<input type="submit" class="form-control btn btn-primary" value="Zarezervovat">
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

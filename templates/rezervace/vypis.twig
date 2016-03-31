@@ -52,104 +52,11 @@
 				
 			</div>
 			<div class="panel-body" id="reservationBody">
-				<form class="form-horizontal" action="{{ urlgen.url(reservationFormAction) }}" method="post">
-					<div class="row">
-						<div class="col-sm-3" id="game_type_list_res_col">
-							<label for="game_type_id" class="control-label">Výběr hry</label>
-							{% include "mini/game_type_list_group.twig" with {'games':games, 'active':defaultGame, 'count': 'reservations'} %}
-						</div>
-						<div class="col-sm-9">
-							<div class="row">
-								<div class="col-sm-4">
-									<label for="desk_id" class="control-label">Stůl</label>
-									<select name="desk_id" class="form-control">
-										<option value="0">Nerezervovat stůl</option>
-										{% for d in desks %}
-											<option value="{{ d.desk_id}}">{{ 'Stůl %02d (míst: %d)'|format(d.desk_id, d.capacity) }}</option>
-										{% endfor %}
-									</select>
-								</div>
-								<div class="col-sm-8">
-									<label class="control-label" for="reservation_type_id">Typ rezervace</label>
-									<select name="reservation_type_id" class="form-control">
-										{% for r in reservationTypes %}
-											<option value="{{ r.type}}">{{ r.label }}</option>
-										{% endfor %}
-									</select>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-4">
-									<label class="control-label" for="reservation_date">Datum rezervace</label>
-									<input type="date" name="reservation_date" class="form-control">
-								</div>
-								<div class="col-sm-4">
-									<label class="control-label" for="time_from">Začátek rezervace</label>
-									<input class="form-control" type="time" name="time_from" id="time_from">
-								</div>
-								<div class="col-sm-4">
-									<label class="control-label" for="time_from">Konec rezervace</label>
-									<input class="form-control" type="time" name="time_to" id="time_to">
-								</div>
-							</div>
-							<br/>
-							<div class="row">
-								<div class="col-sm-offset-3 col-sm-6">
-									<input type="submit" class="form-control btn btn-primary" value="Zarezervovat">
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
-
+				{% include 'components/formAddReservation.twig' %}
 			</div>
 			{% if user.isAdministrator() %}
 				<div class="panel-body" id="eventBody">
-					<form class="form-horizontal" action="{{ urlgen.url(eventFormAction) }}" method="post">
-						<div class="row">
-							<div class="col-sm-3" id="game_type_list_res_col">
-								<label for="game_type_id" class="control-label">Spojit událost s hrou</label>
-								{% include "mini/game_type_list_group.twig" with {'games':eventGameList	, 'active':defaultGame, 'count': false} %}
-							</div>
-							<div class="col-lg-6 col-md-9">
-								<div class="row">
-									<div class="col-sm-4">
-										<label for="desk_id" class="control-label">Název události</label>
-										<input type="text" name="event_title"  class="form-control">
-									</div>
-									<div class="col-sm-4">
-										<label class="control-label" for="time_from">Začátek události</label>
-										<input class="form-control" type="time" name="time_from" id="time_from">
-									</div>
-									<div class="col-sm-4">
-										<label class="control-label" for="time_from">Konec události</label>
-										<input class="form-control" type="time" name="time_to" id="time_to">
-									</div>
-
-								</div>
-								<div class="row">
-									<div class="col-sm-7">
-										<label for="desk_id" class="control-label">Popisek události</label>
-										<input type="text" name="event_subtitle" class="form-control">
-									</div>
-									<div class="col-sm-5">
-										<label class="control-label" for="reservation_date">Datum události</label>
-										<input type="date" name="event_date" class="form-control">
-									</div>
-								</div>
-								<br/>
-								<div class="row">
-									<div class="col-sm-offset-3 col-sm-6">
-										<input type="submit" class="form-control btn btn-primary" value="Vytvořit událost">
-									</div>
-								</div>
-							</div>
-							<div class="col-md-12 col-lg-3">
-								<label for="description" class="control-label">Detaily události</label>
-								<textarea name="description"  class="form-control" rows="6"></textarea>
-							</div>
-						</div>
-					</form>
+					{% include 'components/formAddEvent.twig' %}
 				</div>
 			</div>
 		{% endif %}
