@@ -15,26 +15,6 @@ class SpravaController extends Controller {
 		return "hry";
 	}
 
-	protected function buildSubmenu() {
-		$menu = [];
-		$menu[] = ["urlParams" => ["controller" => "sprava", "action" => "hry"],
-			"label" => "Hry"];
-		$menu[] = ["urlParams" => ["controller" => "sprava", "action" => "inventar"],
-			"label" => "Inventář"];
-		$menu[] = ["urlParams" => ["controller" => "sprava", "action" => "stoly"],
-			"label" => "Stoly"];
-		if ($this->user->isAdministrator()) {
-			$menu[] = ["separator" => true];
-			$menu[] = ["urlParams" => ["controller" => "sprava", "action" => "uzivatele"],
-				"label" => "Uživatelé"];
-			$menu[] = ["urlParams" => ["controller" => "sprava", "action" => "ovladaciPanel"],
-				"label" => "Ovládací panel"];
-			$menu[] = ["urlParams" => ["controller" => "sprava", "action" => "hromadnyMail"],
-				"label" => "Hromadný mail"];
-		}
-		return $menu;
-	}
-
 	public function startUp() {
 		parent::startUp();
 		if (!$this->user->isSupervisor()) {

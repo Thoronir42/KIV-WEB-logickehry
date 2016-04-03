@@ -36,16 +36,6 @@ class RezervaceController extends Controller {
 		$this->addCss('bootstrap-datetimepicker.min.css');
 	}
 
-	protected function buildSubmenu() {
-		return false;
-		/* $menu = [
-		  ["urlParams" => ["controller" => "rezervace", "action"=>"vypis"],
-		  "label" => "Vypis"
-		  ],
-		  ];
-		  return $menu; */
-	}
-
 	public function renderVypis() {
 		$this->addCss('input-specific.css');
 		$this->addJs('input-specific.js');

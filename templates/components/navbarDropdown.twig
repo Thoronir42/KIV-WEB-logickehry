@@ -1,0 +1,12 @@
+{# components/navbarDropdown.twig #}
+
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ nav['label']}}<span class="caret"></span></a>
+<ul class="dropdown-menu">
+{% for subnav in nav['dropdown'] %}
+	{% if subnav.separator %}
+		<li role="separator" class="divider"></li>
+	{% else %}
+		<li{% if subnav['active'] %} class="active"{% endif %}><a href="{{ urlgen.url(subnav['urlParams']) }}">{{ subnav['label'] }}</a></li>
+	{% endif %}
+{% endfor %}
+</ul>

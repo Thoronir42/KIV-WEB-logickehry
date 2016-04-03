@@ -16,14 +16,6 @@ class VypisController extends Controller {
 		return "hry";
 	}
 
-	protected function buildSubmenu() {
-		return false;
-		$menu = [];
-		$menu[] = ["urlParams" => ["controller" => "vypis", "action" => "hry"],
-			"label" => "Seznam her"];
-		return $menu;
-	}
-
 	public function startUp() {
 		parent::startUp();
 		$this->layout = 'layout.twig';

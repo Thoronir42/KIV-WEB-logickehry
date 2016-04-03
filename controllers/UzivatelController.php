@@ -21,20 +21,6 @@ class UzivatelController extends Controller {
 		return "mujProfil";
 	}
 
-	public static function buildUserActionsMenu($user) {
-
-		$changeDetails = ["urlParams" => ["controller" => "uzivatel", "action" => "mujProfil"],
-			"text" => "Můj profil"];
-		if (!$user->hasNickname()) {
-			$changeDetails['label'] = 'label-info';
-		}
-		$separator = ["separator" => true];
-		$logout = ["urlParams" => ["controller" => "uzivatel", "action" => "odhlasitSe"],
-			"text" => "Odhlásit se"];
-		$menu = [$changeDetails, $separator, $logout];
-		return $menu;
-	}
-
 	public function startUp() {
 		parent::startUp();
 		if (!$this->user->isLoggedIn()) {

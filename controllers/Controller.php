@@ -6,6 +6,7 @@ use libs\URLgen,
 	libs\MessageBuffer,
 	libs\DatetimeManager,
 	libs\MessageBufferInsertor;
+use libs\NavbarBuilder;
 
 use model\database\views\UserExtended;
 use model\Users;
@@ -45,9 +46,6 @@ abstract class Controller {
 	/** @var UserExtended */
 	var $user;
 
-	/** @var array */
-	var $navbar;
-
 	public function __construct($support) {
 		if ($support instanceof UserExtended) {
 			$this->user = $support;
@@ -60,13 +58,13 @@ abstract class Controller {
 		$this->message = $this->mb->getInsertor();
 
 		$this->user = Users::getCurrentUser($this->pdo);
-		$this->navbar = $this->createNavbar();
 		$this->layout = "layout.twig";
 		$this->template = [
 			'css' => ['bootstrap.css'],
 			'js' => ['jquery-2.1.4.min.js', 'bootstrap.js'],
 			'title' => \config\Config::APP_NAME,
 			'user' => $this->user,
+			'navbar' => $this->createNavbar(),
 			'badgeTpl' => \config\Config::BADGE,
 		];
 	}
@@ -74,37 +72,16 @@ abstract class Controller {
 	private function createNavbar(){
 		$navbar = [];
 		$navbar['app-name'] = \config\Config::APP_NAME;
+		
+		$navbar['menu'] = NavbarBuilder::navMenu($this->user, $this->urlGen->getController(), $this->urlGen->getAction());
 		if ($this->user->isLoggedIn()) {
-			$navbar['user_actions'] = UzivatelController::buildUserActionsMenu($this->user);
+			$navbar['user_actions'] = NavbarBuilder::userActions($this->user);
 		} else {
 			$navbar['login_url'] = ['controller' => 'uzivatel', 'action' => 'PrihlasitSe'];
 		}
 		$navbar['session_time'] = date(DatetimeManager::HUMAN_FULL, $_SESSION['LAST_ACTIVITY']);
-	}
-
-	private function buildMenu() {
-		$menu = [];
-		$menu[] = ["urlParams" => ["controller" => "rezervace", "action" => "vypis"],
-			"label" => "Rezervace"];
-		$menu[] = ["urlParams" => ["controller" => "vypis", "action" => "hry"],
-			"label" => "Seznam her"];
-
-		if ($this->user->isSupervisor()) {
-			$menu[] = ["urlParams" => ["controller" => "sprava", "action" => "hry"],
-				"label" => "Správa"];
-		}
-
-		foreach ($menu as $k => $v) {
-			$cont = \Dispatcher::getControler($v['urlParams']['controller'], $this->user);
-			if ($cont == null) {
-				continue;
-			}
-			$menu[$k]["dropdown"] = $cont->buildSubmenu();
-
-			unset($cont);
-		}
-
-		return $menu;
+		
+		return $navbar;
 	}
 
 	public function colSizeFromGet() {
@@ -119,38 +96,8 @@ abstract class Controller {
 		return 6;
 	}
 
-	protected function buildSubmenu() {
-		return false;
-	}
-
 	public function startUp() {
-		$menu = $this->buildMenu();
-		$controller = $this->urlGen->getController();
-		$this->navbar['menu'] = $this->activeMenuParse($menu, 'controller', $controller, true);
-		$this->template['navbar'] = $this->navbar;
 		$this->addCss("default.css");
-	}
-
-	private function activeMenuParse($menu, $checkKey, $checkVal, $continue = false) {
-		$currentAction = $this->urlGen->getAction();
-		if (!$menu) {
-			return $menu;
-		}
-		foreach ($menu as $key => $val) {
-			if (!isset($val['urlParams'])) {
-				continue;
-			}
-			if ($val['urlParams'][$checkKey] == $checkVal) {
-				$menu[$key]['active'] = true;
-				$activeKey = $key;
-				//echo "Found active $checkKey : $val[label]<br>";
-				break;
-			}
-		}
-		if (isset($activeKey) && $continue) {
-			$menu[$activeKey]['dropdown'] = $this->activeMenuParse($menu[$activeKey]['dropdown'], "action", $currentAction);
-		}
-		return $menu;
 	}
 
 	protected function getParam($name, $method = INPUT_GET) {

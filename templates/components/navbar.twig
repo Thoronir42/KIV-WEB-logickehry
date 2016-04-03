@@ -17,23 +17,13 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		<ul class="nav navbar-nav">
 		{% for nav in navbar['menu'] %}
-			
-			{% if nav['dropdown'] %}
-				<li class="dropdown{% if nav['active'] %} active{% endif %}">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ nav['label']}}<span class="caret"></span></a>
-				<ul class="dropdown-menu">
-				{% for subnav in nav['dropdown'] %}
-				{% if subnav.separator %}
-					<li role="separator" class="divider"></li>
+			<li{% if nav['active'] %} class="active"{% endif %}>
+				{% if nav['dropdown'] %}
+					{% include 'components/navbarDropdown.twig' %}
 				{% else %}
-					<li{% if subnav['active'] %} class="active"{% endif %}><a href="{{ urlgen.url(subnav['urlParams']) }}">{{ subnav['label'] }}</a></li>
+					<a href="{{ urlgen.url(nav['urlParams']) }}">{{ nav['label'] }}<span class="sr-only">(current)</span></a>
 				{% endif %}
-				{% endfor %}
-				</ul>
-			  </li>
-			{% else %}
-				<li{% if nav['active'] %} class="active"{% endif %}><a href="{{ urlgen.url(nav['urlParams']) }}">{{ nav['label'] }}<span class="sr-only">(current)</span></a></li>
-			{% endif %}
+			</li>
 		{% endfor %}
 		</ul>
       <ul class="nav navbar-nav navbar-right">
@@ -48,7 +38,7 @@
 				{% if a.separator %}
 					<li role="separator" class="divider"></li>
 				{% else %}
-					<li><a href="{{ urlgen.url(a['urlParams']) }}">{% if a['label'] is not empty %}<span class="label {{ a['label'] }}">!</span> {% endif %}{{ a['text'] }}</a></li>
+					<li><a href="{{ urlgen.url(a['urlParams']) }}">{% if a['label'] is not empty %}<span class="label {{ a['label_class'] }}">!</span> {% endif %}{{ a['label'] }}</a></li>
 				{% endif %}
 				{% endfor %}
 				</ul>
