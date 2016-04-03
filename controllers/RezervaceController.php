@@ -8,8 +8,22 @@ use libs\Mail\MailBuilder;
 use \model\database\tables as Tables,
 	\model\database\views as Views;
 
-class RezervaceController extends Controller {
+use model\services\Reservations;
 
+class RezervaceController extends Controller {
+	
+	/** @var Reservations */
+	private $reservaions;
+	
+	public function __construct($support) {
+		parent::__construct($support);
+		if (!$this->pdo) {
+			return;
+		}
+		$this->reservaions = new Reservations($this->pdo);
+	}
+
+		
 	public static function getDefaultAction() {
 		return "vypis";
 	}
@@ -43,7 +57,7 @@ class RezervaceController extends Controller {
 		$timePars = DatetimeManager::getWeeksBounds($week);
 		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FULL);
 
-		$game_types = $this->prepareGames($dbTimePars);
+		$game_types = $this->prepareGames();
 
 		$game_type_id = $this->getParam("game_id");
 		if (Views\GameTypeExtended::fetchById($this->pdo, $game_type_id)) {
@@ -112,12 +126,15 @@ class RezervaceController extends Controller {
 
 	/**
 	 * 
-	 * @param mixed[] $timePars
 	 * @return Views\GameTypeExtended[]
 	 */
-	private function prepareGames($timePars) {
+	private function prepareGames() {
 		$games = Views\GameTypeExtended::fetchAllWithCounts($this->pdo);
-		$resCounts = Views\ReservationExtended::countByGametypeWithinTimespan($this->pdo, $timePars);
+		$date_from = DatetimeManager::format(strtotime('now'), DatetimeManager::DB_FULL);
+		$date_to = DatetimeManager::format(strtotime('+ 1 month'), DatetimeManager::DB_FULL);
+		
+		$resCounts = $this->reservaions->countWithin($date_from, $date_to);
+		
 		foreach ($resCounts as $count) {
 			$games[$count['game_type_id']]->reservationCount = $count['count'];
 		}

@@ -38,7 +38,8 @@ class UzivatelController extends Controller {
 	public function startUp() {
 		parent::startUp();
 		if (!$this->user->isLoggedIn()) {
-			$check = strtolower(substr($this->action, 0, 7));
+			$action = $this->urlGen->getAction();
+			$check = strtolower(substr($action, 0, 7));
 			if ($check == 'prihlas') {
 				return;
 			}

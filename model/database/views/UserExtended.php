@@ -2,7 +2,7 @@
 
 namespace model\database\views;
 
-use model\database\DB_Entity;
+use model\services\DB_Service;
 use \model\database\tables\User;
 
 /**
@@ -22,7 +22,7 @@ class UserExtended extends User {
 		$statement = $pdo->prepare("SELECT * FROM user_extended
 			WHERE orion_login = :ol");
 		if (!$statement->execute(['ol' => $orion_login])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return null;
 		}
 		return $statement->fetchObject(UserExtended::class);
@@ -38,7 +38,7 @@ class UserExtended extends User {
 		$statement = $pdo->prepare("SELECT * FROM user_extended
 			WHERE user_id = :id");
 		if (!$statement->execute(['id' => $user_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return null;
 		}
 		return $statement->fetchObject(UserExtended::class);

@@ -3,6 +3,7 @@
 namespace model\database\tables;
 
 use model\database\DB_Entity;
+use model\services\DB_Service;
 
 /**
  * Description of User
@@ -37,7 +38,7 @@ class GameRating extends DB_Entity {
 				. "(`game_type_id`, `user_id`, `score`, `review`) "
 				. "VALUES (:game_type_id,  :user_id,  :score,  :review);");
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		return true;
@@ -54,7 +55,7 @@ class GameRating extends DB_Entity {
 		$statement = $pdo->prepare("DELETE FROM `web_logickehry_db`.`game_rating` "
 				. "WHERE `game_type_id` = :gid AND `user_id` = :uid;");
 		if (!$statement->execute(['gid' => $game_type_id, 'uid' => $user_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;

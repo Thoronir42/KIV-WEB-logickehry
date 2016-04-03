@@ -2,6 +2,7 @@
 
 namespace model\database\tables;
 use model\database\DB_Entity;
+use model\services\DB_Service;
 
 use libs\DatetimeManager;
 /**
@@ -39,7 +40,7 @@ class Feedback extends DB_Entity {
 				. '(`feedback_type`, `user_id`, `label`, `description`, `created`) '
 				. 'VALUES (:feedback_type, :user_id, :label, :description, :created);');
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		return true;
@@ -55,7 +56,7 @@ class Feedback extends DB_Entity {
 				. 'SET resolved = NOW() '
 				. 'WHERE feedback_id = :fid');
 		if (!$statement->execute(['fid' => $feedback_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;
@@ -71,7 +72,7 @@ class Feedback extends DB_Entity {
 				. 'SET resolved = NULL '
 				. 'WHERE feedback_id = :fid');
 		if (!$statement->execute(['fid' => $feedback_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;
@@ -93,7 +94,7 @@ class Feedback extends DB_Entity {
 
 		$statement = $pdo->prepare($sql);
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return null;
 		}
 		return $statement->fetchAll(\PDO::FETCH_CLASS, Feedback::class);
@@ -108,7 +109,7 @@ class Feedback extends DB_Entity {
 		$statement = $pdo->prepare("SELECT * FROM feedback "
 				. "WHERE feedback_id = :id");
 		if (!$statement->execute(['id' => $id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return null;
 		}
 		return $statement->fetch(\PDO::FETCH_CLASS, Feedback::class);

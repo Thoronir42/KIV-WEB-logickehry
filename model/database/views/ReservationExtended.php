@@ -2,7 +2,7 @@
 
 namespace model\database\views;
 
-use model\database\DB_Entity;
+use model\services\DB_Service;
 use \model\database\tables\Reservation;
 
 use \model\database\IRenderableWeekEntity;
@@ -22,24 +22,7 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 	 * @return ReservationExtended[]
 	 */
 	public static function fetchWithinTimespan($pdo, $pars, $user_id = null) {
-		$sql = $user_id ?
-				("SELECT reservation_extended.* FROM `reservation_extended` "
-				. "LEFT JOIN reservation_users AS ru ON ru.reservation_id = reservation_extended.reservation_id "
-				. "WHERE reservation_date >= :time_from AND reservation_date < :time_to "
-				. "AND (reservation_extended.reservee_user_id = :uid1 OR ru.user_id = :uid2) "
-				. "ORDER BY time_from ASC") :
-				("SELECT * FROM `reservation_extended` "
-				. "WHERE reservation_date >= :time_from AND reservation_date < :time_to "
-				. "ORDER BY time_from ASC");
-		if ($user_id) {
-			$pars['uid1'] = $pars['uid2'] = $user_id;
-		}
-		$statement = $pdo->prepare($sql);
-		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
-			return null;
-		}
-		return $statement->fetchAll(\PDO::FETCH_CLASS, ReservationExtended::class);
+		
 	}
 
 	public static function fetchWithinTimespanByUser($pdo, $pars, $user_id) {
@@ -56,29 +39,13 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 		$statement = $pdo->prepare("SELECT * FROM `reservation_extended` "
 				. "WHERE reservation_id = :id ");
 		if (!$statement->execute(['id' => $id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return null;
 		}
 		return $statement->fetchObject(ReservationExtended::class);
 	}
 
-	/**
-	 * 
-	 * @param \PDO $pdo
-	 * @param mixed[] $pars
-	 * @return mixed[]
-	 */
-	public static function countByGametypeWithinTimespan($pdo, $pars) {
-		$statement = $pdo->prepare("SELECT game_type_id, count(reservation_id) as count FROM `reservation_extended` "
-				. "WHERE reservation_date >= :time_from AND reservation_date <= :time_to "
-				. "GROUP BY game_type_id");
-		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
-			return null;
-		}
-		return $statement->fetchAll(\PDO::FETCH_ASSOC);
-	}
-
+	
 	/**
 	 * 
 	 * @param \PDO $pdo
@@ -99,7 +66,7 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 		$pars['time_to1'] = $pars['time_to2'] = $time_to;
 		
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		$result = $statement->fetch(\PDO::FETCH_COLUMN);
@@ -130,7 +97,7 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 			'time_from1' => $time_from, 'time_from2' => $time_from,
 			'time_to1' => $time_to, 'time_to2' => $time_to];
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		$boxesInUse = $statement->fetchAll(\PDO::FETCH_COLUMN);
@@ -160,7 +127,7 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 			$pars['time_to1'] = $pars['time_to2'] = $time['to'];
 		}
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		$return = [];

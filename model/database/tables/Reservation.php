@@ -3,6 +3,7 @@
 namespace model\database\tables;
 
 use model\database\DB_Entity;
+use model\services\DB_Service;
 
 use libs\DatetimeManager;
 
@@ -45,7 +46,7 @@ class Reservation extends DB_Entity {
 			'time_from' => date(DatetimeManager::DB_TIME_ONLY, strtotime($res->time_from)),
 			'desk_id' => $res->desk_id];
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		return true;
@@ -61,7 +62,7 @@ class Reservation extends DB_Entity {
 		$statement = $pdo->prepare('DELETE FROM `web_logickehry_db`.`reservation_users` '
 				. 'WHERE user_id = :uid AND reservation_id = :rid');
 		if (!$statement->execute(['uid' => $user_id, 'rid' => $reservation_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;
@@ -77,7 +78,7 @@ class Reservation extends DB_Entity {
 		$statement = $pdo->prepare('INSERT INTO `web_logickehry_db`.`reservation_users` '
 				. '(`user_id`, `reservation_id`) VALUES ( :uid, :rid )');
 		if (!$statement->execute(['uid' => $user_id, 'rid' => $reservation_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;
@@ -95,7 +96,7 @@ class Reservation extends DB_Entity {
 		$statement = $pdo->prepare($sql);
 		
 		if(!$statement->execute(['rid' => $id])){
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return $statement->fetchAll(\PDO::FETCH_COLUMN);
@@ -110,7 +111,7 @@ class Reservation extends DB_Entity {
 	public static function delete($pdo, $id) {
 		$statement = $pdo->prepare("DELETE FROM reservation WHERE reservation_id = :rid");
 		if(!$statement->execute(['rid' => $id])){
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;

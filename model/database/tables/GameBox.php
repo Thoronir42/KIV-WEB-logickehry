@@ -4,6 +4,8 @@ namespace model\database\tables;
 
 use model\database\DB_Entity;
 
+use model\services\DB_Service;
+
 /**
  * Description of GameBox
  *
@@ -24,7 +26,7 @@ class GameBox extends DB_Entity {
 				. "(`tracking_code`, `game_type_id`) "
 				. "VALUES ( :tracking_code,  :game_type_id);");
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		return true;
@@ -47,7 +49,7 @@ class GameBox extends DB_Entity {
 				. "WHERE `game_box`.`tracking_code` = :tracking_code"
 		);
 		if (!$statement->execute(['tracking_code' => $code])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return null;
 		}
 		return $box;

@@ -4,7 +4,8 @@ namespace model\database\views;
 
 use config\Config;
 
-use model\database\DB_Entity;
+use model\services\DB_Service;
+
 use \model\database\tables\GameRating;
 
 /**
@@ -25,7 +26,7 @@ class GameRatingExtended extends GameRating {
 		$statement = $pdo->prepare("SELECT * FROM `web_logickehry_db`.`game_rating_extended` "
 				. "WHERE `game_type_id` = :gid AND `user_id` = :uid;");
 		if (!$statement->execute(['gid' => $game_type_id, 'uid' => $user_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return true;
 		}
 		return $statement->fetchObject(self::class);
@@ -41,7 +42,7 @@ class GameRatingExtended extends GameRating {
 		$statement = $pdo->prepare("SELECT * FROM `web_logickehry_db`.`game_rating_extended` "
 				. "WHERE `user_id` = :uid;");
 		if (!$statement->execute(['uid' => $user_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return $statement->fetchAll(\PDO::FETCH_CLASS, self::class);
@@ -57,7 +58,7 @@ class GameRatingExtended extends GameRating {
 		$statement = $pdo->prepare("SELECT * FROM `web_logickehry_db`.`game_rating_extended` "
 				. "WHERE `game_type_id` = :gid;");
 		if (!$statement->execute(['gid' => $game_type_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return $statement->fetchAll(\PDO::FETCH_CLASS, self::class);

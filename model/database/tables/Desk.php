@@ -3,6 +3,7 @@
 namespace model\database\tables;
 
 use model\database\DB_Entity;
+use model\services\DB_Service;
 
 /**
  * Description of User
@@ -35,7 +36,7 @@ class Desk extends DB_Entity {
 		$return = ['added' => 0, 'duplicate' => 0];
 		foreach ($desks as $desk){
 			if(!$statement->execute($desk)){
-				DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $desk);
+				DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $desk);
 				if($statement->errorCode() == '23000'){
 					$return['duplicate']++;
 				}
@@ -72,7 +73,7 @@ class Desk extends DB_Entity {
 		}
 		
 		foreach($errors as $err){
-			DB_Entity::logError($err['error'], __CLASS__."::".__FUNCTION__, $statement->queryString, $err['pars']);
+			DB_Service::logError($err['error'], __CLASS__."::".__FUNCTION__, $statement->queryString, $err['pars']);
 		}
 		
 		return $changedRows;
@@ -88,7 +89,7 @@ class Desk extends DB_Entity {
 		$pars = ['desk_id' => implode(', ', $desk_ids)];
 		
 		if(!$statement->execute($pars)){
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		

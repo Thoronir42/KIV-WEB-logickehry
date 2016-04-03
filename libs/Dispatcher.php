@@ -63,11 +63,8 @@ class Dispatcher {
 		return ['pdo' => $this->pdo, 'urlgen' => $this->urlGen, 'mb' => $this->messageBuffer];
 	}
 
-	public function getControllerInstance($controllerName, $url = null) {
+	public function getControllerInstance($controllerName) {
 		$support = $this->packSupport();
-		if ($url) {
-			$support['url'] = $url;
-		}
 		$cont = self::getControler($controllerName, $support);
 		if (!$cont) {
 			return null;
@@ -82,13 +79,14 @@ class Dispatcher {
 	}
 
 	public function dispatch() {
-		$url = $this->urlGen->getContAct();
-		$contName = $url['controller'];
-		$action = $url['action'];
-		$cont = self::getControllerInstance($contName, $url);
+		
+		$contName = $this->urlGen->getController();
+		$action = $this->urlGen->getAction();
+		
+		$cont = self::getControllerInstance($contName);
 
 		if (!$contName || strlen($cont) < 1) {
-			$cont = $this->getControllerInstance(Controller::DEFAULT_CONTROLLER, $url);
+			$cont = $this->getControllerInstance(Controller::DEFAULT_CONTROLLER);
 			$cont->redirectPars(Controller::DEFAULT_CONTROLLER, $cont->getDefaultAction());
 		}
 		if (!$action || strlen($action) < 1) {

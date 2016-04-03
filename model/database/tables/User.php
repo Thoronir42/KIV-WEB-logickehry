@@ -4,6 +4,7 @@ namespace model\database\tables;
 
 use config\Config;
 use model\database\DB_Entity;
+use model\services\DB_Service;
 
 /**
  * Description of User
@@ -26,7 +27,7 @@ class User extends DB_Entity {
 		$statement = $pdo->prepare(
 				"INSERT INTO `web_logickehry_db`.`user` (`orion_login`) VALUES (:ol)");
 		if(!$statement->execute(['ol' => $orion_login])){
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;
@@ -46,7 +47,7 @@ class User extends DB_Entity {
 				. "WHERE `user`.`orion_login` = :orion_login"
 		);
 		if(!$statement->execute($pars)){
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;
@@ -76,7 +77,7 @@ class User extends DB_Entity {
 				. "WHERE `user`.`orion_login` = :orion_login"
 		);
 		if(!$statement->execute(['time' => $time, 'orion_login' => $orion_login])){
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;
@@ -96,7 +97,7 @@ class User extends DB_Entity {
 				. "WHERE `user`.`orion_login` = :orion_login"
 		);
 		if (!$statement->execute(['role' => $role_id, 'orion_login' => $orion_login])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;

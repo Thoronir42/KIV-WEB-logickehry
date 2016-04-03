@@ -2,7 +2,7 @@
 
 namespace model\database\views;
 
-use model\database\DB_Entity;
+use model\services\DB_Service;
 
 /**
  * Description of Subscription
@@ -21,7 +21,7 @@ class Subscription {
 		$statement = $pdo->prepare("SELECT game_type_id FROM subscription
 			WHERE user_id = :uid");
 		if (!$statement->execute(['uid' => $user_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return null;
 		}
 		return $statement->fetchAll(\PDO::FETCH_COLUMN);
@@ -38,7 +38,7 @@ class Subscription {
 				. "JOIN user_extended ON subscribees.user_id = user_extended.user_id "
 				. "WHERE game_type_id = :gid");
 		if (!$statement->execute(['gid' => $game_type_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return null;
 		}
 		return $statement->fetchAll(\PDO::FETCH_CLASS, UserExtended::class);
@@ -55,7 +55,7 @@ class Subscription {
 				. "JOIN subscription ON subscription.game_type_id = game_type_extended.game_type_id "
 				. "WHERE subscription.user_id = :uid");
 		if (!$statement->execute(['uid' => $user_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return null;
 		}
 		return $statement->fetchAll(\PDO::FETCH_CLASS, GameTypeExtended::class);
@@ -72,7 +72,7 @@ class Subscription {
 		$statement = $pdo->prepare("DELETE FROM subscription "
 				. "WHERE user_id = :uid AND game_type_id = :gid");
 		if (!$statement->execute(['uid' => $user_id, 'gid' => $game_type_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;
@@ -89,7 +89,7 @@ class Subscription {
 				. "(`user_id`, `game_type_id`) "
 				. "VALUES (:uid, :gid)");
 		if (!$statement->execute(['uid' => $user_id, 'gid' => $game_type_id])) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
 			return false;
 		}
 		return true;

@@ -3,6 +3,8 @@
 namespace model\database\tables;
 
 use model\database\DB_Entity;
+use model\services\DB_Service;
+
 use libs\ColorManager;
 
 /**
@@ -35,7 +37,7 @@ class GameType extends DB_Entity {
 				. "(`game_type_id`, `game_name`, `game_subtitle`, `avg_playtime`, `max_players`, `min_players`) "
 				. "VALUES ( :game_type_id,  :game_name,  :game_subtitle,  :avg_playtime,  :max_players,  :min_players )");
 		if (!$statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		return true;
@@ -58,7 +60,7 @@ class GameType extends DB_Entity {
 		
 		$pars['id'] = $id;
 		if ($statement->execute($pars)) {
-			DB_Entity::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
 		return true;

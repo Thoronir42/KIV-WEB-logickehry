@@ -9,7 +9,7 @@ use libs\URLgen,
 
 use model\database\views\UserExtended;
 use model\Users;
-use model\database\DB_Entity;
+use model\services\DB_Service;
 
 /**
  * Description of Controler
@@ -48,33 +48,19 @@ abstract class Controller {
 	/** @var array */
 	var $navbar;
 
-	/** @var String */
-	var $action, $controller;
-
 	public function __construct($support) {
 		if ($support instanceof UserExtended) {
 			$this->user = $support;
 			return;
 		}
+		
 		$this->pdo = $support['pdo'];
 		$this->urlGen = $support['urlgen'];
 		$this->mb = $support['mb'];
-
-		if (isset($support['url'])) {
-			$this->controller = $support['url']['controller'];
-			$this->action = $support['url']['action'];
-		}
 		$this->message = $this->mb->getInsertor();
 
 		$this->user = Users::getCurrentUser($this->pdo);
-		$this->navbar = [];
-		$this->navbar['app-name'] = \config\Config::APP_NAME;
-		if ($this->user->isLoggedIn()) {
-			$this->navbar['user_actions'] = UzivatelController::buildUserActionsMenu($this->user);
-		} else {
-			$this->navbar['login_url'] = ['controller' => 'uzivatel', 'action' => 'PrihlasitSe'];
-		}
-		$this->navbar['session_time'] = date(DatetimeManager::HUMAN_FULL, $_SESSION['LAST_ACTIVITY']);
+		$this->navbar = $this->createNavbar();
 		$this->layout = "layout.twig";
 		$this->template = [
 			'css' => ['bootstrap.css'],
@@ -83,6 +69,17 @@ abstract class Controller {
 			'user' => $this->user,
 			'badgeTpl' => \config\Config::BADGE,
 		];
+	}
+	
+	private function createNavbar(){
+		$navbar = [];
+		$navbar['app-name'] = \config\Config::APP_NAME;
+		if ($this->user->isLoggedIn()) {
+			$navbar['user_actions'] = UzivatelController::buildUserActionsMenu($this->user);
+		} else {
+			$navbar['login_url'] = ['controller' => 'uzivatel', 'action' => 'PrihlasitSe'];
+		}
+		$navbar['session_time'] = date(DatetimeManager::HUMAN_FULL, $_SESSION['LAST_ACTIVITY']);
 	}
 
 	private function buildMenu() {
@@ -128,12 +125,14 @@ abstract class Controller {
 
 	public function startUp() {
 		$menu = $this->buildMenu();
-		$this->navbar['menu'] = $this->activeMenuParse($menu, 'controller', $this->controller, true);
+		$controller = $this->urlGen->getController();
+		$this->navbar['menu'] = $this->activeMenuParse($menu, 'controller', $controller, true);
 		$this->template['navbar'] = $this->navbar;
 		$this->addCss("default.css");
 	}
 
 	private function activeMenuParse($menu, $checkKey, $checkVal, $continue = false) {
+		$currentAction = $this->urlGen->getAction();
 		if (!$menu) {
 			return $menu;
 		}
@@ -149,7 +148,7 @@ abstract class Controller {
 			}
 		}
 		if (isset($activeKey) && $continue) {
-			$menu[$activeKey]['dropdown'] = $this->activeMenuParse($menu[$activeKey]['dropdown'], "action", $this->action);
+			$menu[$activeKey]['dropdown'] = $this->activeMenuParse($menu[$activeKey]['dropdown'], "action", $currentAction);
 		}
 		return $menu;
 	}
@@ -198,7 +197,7 @@ abstract class Controller {
 	}
 
 	public function preRender() {
-		$messages = array_merge(DB_Entity::$message_buffer->getLog(), $this->mb->getLog());
+		$messages = array_merge(DB_Service::getErrorLog(), $this->mb->getLog());
 		$this->template['alert_messages'] = $messages;
 	}
 

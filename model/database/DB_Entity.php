@@ -2,44 +2,12 @@
 
 namespace model\database;
 
-use libs\MessageBuffer;
-
 /**
  * Description of DbEntityModel
  *
  * @author Stepan
  */
 abstract class DB_Entity {
-
-	/**
-	 * @var MessageBuffer
-	 */
-	public static $message_buffer;
-
-	public static function logError($errorInfo, $function, $sql = null, $pars = null) {
-		if (!\config\Config::LOG_DB_ERRORS) {
-			return;
-		}
-		$message = sprintf("DB error <strong>%s</strong> in function <strong>%s</strong>", $errorInfo[2], $function);
-		if (!is_null($sql)) {
-			$message .= "<br/>SQL: $sql";
-		}
-		if (!is_null($pars)) {
-			$message .= "<br/>Querry was called with following parameters:<br/>";
-			foreach($pars as $key => $val){
-				if(is_array($val)){
-					$str = '';
-					foreach($val as $k => $v){
-						$str .= "$k => $v";
-					}
-					$val = sprintf('[%s]', implode(', ', $str));
-				}
-				$message .= "$key => $val <br/>";
-			}
-			
-		}
-		self::$message_buffer->log($message, MessageBuffer::LVL_DNG);
-	}
 
 	/**
 	 * 

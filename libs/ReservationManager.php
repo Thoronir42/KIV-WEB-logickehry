@@ -2,6 +2,8 @@
 
 namespace libs;
 
+use model\services\Reservations;
+
 use model\database\views\ReservationExtended;
 use model\database\tables\Event;
 
@@ -26,7 +28,8 @@ class ReservationManager {
 	}
 
 	private static function prepareReservationDays($pdo, $timeFrom, $dbTimePars, $user_id = null) {
-		$reservations = ReservationExtended::fetchWithinTimespan($pdo, $dbTimePars, $user_id);
+		$resService = new Reservations($pdo);
+		$reservations = $resService->fetchWithin($dbTimePars['time_from'], $dbTimePars['time_to'],$user_id);
 		$events = Event::fetchWithinTimespan($pdo, $dbTimePars);
 		
 		$reservationDays = [];
