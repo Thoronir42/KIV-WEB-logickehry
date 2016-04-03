@@ -10,6 +10,8 @@ use libs\NavbarBuilder;
 
 use model\database\views\UserExtended;
 use model\Users;
+
+use libs\ReservationManager;
 use model\services\DB_Service;
 
 /**
@@ -45,6 +47,9 @@ abstract class Controller {
 
 	/** @var UserExtended */
 	var $user;
+	
+	/** @var type */
+	protected $reservationManager;
 
 	public function __construct($support) {
 		if ($support instanceof UserExtended) {
@@ -56,6 +61,7 @@ abstract class Controller {
 		$this->urlGen = $support['urlgen'];
 		$this->mb = $support['mb'];
 		$this->message = $this->mb->getInsertor();
+		$this->reservationManager = new ReservationManager($this->pdo);
 
 		$this->user = Users::getCurrentUser($this->pdo);
 		$this->layout = "layout.twig";

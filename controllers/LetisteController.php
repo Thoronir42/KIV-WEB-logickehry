@@ -29,7 +29,7 @@ class LetisteController extends Controller {
 			$week = 0;
 		}
 		
-		$rw = ReservationManager::prepareReservationWeek($this->pdo, $week);
+		$rw = $this->reservationManager->prepareReservationWeek($week);
 		$this->template["reservationDays"] = $rw['reservationDays'];
 		$this->template["pageTitle"] = $rw['pageTitle'];
 		$this->template["timeSpan"] = DatetimeManager::format($rw['timePars'], DatetimeManager::HUMAN_DATE_ONLY);

@@ -3,8 +3,8 @@
 namespace libs;
 
 use model\services\Reservations;
-
-use model\database\views\ReservationExtended;
+use model\services\Events;
+use model\database\IRenderableWeekEntity;
 use model\database\tables\Event;
 
 /**
@@ -14,24 +14,36 @@ use model\database\tables\Event;
  */
 class ReservationManager {
 
-	public static function prepareReservationWeek($pdo, $week = 0, $user_id = null) {
-		$timePars = DatetimeManager::getWeeksBounds($week);
-		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FULL);
+	/** @var Reservations */
+	private $reservations;
+
+	/** @var Events */
+	private $events;
+
+	public function __construct($pdo) {
+		$this->reservations = new Reservations($pdo);
+		$this->events = new Events($pdo);
+	}
+
+	public function prepareReservationWeek($week = 0, $user_id = null) {
+		$weekBounds = DatetimeManager::getWeeksBounds($week);
+		$dbTimePars = DatetimeManager::format($weekBounds, DatetimeManager::DB_FULL);
+
+		$reservations = $this->reservations->fetchWithin($dbTimePars['time_from'], $dbTimePars['time_to'], $user_id);
+		$events = $this->events->fetchWithinTimespan($dbTimePars);
+
+		$weekEntityGroups = ['events' => $events, 'reservations' => $reservations];
 
 		$return = [];
 
-		$return['reservationDays'] = self::prepareReservationDays($pdo, $timePars['time_from'], $dbTimePars, $user_id);
+		$return['reservationDays'] = self::prepareReservationDays($weekBounds['time_from'], $weekEntityGroups);
 		$return["pageTitle"] = self::makeVypisTitle($week);
-		$return['timePars'] = $timePars;
+		$return['timePars'] = $weekBounds;
 
 		return $return;
 	}
 
-	private static function prepareReservationDays($pdo, $timeFrom, $dbTimePars, $user_id = null) {
-		$resService = new Reservations($pdo);
-		$reservations = $resService->fetchWithin($dbTimePars['time_from'], $dbTimePars['time_to'],$user_id);
-		$events = Event::fetchWithinTimespan($pdo, $dbTimePars);
-		
+	private function createWeekContainer($timeFrom){
 		$reservationDays = [];
 
 		for ($i = 0; $i < 7; $i++) {
@@ -42,17 +54,25 @@ class ReservationManager {
 				'year' => date('Y', $day),
 			];
 		}
-		
-		foreach ($reservations as $r) {
-			$day = date("w", strtotime($r->getDate()));
-			$reservationDays[$day]['weekEntities'][] = $r;
+		return $reservationDays;
+	}
+	
+	/**
+	 * 
+	 * @param type $timeFrom
+	 * @param IRenderableWeekEntity[][] $weekEntityGroups
+	 * @return boolean
+	 */
+	private function prepareReservationDays($timeFrom, $weekEntityGroups) {
+		$reservationDays = $this->createWeekContainer($timeFrom);
+		foreach ($weekEntityGroups as $group) {
+			foreach ($group as $entity) {
+				$day = date("w", strtotime($entity->getDate()));
+				$reservationDays[$day]['weekEntities'][] = $entity;
+			}
 		}
-		foreach ($events as $e) {
-			$day = date("w", strtotime($e->getDate()));
-			$reservationDays[$day]['weekEntities'][] = $e;
-		}
-		for($i = 6; $i >= 0; $i--){
-			if(!empty($reservationDays[$i]['weekEntities'])){
+		for ($i = 6; $i >= 0; $i--) {
+			if (!empty($reservationDays[$i]['weekEntities'])) {
 				$reservationDays[$i]['last'] = true;
 				break;
 			}
@@ -60,7 +80,7 @@ class ReservationManager {
 		return $reservationDays;
 	}
 
-	private static function makeVypisTitle($week) {
+	private function makeVypisTitle($week) {
 		switch ($week) {
 			case -1: return "Výpis rezervací předcházejícího týdne";
 			case 0: return "Výpis rezervací aktuálního týdne";

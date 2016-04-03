@@ -54,7 +54,7 @@ class UzivatelController extends Controller {
 		$this->addCss('rezervace_vypis.css');
 		$this->template['rUser'] = $user;
 
-		$rw = ReservationManager::prepareReservationWeek($this->pdo, 0, $user->user_id);
+		$rw = $this->reservationManager->prepareReservationWeek(0, $user->user_id);
 		$this->template["reservationDays"] = $rw['reservationDays'];
 		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);
 		

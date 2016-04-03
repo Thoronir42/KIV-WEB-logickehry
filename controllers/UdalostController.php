@@ -6,18 +6,41 @@ use libs\DatetimeManager;
 use \model\database\tables as Tables,
 	\model\database\views as Views;
 
+use model\services\Reservations;
+use model\services\Events;
+
 /**
  * Description of UdalostController
  *
  * @author Stepan
  */
 class UdalostController extends Controller {
+	
+	/** @var Reservations */
+	private $reservations;
+	
+	/** @var Events */
+	private $events;
+	
+	public function __construct($support) {
+		parent::__construct($support);
+		
+		$this->reservations = new Reservations($this->pdo);
+		$this->events = new Events($this->pdo);
+	}
 
+	
 	public function doPridat() {
 		$event = Tables\Event::fromPOST();
 		$event->author_user_id = $this->user->user_id;
+		$dateTime = DatetimeManager::reformat(['time_from' => strtotime($event->time_from), 'time_to' => strtotime($event->time_to)], DatetimeManager::DB_TIME_ONLY);
+		$dateTime['date'] = DatetimeManager::reformat($event->event_date, DatetimeManager::DB_DATE_ONLY);
 		
-		$resrvations = Views\ReservationExtended::fetchWithinTimespan($this->pdo, DatetimeManager::format(['time_from' => strtotime($event->time_from), 'time_to' => strtotime($event->time_to)], DatetimeManager::DB_FULL));
+		$date_from = $dateTime['date'].' '.$dateTime['time_from'];
+		$date_to = $dateTime['date'].' '.$dateTime['time_to'];
+		
+		
+		$resrvations = $this->reservations->fetchWithin($date_from, $date_to);
 		$total = count($resrvations);
 		if ($total > 0) {
 			$this->message->warning(sprintf('V den %s není možné vytvořit událost, vytvoření blokuje %d %s.', date(DatetimeManager::HUMAN_DATE_ONLY, strtotime($event->event_date)), $total, $total >= 5 ? 'rezervací' : 'rezervace'));

@@ -116,24 +116,6 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 	/**
 	 * 
 	 * @param \PDO $pdo
-	 * @param mixed[] $pars
-	 * @return Event[]
-	 */
-	public static function fetchWithinTimespan($pdo, $pars) {
-		$sql = "SELECT * FROM `event` "
-				. "WHERE event_date >= :time_from AND event_date < :time_to "
-				. "ORDER BY time_from ASC";
-		$statement = $pdo->prepare($sql);
-		if (!$statement->execute($pars)) {
-			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
-			return null;
-		}
-		return $statement->fetchAll(\PDO::FETCH_CLASS, Event::class);
-	}
-
-	/**
-	 * 
-	 * @param \PDO $pdo
 	 * @param Date $date
 	 * @param Time $time_from
 	 * @param Time $time_to
