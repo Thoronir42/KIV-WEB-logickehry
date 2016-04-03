@@ -59,12 +59,12 @@ abstract class Controller {
 		$this->pdo = $support['pdo'];
 		$this->urlGen = $support['urlgen'];
 		$this->mb = $support['mb'];
-		$this->message = new MessageBufferInsertor($this->mb);
 
 		if (isset($support['url'])) {
 			$this->controller = $support['url']['controller'];
 			$this->action = $support['url']['action'];
 		}
+		$this->message = $this->mb->getInsertor();
 
 		$this->user = Users::getCurrentUser($this->pdo);
 		$this->navbar = [];

@@ -162,6 +162,14 @@ class MessageBuffer {
 		return array_key_exists($level, self::$MSG_LEVELS);
 	}
 
+	/**
+	 * 
+	 * @return MessageBufferInsertor
+	 */
+	public function getInsertor() {
+		return new MessageBufferInsertor($this);
+	}
+
 }
 
 class MessageBufferInsertor{
