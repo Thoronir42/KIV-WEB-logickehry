@@ -143,7 +143,7 @@ class RezervaceController extends Controller {
 
 	public function doRezervovat() {
 		$game_type_id = $this->getParam('game_type_id', INPUT_POST);
-		$reservation = \model\database\tables\Reservation::fromPOST();
+		$reservation = Tables\Reservation::fromPOST();
 		$reservation->reservee_user_id = $this->user->user_id;
 
 
@@ -171,7 +171,7 @@ class RezervaceController extends Controller {
 
 	public function doSmazat() {
 		$id = $this->getParam('id');
-		$reservation = Views\ReservationExtended::fetchById($this->pdo, $id);
+		$reservation = $this->reservaions->fetchById($id);
 
 		if (!$reservation) {
 			$this->message->warning("Reservace nebyla nalezena.");
@@ -245,26 +245,26 @@ class RezervaceController extends Controller {
 	}
 
 	private function prepareReservation($id) {
-		$r = Views\ReservationExtended::fetchById($this->pdo, $id);
-		if (empty($r)) {
+		$reservation = $this->reservaions->fetchById($id);
+		if (empty($reservation)) {
 			return null;
 		}
-		$r->user = Views\UserExtended::fetchById($this->pdo, $r->reservee_user_id);
-		$r->game = Views\GameTypeExtended::fetchById($this->pdo, $r->game_type_id);
-		$rUsers = [$r->user];
-		$users = Views\ReservationExtended::getUsers($this->pdo, $r->reservation_id);
+		$reservation->user = Views\UserExtended::fetchById($this->pdo, $reservation->reservee_user_id);
+		$reservation->game = Views\GameTypeExtended::fetchById($this->pdo, $reservation->game_type_id);
+		$rUsers = [$reservation->user];
+		$users = Views\ReservationExtended::getUsers($this->pdo, $reservation->reservation_id);
 		foreach ($users as $u) {
 			$rUsers[$u->user_id] = $u;
 		}
-		$r->allUsers = $rUsers;
-		return $r;
+		$reservation->allUsers = $rUsers;
+		return $reservation;
 	}
 
 	public function doUcast() {
 		$id = $this->getParam('id');
 		$co = $this->getParam('co');
 
-		$reservation = Views\ReservationExtended::fetchById($this->pdo, $id);
+		$reservation = $this->reservaions->fetchById($id);
 		$reserveeUser = Views\UserExtended::fetchById($this->pdo, $reservation->reservee_user_id);
 
 		switch ($co) {
@@ -314,12 +314,8 @@ class RezervaceController extends Controller {
 		}
 	}
 
-	/**
-	 * 
-	 * @param Tables\Reservation $reservation
-	 */
 	private function reservationCreatedSendMail($reservation_id) {
-		$reservation = Views\ReservationExtended::fetchById($this->pdo, $reservation_id);
+		$reservation = $this->reservaions->fetchById($reservation_id);
 		$gameType = Views\GameTypeExtended::fetchById($this->pdo, $reservation->game_type_id);
 		$users = Views\Subscription::fetchUsersByGame($this->pdo, $reservation->game_type_id);
 

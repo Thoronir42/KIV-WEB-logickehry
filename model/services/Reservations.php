@@ -17,7 +17,22 @@ class Reservations extends DB_Service {
 		parent::__construct($pdo);
 	}
 
-	public function fetchWithin($date_from, $date_to, $user_id) {
+	/**
+	 * 
+	 * @param type $id
+	 * @return ReservationExtended
+	 */
+	public function fetchById($id) {
+		$statement = $this->pdo->prepare("SELECT * FROM `reservation_extended` "
+				. "WHERE reservation_id = :id ");
+		if (!$statement->execute(['id' => $id])) {
+			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
+			return null;
+		}
+		return $statement->fetchObject(ReservationExtended::class);
+	}
+	
+	public function fetchWithin($date_from, $date_to, $user_id = null) {
 		$sql = $user_id ?
 				("SELECT reservation_extended.* FROM `reservation_extended` "
 				. "LEFT JOIN reservation_users AS ru ON ru.reservation_id = reservation_extended.reservation_id "

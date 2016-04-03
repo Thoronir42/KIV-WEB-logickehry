@@ -18,37 +18,6 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 	/**
 	 * 
 	 * @param \PDO $pdo
-	 * @param mixed[] $pars
-	 * @return ReservationExtended[]
-	 */
-	public static function fetchWithinTimespan($pdo, $pars, $user_id = null) {
-		
-	}
-
-	public static function fetchWithinTimespanByUser($pdo, $pars, $user_id) {
-		return self::fetchWithinTimespan($pdo, $pars, $user_id);
-	}
-
-	/**
-	 * 
-	 * @param \PDO $pdo
-	 * @param type $id
-	 * @return ReservationExtended
-	 */
-	public static function fetchById($pdo, $id) {
-		$statement = $pdo->prepare("SELECT * FROM `reservation_extended` "
-				. "WHERE reservation_id = :id ");
-		if (!$statement->execute(['id' => $id])) {
-			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
-			return null;
-		}
-		return $statement->fetchObject(ReservationExtended::class);
-	}
-
-	
-	/**
-	 * 
-	 * @param \PDO $pdo
 	 * @param int $desk_id
 	 * @param Date $date
 	 * @param Time $time_from
