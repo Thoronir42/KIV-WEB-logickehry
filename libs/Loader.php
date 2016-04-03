@@ -7,6 +7,10 @@ spl_autoload_register('Loader::LibsLoader');
 
 spl_autoload_register('Twig_Autoloader::autoload');
 
+use libs\URLgen;
+use libs\URLgenNice;
+use config\Config;
+
 /**
  * Description of Config
  *
@@ -41,12 +45,15 @@ class Loader {
 
 	/**
 	 * 
-	 * @return \libs\URLgen
+	 * @return URLgen
 	 */
 	public static function getURLgen() {
 		$protocol = (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS'])) ? "https" : "http";
 		$prefix = $protocol . "://$_SERVER[SERVER_NAME]/";
-		return new \libs\URLgen($prefix);
+		if (Config::USE_NICE_URL){
+			return new URLgenNice($prefix);
+		}
+		return new URLgen($prefix);
 	}
 
 	/**

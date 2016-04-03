@@ -11,26 +11,22 @@ class URLgen {
 	const LOGO_FILENAME = 'clh.png';
 
 	var $urlPrefix;
+	
+	protected $controller, $action;
+	protected $urlOk;
 
 	public function __construct($prefix) {
 		$this->urlPrefix = $prefix;
+		$url = $this->handleUrl();
+		$this->controller = $url['controller'];
+		$this->action = $url['action'];
+		$this->urlOk = !$url['redirect'];
 	}
 
-	public function getContAct() {
-		$redirect = false;
-		if (!Config::USE_NICE_URL) {
-			$controller = filter_input(INPUT_GET, 'controller');
-			$action = filter_input(INPUT_GET, 'action');
-		} else {
-			$url = filter_input(INPUT_GET, 'q');
-			$parts = explode(self::ADDR_SEP, $url);
-			if (count($parts) < 2) {
-				$redirect = true;
-			} else {
-				$controller = $parts[0];
-				$action = $parts[1];
-			}
-		}
+	protected function handleUrl(){
+		$controller = filter_input(INPUT_GET, 'controller');
+		$action = filter_input(INPUT_GET, 'action');
+		$redirect = (empty($action) || empty($controller));
 		return ['controller' => $controller, 'action' => $action, 'redirect' => $redirect];
 	}
 
@@ -40,9 +36,6 @@ class URLgen {
 	}
 
 	public function url($params = null) {
-		if (Config::USE_NICE_URL) {
-			return $this->niceUrl($params);
-		}
 		$return = $this->urlPrefix;
 		if (empty($params)) {
 			return $return;
@@ -147,6 +140,18 @@ class URLgen {
 			'action' => 'zobrazitProfil',
 			'login' => $orion_login];
 		return $this->url($args);
+	}
+
+	public function getController() {
+		return $this->controller;
+	}
+	
+	public function getAction() {
+		return $this->action;
+	}
+	
+	public function isUrlOk(){
+		return $this->urlOk;
 	}
 
 }
