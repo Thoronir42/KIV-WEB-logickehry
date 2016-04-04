@@ -16,7 +16,7 @@ class DB_Service {
 	 * @var MessageBuffer
 	 */
 	public static $message_buffer;
-
+	
 	public static function logError($errorInfo, $function, $sql = null, $pars = null) {
 		if (!\config\Config::LOG_DB_ERRORS) {
 			return;
@@ -55,6 +55,31 @@ class DB_Service {
 	
 	public function __construct(PDO $pdo) {
 		$this->pdo = $pdo;
+	}
+	
+	/**
+	 * 
+	 * @param type $sql
+	 * @param type $pars
+	 * @param type $function
+	 * @return \PDOStatement
+	 */
+	protected function execute($sql, $pars = null){
+		$statement = $this->pdo->prepare($sql);
+		if(!$statement->execute($pars)){
+			$function = $this->stringifyCaller();
+			DB_Service::logError($statement->errorInfo(), $function, $statement->queryString, $pars);
+			return false;
+		}
+		
+		return $statement;
+	}
+	
+	private function stringifyCaller(){
+		$caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)[2];
+		$callString = isset($caller['class']) ? $caller['class'] : '';
+		$callString .= $caller['type'].$caller['function'];
+		return $callString;
 	}
 
 	
