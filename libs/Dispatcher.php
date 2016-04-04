@@ -156,7 +156,6 @@ class Dispatcher {
 
 	private function render($template, $vars, $layout) {
 		$vars['layout'] = $this->twig->loadTemplate($layout);
-		$vars['urlgen'] = $this->urlGen;
 
 		echo $this->twig->render($template, $vars);
 	}

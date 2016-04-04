@@ -32,7 +32,7 @@ abstract class Controller {
 
 	/** @var \PDO */
 	var $pdo;
-
+	
 	/** @var MessageBuffer */
 	var $mb;
 	
@@ -72,6 +72,7 @@ abstract class Controller {
 			'user' => $this->user,
 			'navbar' => $this->createNavbar(),
 			'badgeTpl' => \config\Config::BADGE,
+			'urlgen' => $this->urlGen,
 		];
 	}
 	
