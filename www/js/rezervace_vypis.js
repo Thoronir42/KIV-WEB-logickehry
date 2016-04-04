@@ -127,8 +127,43 @@ $(document).ready(function () {
 			locale: 'cs',
 			format: 'HH:mm'
 		});
-		var dp = $(this).data('DateTimePicker');
+		//var dp = $(this).data('DateTimePicker');
 	});
+	
+	prepareUpcommingReservations();
 	
 
 });
+
+function prepareUpcommingReservations(){
+	$(".badge-link").each(function(){
+		var href = $("#upcomming-reservations").attr("data-fetch-link");
+		href += $(this).parents("a.list-group-item").attr("data-value");
+		$(this).attr('href', href);
+	});
+	
+	$(".badge-link").click(function(){
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+				var resp = xmlhttp.responseText;
+				if(resp === 'false'){
+					return;
+				}
+				$(".upcomming-list").html(resp);
+				$("#upcomming-reservations").slideDown();
+			}
+		};
+		xmlhttp.open("GET", $(this).attr("href"), true);
+		xmlhttp.send();
+		
+		var label = $(this).siblings("h4").html();
+		$("#upcomming-reservations .game_name").html(label);
+		$("#upcomming-reservations .game_name").find("br").replaceWith(' ');
+	});
+	
+	$(".close-upcomming").click(function(){
+		$("#upcomming-reservations").slideUp();
+	});
+	$("#upcomming-reservations").hide();
+}

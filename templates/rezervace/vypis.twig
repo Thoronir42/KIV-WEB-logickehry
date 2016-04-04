@@ -42,14 +42,14 @@
 						Přidat
 						<div class="btn-group" data-toggle="buttons">
 							{% for key, but in switchButtons %}
-							<label id='label_{{ key }}' class="btn {% if but['active'] %}btn-primary active{% else %}btn-default{% endif %}">
-								<input type="radio" name="rb_add_type" value="{{ key }}" {% if but['active'] %}checked{% endif %}> {{ but['label'] }}
-							</label>
+								<label id='label_{{ key }}' class="btn {% if but['active'] %}btn-primary active{% else %}btn-default{% endif %}">
+									<input type="radio" name="rb_add_type" value="{{ key }}" {% if but['active'] %}checked{% endif %}> {{ but['label'] }}
+								</label>
 							{% endfor %}
 						</div>
 					{% endif %}
 				</span>
-				
+
 			</div>
 			<div class="panel-body" id="reservationBody">
 				{% include 'components/formAddReservation.twig' %}
@@ -58,8 +58,15 @@
 				<div class="panel-body" id="eventBody">
 					{% include 'components/formAddEvent.twig' %}
 				</div>
+			{% endif %}
+			<div class="panel-footer" id="upcomming-reservations" data-fetch-link="{{ urlgen.url(fetchUpcommingLink) }}">
+				<a class="btn btn-default pull-right close-upcomming"><span class="glyphicon glyphicon-erase"></span></a>
+				<h4>Nadcházející rezervace hry <span class="game_name"></span></h4>
+				<div class="upcomming-list">
+
+				</div>
 			</div>
-		{% endif %}
+		</div>
 	{% endif %}
 
 	<div class="well well-lg reservations-list">

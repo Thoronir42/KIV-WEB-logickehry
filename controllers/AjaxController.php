@@ -5,6 +5,10 @@ namespace controllers;
 use \model\database\tables as Tables,
 	\model\database\views as Views;
 
+use libs\DatetimeManager;
+
+use model\services\Reservations;
+
 /**
  * Description of AjaxController
  *
@@ -13,9 +17,20 @@ use \model\database\tables as Tables,
 class AjaxController extends Controller {
 	
 	const WILDCARD = '~';
+	
+	/** @var \Twig_Environment */
+	var $twig;
+	
+	/** @var Reservations */
+	var $reservations;
 
 	public function __construct($support) {
 		parent::__construct($support);
+		$this->reservations = new Reservations($this->pdo);
+		
+		
+		$this->twig = $support['twig'];
+		
 		$this->layout = "ajax.twig";
 	}
 
@@ -42,6 +57,19 @@ class AjaxController extends Controller {
 			}
 		}
 		$this->template['response'] = (!$fail ? "true" : "$game_id;$fail");
+	}
+	
+	public function doUpcommingReservations(){
+		$gameTypeId = $this->getParam('game');
+		
+		$date_from = DatetimeManager::format(strtotime('now'), DatetimeManager::DB_FULL);
+		$date_to = DatetimeManager::format(strtotime('+ 1 month'), DatetimeManager::DB_FULL);
+		
+		$reservations = $this->reservations->fetchWithinByGame($date_from, $date_to, $gameTypeId);
+		
+		$subTemplate = ['reservations' => $reservations, 'urlgen' => $this->urlGen];
+		
+		$this->template['response'] = $this->twig->render('ajax/upcommingReservations.twig', $subTemplate);
 	}
 
 	private function checkBoxBeforeInsert($code, $game_id) {

@@ -2,8 +2,8 @@
 
 namespace controllers;
 
-use libs\DatetimeManager,
-	libs\ReservationManager;
+use libs\DatetimeManager;
+
 use libs\Mail\MailBuilder;
 use \model\database\tables as Tables,
 	\model\database\views as Views;
@@ -70,6 +70,8 @@ class RezervaceController extends Controller {
 		$this->template['weekShift'] = $this->makeWeekLinks($week);
 		$this->template['resListColSize'] = $this->colSizeFromGet();
 
+		$this->template['fetchUpcommingLink'] = ['controller' => 'ajax', 'action' => 'upcommingReservations', 'game' => null];
+		
 		$refill = $this->pickRefill();
 		$this->template['refill'] = $refill;
 		if ($this->user->isAdministrator()) {

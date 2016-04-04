@@ -116,7 +116,7 @@ class URLgen {
 		}
 		return $this->url($args);
 	}
-
+	
 	public function weDetail($type, $reservation_id) {
 		switch ($type) {
 			default: 

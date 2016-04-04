@@ -1,0 +1,19 @@
+{# empty Twig template #}
+<ul class="list-group">
+	{% for res in reservations %}
+		{% if loop.index0 % 2 == 0 %}
+			<li class="list-group-item">
+				<span class="btn-group btn-group-justified">
+		{% endif %}
+				<a class="btn btn-default" href="{{ urlgen.weDetail(res.getType(), res.getID()) }}">
+					Rezervace #{{ "%04d"|format(res.getId()) }}
+					{{ res.getDate() }} => {{"%s - %s"|format(res.getTimeFrom(), res.getTimeTo())}}
+				</a>
+		{% if loop.index0 % 2 == 1 %}
+				</span>
+			</li>
+		{% endif %}
+
+
+	{% endfor %}
+</ul>

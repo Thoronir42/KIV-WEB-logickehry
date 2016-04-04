@@ -60,7 +60,7 @@ class Dispatcher {
 	}
 
 	private function packSupport() {
-		return ['pdo' => $this->pdo, 'urlgen' => $this->urlGen, 'mb' => $this->messageBuffer];
+		return ['pdo' => $this->pdo, 'urlgen' => $this->urlGen, 'mb' => $this->messageBuffer, 'twig' => $this->twig];
 	}
 
 	public function getControllerInstance($controllerName) {

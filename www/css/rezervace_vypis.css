@@ -67,3 +67,16 @@
 #addReservation .panel-heading a{
 	margin-top: -6px;
 }
+
+.badge-link, .badge-link *{
+	cursor: pointer;
+}
+
+.upcomming-list{
+	max-height: 120px;
+	overflow-y: auto;
+	overflow-x: hidden
+}
+.upcomming-list .list-group-item{
+	padding: 0;
+}
