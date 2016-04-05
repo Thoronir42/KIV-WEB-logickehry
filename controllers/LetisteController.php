@@ -30,9 +30,8 @@ class LetisteController extends Controller {
 		}
 		
 		$rw = $this->reservationManager->prepareReservationWeek($week);
-		$this->template["reservationDays"] = $rw['reservationDays'];
-		$this->template["pageTitle"] = $rw['pageTitle'];
-		$this->template["timeSpan"] = DatetimeManager::format($rw['timePars'], DatetimeManager::HUMAN_DATE_ONLY);
+		$this->template['reservationWeek'] = $rw;
+		$this->template['pageTitle'] = $rw['pageTitle'];
 		
 		$this->template['resListColSize'] = $this->colSizeFromGet();
 		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);

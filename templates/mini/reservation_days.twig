@@ -5,7 +5,7 @@
 		<div class="row smartRow">
 			{% set rd = reservationDays[i] %}
 			{% for we in rd['weekEntities'] %}
-				{% set rGame = games[we.game_type_id] %}
+				{% set rGame = we.hasGameAssigned() ? games[we.getGameTypeID()] : null %}
 				<div class="col-md-{% if we.isEvent() %}12{% else %}{{ resListColSize }}{% endif %}">
 					<div class="media" style="border: 8px solid #{{ we.hasGameAssigned() ? games[we.getGameTypeID()].getColor : '4e4848'}}; margin-bottom: 4px;">
 						<div class="media-left">
@@ -25,7 +25,7 @@
 								{% endif %}
 							</div>
 							<h4 class="media-heading">
-								{{ rGame.game_name }}{% if rGame.game_subtitle is not empty %} <small>{{ rGame.game_subtitle}}</small>{% endif %}
+								{{ we.getTitle() }}{% if we.hasSubtitle() %} <small>{{ we.getSubtitle()}}</small>{% endif %}
 							</h4>
 
 

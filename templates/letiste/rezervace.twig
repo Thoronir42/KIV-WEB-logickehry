@@ -9,7 +9,7 @@
 					<div class="row">
 						<div class="col-xs-9">
 							<h4 class="date_bounds">
-								{{ "%s - %s"|format(timeSpan['time_from'], timeSpan['time_to'])  }}
+								{{ "%s - %s"|format(reservationWeek.timeSpan['time_from'], reservationWeek.timeSpan['time_to'])  }}
 							</h4>
 						</div>
 						<div class="col-xs-3">
@@ -22,79 +22,16 @@
 					</div>
 				</div>
 				<div class="panel-body">
-					{% include "mini/rezervace_graficky.twig" with {'reservationDays': reservationDays} %}
+					{% include "mini/rezervace_graficky.twig" with {'reservationDays': reservationWeek.days} %}
 				</div>
 			</div>
 		</div>
 		<div class="col-lg-5">
 			<div class="well well-lg reservations-list">
-				{% for i in (resRend.getWeekStartDay())..(resRend.getWeekEndDay()) if reservationDays[i]['reservations'] is not empty %}
-					<div class="dayLists{% if loop.first %} first{ else if loop.last} last {% endif %}" id="dl_{{ i }}">
-						<h3>{{ resRend.getDay(i, 'full') }}</h3>
-						<div class="row smartRow">
-							{% set rd = reservationDays[i] %}
-							{% for r in rd['reservations'] %}
-								{% set rGame = games[r.game_type_id] %}
-								<div class="col-md-{% if not rd['reservations']|first.isEvent() %}{{ resListColSize }}{% else %}12{% endif %}">
-									<div class="media" style="border: 8px solid #{{ games[r.game_type_id].getColor }}; margin-bottom: 4px;">
-										<div class="media-left">
-											<img class="media-object" src="{{ urlgen.gImg(r.game_type_id) }}" alt="...">
-										</div>
-										<div class="media-body">
-											<div class="row">
-												<div class="col-xs-6">
-													<a href="{{ urlgen.rdet(r.reservation_id) }}"
-													   <small>Rezervace #{{ "%04d"|format(r.reservation_id) }}</small>
-													</a>
-												</div>
-												{% if r.isOpen %}
-													<div class="col-xs-6">
-														<small class="pull-right">Hráčů: {{ r.getSignedPlayerCount() }}<span> (doporuč. {{ "%d-%d"|format(r.min_players, r.max_players) }})</span></small>
-													</div>
-												{% endif %}
-											</div>
-											<h4 class="media-heading">
-												{{ rGame.game_name }}{% if rGame.game_subtitle is not empty %} <small>{{ rGame.game_subtitle}}</small>{% endif %}
-											</h4>
-
-
-											<span>{{ "%s - %s"|format(r.time_from, r.time_to) }}</span>
-											{% if r.hasDesk %}
-												<span class="pull-right">{{ 'Stůl %02d (%d míst)'|format(r.desk_id, r.desk_capacity) }}</span>
-											{% endif %}
-										</div>
-									</div>
-									<div class="res-head row">
-
-
-									</div>
-									<div class="res-body row">
-										<span></span>
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-					</div>
-					<hr/>
-				{% endfor %}
+				{% include 'mini/reservation_days.twig' with { 'reservationDays': reservationWeek.days } %}
 			</div>
 		</div>
 	</div>
-
-	{% for r in rezervace %}
-		<div class="reservation">
-			<div class="res-head row">
-				<span>Rezervace #{{ "%04d"|format(r.reservation_id) }} - {{ r.game_name }}</span>
-				<span>Hráčů: {{ r.signed_players}}</span>
-				<span> z {{ "%d-%d"|format(r.min_players, r.max_players) }}</span>
-				<span>{{ "%s - %s"|format(r.time_from, r.time_to) }}</span>
-			</div>
-			<div class="res-body row">
-				<span></span>
-			</div>
-		</div>
-	{% endfor %}
-
 {% endblock %}
 
 {% block pageStyle %}

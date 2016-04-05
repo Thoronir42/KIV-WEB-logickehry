@@ -162,6 +162,10 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 		return strtotime($this->getTimeTo()) - strtotime($this->getTimeFrom());
 	}
 
+	public function hasSubtitle() {
+		return !empty($this->game_subtitle);
+	}
+	
 	public function getSubtitle() {
 		return $this->game_subtitle;
 	}
