@@ -22,12 +22,12 @@ class Events extends DB_Service {
 	 * @param mixed[] $pars
 	 * @return Event[]
 	 */
-	public function fetchWithinTimespan($pars) {
+	public function fetchWithinTimespan($date_from, $date_to) {
 		$sql = "SELECT * FROM `event` "
-				. "WHERE event_date >= :time_from AND event_date < :time_to "
+				. "WHERE event_date >= :date_from AND event_date <= :date_to "
 				. "ORDER BY time_from ASC";
 		$statement = $this->pdo->prepare($sql);
-		if (!$statement->execute($pars)) {
+		if (!$statement->execute(['date_from' => $date_from, 'date_to' => $date_to])) {
 			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return null;
 		}

@@ -5,7 +5,6 @@ namespace libs;
 use model\services\Reservations;
 use model\services\Events;
 use model\database\IRenderableWeekEntity;
-
 use model\database\tables\Event;
 use model\database\views\ReservationExtended;
 
@@ -32,7 +31,7 @@ class ReservationManager {
 		$dbTimePars = DatetimeManager::format($weekBounds, DatetimeManager::DB_FULL);
 
 		$reservations = $this->reservations->fetchWithin($dbTimePars['time_from'], $dbTimePars['time_to'], $user_id);
-		$events = $this->events->fetchWithinTimespan($dbTimePars);
+		$events = $this->events->fetchWithinTimespan($dbTimePars['time_from'], $dbTimePars['time_to']);
 
 		$weekEntityGroups = ['events' => $events, 'reservations' => $reservations];
 
@@ -45,7 +44,7 @@ class ReservationManager {
 		return $return;
 	}
 
-	private function createWeekContainer($timeFrom){
+	private function createWeekContainer($timeFrom) {
 		$reservationDays = [];
 
 		for ($i = 0; $i < 7; $i++) {
@@ -58,7 +57,7 @@ class ReservationManager {
 		}
 		return $reservationDays;
 	}
-	
+
 	/**
 	 * 
 	 * @param type $timeFrom
@@ -70,31 +69,32 @@ class ReservationManager {
 		foreach ($weekEntityGroups as $group) {
 			foreach ($group as $entity) {
 				$day = date("w", strtotime($entity->getDate()));
+				if ($day == 0) {
+					$day = 7;
+				}
 				$reservationDays[$day]['weekEntities'][] = $entity;
 			}
 		}
-		for ($i = 6; $i >= 0; $i--) {
+		for ($i = 7; $i >= 1; $i--) {
 			if (!empty($reservationDays[$i]['weekEntities'])) {
 				$reservationDays[$i]['last'] = true;
 				break;
 			}
 		}
-		
-		
 		return $reservationDays;
 	}
-	
+
 	/**
 	 * 
 	 * @param ReservationExtended $reservations
 	 */
-	private function countGamesOnReservations($reservations){
+	private function countGamesOnReservations($reservations) {
 		$games = [];
-		foreach ($reservations as $reservation){
+		foreach ($reservations as $reservation) {
 			$gameTypeId = $reservation->getGameTypeID();
 			$games[$gameTypeId] = ( isset($games[$gameTypeId]) ) ? $games[$gameTypeId] + 1 : 1;
 		}
-		
+
 		return $games;
 	}
 

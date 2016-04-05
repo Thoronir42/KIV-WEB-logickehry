@@ -61,7 +61,7 @@ class Reservations extends DB_Service {
 	private function getFetchWithinSQL($date_from, $date_to, $type = null, $value = null) {
 		$sql = "SELECT reservation_extended.* FROM `reservation_extended` ";
 		
-		$timeSpanSql = "WHERE :date_from <= reservation_date AND reservation_date < :date_to ";
+		$timeSpanSql = "WHERE :date_from <= reservation_date AND reservation_date <= :date_to ";
 		$pars = ['date_from' => $date_from, 'date_to' => $date_to];
 		switch ($type) {
 			default:
