@@ -38,7 +38,7 @@ class GameTypeExtended extends GameType {
 				. "COUNT(DISTINCT game_box.game_box_id) AS total_boxes, "
 				. "COUNT(DISTINCT case game_box.retired when '0' then game_box.game_box_id else null end) AS active_boxes, "
 				. "COUNT(DISTINCT reservation_extended.reservation_id) AS total_reservations "
-				. " FROM `game_type_extended` "
+				. "FROM `game_type_extended` "
 				. "LEFT JOIN game_box "
 				. "ON game_type_extended.game_type_id = game_box.game_type_id "
 				. "LEFT JOIN reservation_extended "

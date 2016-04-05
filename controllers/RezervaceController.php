@@ -46,7 +46,7 @@ class RezervaceController extends Controller {
 
 		$timePars = DatetimeManager::getWeeksBounds($week);
 		$dbTimePars = DatetimeManager::format($timePars, DatetimeManager::DB_FULL);
-
+		
 		$game_types = $this->prepareGames();
 
 		$game_type_id = $this->getParam("game_id");
@@ -54,19 +54,25 @@ class RezervaceController extends Controller {
 			$this->template['defaultGame'] = $game_type_id;
 		}
 
-		$this->template['reservationFormAction'] = ['controller' => 'rezervace', 'action' => 'rezervovat'];
-		$this->template['eventFormAction'] = ['controller' => 'udalost', 'action' => 'pridat'];
-		$this->template['eventGameList'] = Tables\Event::addNoGame($game_types);
-
+		$this->template['reservation'] =[
+			'formAction' =>['controller' => 'rezervace', 'action' => 'rezervovat'],
+			'types' => Tables\Reservation::getTypes(),
+			'games' => $game_types,
+			'desks' => Tables\Desk::fetchAll($this->pdo),
+			];
+		
+		$this->template['event'] = [
+			'formAction' => ['controller' => 'udalost', 'action' => 'pridat'],
+			'gameList' => Tables\Event::addNoGame($game_types),
+				];
+		
+		$this->template['games'] = $this->prepareGames($dbTimePars);
+		
 
 		$rw = $this->reservationManager->prepareReservationWeek($week);
-		$this->template["reservationDays"] = $rw['reservationDays'];
-		$this->template["pageTitle"] = $rw['pageTitle'];
-		$this->template["timeSpan"] = DatetimeManager::format($rw['timePars'], DatetimeManager::HUMAN_DATE_ONLY);
-
-		$this->template["reservationTypes"] = Tables\Reservation::getTypes();
-		$this->template['games'] = $game_types;
-		$this->template['desks'] = Tables\Desk::fetchAll($this->pdo);
+		$this->template['reservationWeek'] = $rw;
+		$this->template['pageTitle'] = $rw['pageTitle'];
+		
 		$this->template['weekShift'] = $this->makeWeekLinks($week);
 		$this->template['resListColSize'] = $this->colSizeFromGet();
 
@@ -120,10 +126,10 @@ class RezervaceController extends Controller {
 	 * 
 	 * @return Views\GameTypeExtended[]
 	 */
-	private function prepareGames() {
+	private function prepareGames($timePars = []) {
 		$games = Views\GameTypeExtended::fetchAllWithCounts($this->pdo);
-		$date_from = DatetimeManager::format(strtotime('now'), DatetimeManager::DB_FULL);
-		$date_to = DatetimeManager::format(strtotime('+ 1 month'), DatetimeManager::DB_FULL);
+		$date_from = isset($timePars['time_from']) ? $timePars['time_from'] : DatetimeManager::format(strtotime('now'), DatetimeManager::DB_FULL);
+		$date_to = isset($timePars['time_to']) ? $timePars['time_to'] : DatetimeManager::format(strtotime('+ 1 month'), DatetimeManager::DB_FULL);
 		
 		$resCounts = $this->reservaions->countWithin($date_from, $date_to);
 		
@@ -320,6 +326,6 @@ class RezervaceController extends Controller {
 			'reservationUrl' => $this->urlGen->url(['controller' => 'rezervace', 'action' => 'detail', 'id' => $reservation_id]),
 		];
 		MailBuilder::openReservationCreated($users, $pars);
-	}
+	}	
 
 }

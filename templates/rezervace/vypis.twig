@@ -7,7 +7,7 @@
 			<div class="row">
 				<div class="col-xs-6">
 					<h4 class="date_bounds">
-						{{ "%s - %s"|format(timeSpan['time_from'], timeSpan['time_to'])  }}
+						{{ "%s - %s"|format(reservationWeek.timeSpan['time_from'], reservationWeek.timeSpan['time_to'])  }}
 					</h4>
 				</div>
 				<div class="col-xs-3">
@@ -28,7 +28,7 @@
 			</div>
 		</div>
 		<div class="panel-body">
-			{% include "mini/rezervace_graficky.twig" with {'reservationDays': reservationDays} %}
+			{% include "mini/rezervace_graficky.twig" with {'reservationDays': reservationWeek.days} %}
 		</div>
 	</div>
 
@@ -70,7 +70,7 @@
 	{% endif %}
 
 	<div class="well well-lg reservations-list">
-		{% include 'mini/reservation_days.twig' %}
+		{% include 'mini/reservation_days.twig' with { 'reservationDays': reservationWeek.days } %}
 	</div>
 
 {% endblock %}

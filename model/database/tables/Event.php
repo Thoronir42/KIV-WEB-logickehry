@@ -186,7 +186,7 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 	}
 
 	public function getTimeLength() {
-		return $this->time_to - $this->time_from;
+		return strtotime($this->getTimeTo()) - strtotime($this->getTimeFrom());
 	}
 
 	public function getTimeTo() {

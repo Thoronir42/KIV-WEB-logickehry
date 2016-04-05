@@ -5,7 +5,9 @@ namespace libs;
 use model\services\Reservations;
 use model\services\Events;
 use model\database\IRenderableWeekEntity;
+
 use model\database\tables\Event;
+use model\database\views\ReservationExtended;
 
 /**
  * Description of ReservationManager
@@ -36,10 +38,10 @@ class ReservationManager {
 
 		$return = [];
 
-		$return['reservationDays'] = self::prepareReservationDays($weekBounds['time_from'], $weekEntityGroups);
+		$return['days'] = self::prepareReservationDays($weekBounds['time_from'], $weekEntityGroups);
 		$return["pageTitle"] = self::makeVypisTitle($week);
-		$return['timePars'] = $weekBounds;
-
+		$return['timeSpan'] = DatetimeManager::format($weekBounds, DatetimeManager::HUMAN_DATE_ONLY);
+		$return['currentWeekGames'] = $this->countGamesOnReservations($reservations);
 		return $return;
 	}
 
@@ -77,7 +79,23 @@ class ReservationManager {
 				break;
 			}
 		}
+		
+		
 		return $reservationDays;
+	}
+	
+	/**
+	 * 
+	 * @param ReservationExtended $reservations
+	 */
+	private function countGamesOnReservations($reservations){
+		$games = [];
+		foreach ($reservations as $reservation){
+			$gameTypeId = $reservation->getGameTypeID();
+			$games[$gameTypeId] = ( isset($games[$gameTypeId]) ) ? $games[$gameTypeId] + 1 : 1;
+		}
+		
+		return $games;
 	}
 
 	private function makeVypisTitle($week) {

@@ -1,10 +1,10 @@
 {# components/formAddEvent.twig #}
 
-<form class="form-horizontal" action="{{ urlgen.url(eventFormAction) }}" method="post">
+<form class="form-horizontal" action="{{ urlgen.url(event.formAction) }}" method="post">
 	<div class="row">
 		<div class="col-sm-3" id="game_type_list_res_col">
 			<label for="game_type_id" class="control-label">Spojit událost s hrou</label>
-			{% include "mini/game_type_list_group.twig" with {'games':eventGameList	, 'active':defaultGame, 'count': false} %}
+			{% include "mini/game_type_list_group.twig" with {'games':event.gameList	, 'active':defaultGame, 'count': false} %}
 		</div>
 		<div class="col-lg-6 col-md-9">
 			<div class="row">

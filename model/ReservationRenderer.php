@@ -6,6 +6,8 @@ use model\database\IRenderableWeekEntity,
 	model\database\tables\Reservation;
 use libs\DatetimeManager;
 
+use libs\Localizer;
+
 /**
  * Description of ReservationRenderer
  *
@@ -24,7 +26,9 @@ class ReservationRenderer {
 	private $dayLength;
 
 	public function __construct($dayStart, $dayEnd) {
-		$this->dayLength = (($this->dayEnd = $dayEnd) - ($this->dayStart = $dayStart)) * 60;
+		$this->dayEnd = $dayEnd;
+		$this->dayStart  = $dayStart;
+		$this->dayLength = (($this->dayEnd) - ($this->dayStart)) * 60 * 60;
 	}
 
 	/**
@@ -35,7 +39,7 @@ class ReservationRenderer {
 		$rStart = strtotime($res->getTimeFrom());
 		$h = date('H', $rStart);
 		$m = date('i', $rStart);
-		$dayMin = 60 * ($h - $this->dayStart) + $m;
+		$dayMin = 60 * (60 * ($h - $this->dayStart) + $m);
 		return $dayMin * 100 / $this->dayLength;
 	}
 
@@ -58,12 +62,14 @@ class ReservationRenderer {
 	 */
 	public function getWidthPct($res) {
 		$rLength = $res->getTimeLength();
-		$h = date('H', $rLength);
-		$m = date('i', $rLength);
-		$rTime = 60 * $h + $m;
-		// 19:00 - 7:00 = 13:00 ?????? only happened to eventReservation
-		//echo date('H:i', $rFrom).' - '.date('H:i', $rTo)." =$h:$m = $rTime / $this->dayLength";
-		return $rTime * 100 / $this->dayLength;
+		/*
+		$mins = $rLength / 60;
+		$h = floor($mins / 60);
+		$m = $mins % 60;
+		
+		$rTime = 60 * ($h * 60 + $m);
+		 */
+		return $rLength * 100 / $this->dayLength;
 	}
 
 	public function time($time) {
@@ -71,16 +77,16 @@ class ReservationRenderer {
 		return DatetimeManager::format($iTime, DatetimeManager::HUMAN_TIME_ONLY);
 	}
 
-	public function getDay($n, $type = \libs\Localizer::DAY_FORMAT_FULL) {
-		return \libs\Localizer::getDayName($n, $type);
+	public function getDay($n, $type = Localizer::DAY_FORMAT_FULL) {
+		return Localizer::getDayName($n, $type);
 	}
 
 	public function getWeekStartDay() {
-		return database\tables\Reservation::WEEK_START_DAY;
+		return Reservation::WEEK_START_DAY;
 	}
 
 	public function getWeekEndDay() {
-		return database\tables\Reservation::WEEK_END_DAY;
+		return Reservation::WEEK_END_DAY;
 	}
 
 }

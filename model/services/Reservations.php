@@ -23,10 +23,10 @@ class Reservations extends DB_Service {
 	 * @return ReservationExtended
 	 */
 	public function fetchById($id) {
-		$statement = $this->pdo->prepare("SELECT * FROM `reservation_extended` "
+		$sql = ("SELECT * FROM `reservation_extended` "
 				. "WHERE reservation_id = :id ");
-		if (!$statement->execute(['id' => $id])) {
-			DB_Service::logError($statement->errorInfo(), __CLASS__ . "::" . __FUNCTION__, $statement->queryString);
+		$statement = $this->execute($sql, ['id' => $id]);
+		if(!$statement){
 			return null;
 		}
 		return $statement->fetchObject(ReservationExtended::class);

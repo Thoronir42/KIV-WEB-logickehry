@@ -1,10 +1,10 @@
 {# components/addReservation.twig #}
 
-<form class="form-horizontal" action="{{ urlgen.url(reservationFormAction) }}" method="post">
+<form class="form-horizontal" action="{{ urlgen.url(reservation.formAction) }}" method="post">
 	<div class="row">
 		<div class="col-sm-3" id="game_type_list_res_col">
 			<label for="game_type_id" class="control-label">Výběr hry</label>
-			{% include "mini/game_type_list_group.twig" with {'games':games, 'active':defaultGame, 'count': 'reservations'} %}
+			{% include "mini/game_type_list_group.twig" with {'games':reservation.games, 'active':defaultGame, 'count': 'reservations'} %}
 		</div>
 		<div class="col-sm-9">
 			<div class="row">
@@ -12,7 +12,7 @@
 					<label for="desk_id" class="control-label">Stůl</label>
 					<select name="desk_id" class="form-control">
 						<option value="0">Nerezervovat stůl</option>
-						{% for d in desks %}
+						{% for d in reservation.desks %}
 							<option value="{{ d.desk_id}}">{{ 'Stůl %02d (míst: %d)'|format(d.desk_id, d.capacity) }}</option>
 						{% endfor %}
 					</select>
@@ -20,7 +20,7 @@
 				<div class="col-sm-8">
 					<label class="control-label" for="reservation_type_id">Typ rezervace</label>
 					<select name="reservation_type_id" class="form-control">
-						{% for r in reservationTypes %}
+						{% for r in reservation.types %}
 							<option value="{{ r.type}}">{{ r.label }}</option>
 						{% endfor %}
 					</select>
