@@ -9,11 +9,15 @@ use \model\database\tables as Tables,
 	\model\database\views as Views;
 
 use model\services\Reservations;
+use model\services\GameTypes;
 
 class RezervaceController extends Controller {
 	
 	/** @var Reservations */
 	private $reservaions;
+	
+	/** @var GameTypes */
+	private $gameTypes;
 	
 	public function __construct($support) {
 		parent::__construct($support);
@@ -21,6 +25,7 @@ class RezervaceController extends Controller {
 			return;
 		}
 		$this->reservaions = new Reservations($this->pdo);
+		$this->gameTypes = new GameTypes($this->pdo);
 	}
 
 		
@@ -50,7 +55,7 @@ class RezervaceController extends Controller {
 		$game_types = $this->prepareGames();
 
 		$game_type_id = $this->getParam("game_id");
-		if (Views\GameTypeExtended::fetchById($this->pdo, $game_type_id)) {
+		if ($this->gameTypes->fetchById($game_type_id)) {
 			$this->template['defaultGame'] = $game_type_id;
 		}
 
@@ -146,7 +151,7 @@ class RezervaceController extends Controller {
 
 
 		if (!$reservation->readyForInsert()) {
-			$this->message->warning('Vstupní pole rezervace nebyla správně vyplněna - rezervae nebyla přidána');
+			$this->message->warning('Vstupní pole rezervace nebyla správně vyplněna - rezervace nebyla přidána');
 			$this->redirectPars('rezervace', 'vypis');
 		}
 
@@ -248,7 +253,7 @@ class RezervaceController extends Controller {
 			return null;
 		}
 		$reservation->user = Views\UserExtended::fetchById($this->pdo, $reservation->reservee_user_id);
-		$reservation->game = Views\GameTypeExtended::fetchById($this->pdo, $reservation->game_type_id);
+		$reservation->game = $this->gameTypes->fetchById($reservation->game_type_id);
 		$rUsers = [$reservation->user];
 		$users = Views\ReservationExtended::getUsers($this->pdo, $reservation->reservation_id);
 		foreach ($users as $u) {
@@ -314,7 +319,11 @@ class RezervaceController extends Controller {
 
 	private function reservationCreatedSendMail($reservation_id) {
 		$reservation = $this->reservaions->fetchById($reservation_id);
-		$gameType = Views\GameTypeExtended::fetchById($this->pdo, $reservation->game_type_id);
+		if(!$reservation){
+			$this->message->warning("Při pokusu o odeslání upozornění hráčům odebírajícím hru ".$reservation->game_name." nastala chyba.");
+			return;
+		}
+		$gameType = $this->gameTypes->fetchById($reservation->game_type_id);
 		$users = Views\Subscription::fetchUsersByGame($this->pdo, $reservation->game_type_id);
 
 		$dateTime = DatetimeManager::reformat($reservation->reservation_date, DatetimeManager::HUMAN_DATE_ONLY);

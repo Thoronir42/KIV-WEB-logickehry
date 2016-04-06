@@ -8,6 +8,7 @@ use \model\database\tables as Tables,
 use libs\DatetimeManager;
 
 use model\services\Reservations;
+use model\services\GameTypes;
 
 /**
  * Description of AjaxController
@@ -23,10 +24,14 @@ class AjaxController extends Controller {
 	
 	/** @var Reservations */
 	var $reservations;
+	
+	/** @var GameTypes */
+	var $gameTypes;
 
 	public function __construct($support) {
 		parent::__construct($support);
 		$this->reservations = new Reservations($this->pdo);
+		$this->gameTypes = new GameTypes($this->pdo);
 		
 		
 		$this->twig = $support['twig'];
@@ -85,7 +90,7 @@ class AjaxController extends Controller {
 			$response .= ($gameBox->retired ? "je však vyřazený z oběhu" : "náleží hře " . $gameBox->game_name);
 			return $response;
 		}
-		$gameType = Views\GameTypeExtended::fetchById($this->pdo, $game_id);
+		$gameType = $this->gameTypes->fetchById($game_id);
 		if (!$gameType) {
 			return $this->template['response'] = sprintf("Nebyla nalezena hra %03d", $game_id);
 		}

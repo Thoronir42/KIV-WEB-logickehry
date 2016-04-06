@@ -5,6 +5,8 @@ namespace controllers;
 use \model\database\tables as Tables,
 	\model\database\views as Views;
 
+use model\services\GameTypes;
+
 /**
  * Description of HomeControler
  *
@@ -12,6 +14,15 @@ use \model\database\tables as Tables,
  */
 class VypisController extends Controller {
 
+	/** @var GameTypes */
+	private $gameTypes;
+	
+	public function __construct($support) {
+		parent::__construct($support);
+		
+		$this->gameTypes = new GameTypes($this->pdo);
+	}
+	
 	public static function getDefaultAction() {
 		return "hry";
 	}
@@ -34,7 +45,7 @@ class VypisController extends Controller {
 
 	public function renderDetailHry() {
 		$id = $this->getParam("id");
-		$gameType = Views\GameTypeExtended::fetchById($this->pdo, $id);
+		$gameType = $this->gameTypes->fetchById($id);
 		if (!$gameType) {
 			$this->message->warning("Požadovaná hra nebyla nalezena.");
 			$this->redirectPars('vypis', 'hry');

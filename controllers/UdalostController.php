@@ -8,6 +8,7 @@ use \model\database\tables as Tables,
 
 use model\services\Reservations;
 use model\services\Events;
+use model\services\GameTypes;
 
 /**
  * Description of UdalostController
@@ -22,11 +23,15 @@ class UdalostController extends Controller {
 	/** @var Events */
 	private $events;
 	
+	/** @var GameTypes */
+	private $gameTypes;
+	
 	public function __construct($support) {
 		parent::__construct($support);
 		
 		$this->reservations = new Reservations($this->pdo);
 		$this->events = new Events($this->pdo);
+		$this->gameTypes = new GameTypes($this->pdo);
 	}
 
 	
@@ -69,7 +74,7 @@ class UdalostController extends Controller {
 		$this->template['resRend'] = \model\ReservationRenderer::getInstance();
 		$this->template['event'] = $event;
 		if($event->hasGameAssigned()){
-			$this->template['game'] = Views\GameTypeExtended::fetchById($this->pdo, $event->getGameTypeID());	
+			$this->template['game'] = $this->gameTypes->fetchById($event->getGameTypeID());	
 		}
 		$this->template['links'] = [
 			'edit' => ['controller' => 'udalost', 'action' => 'upravit', 'id' => $id],

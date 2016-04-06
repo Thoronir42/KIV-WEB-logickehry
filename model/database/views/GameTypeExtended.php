@@ -56,21 +56,6 @@ class GameTypeExtended extends GameType {
 		return $games;
 	}
 
-	/**
-	 * 
-	 * @param \PDO $pdo
-	 * @param int $game_id
-	 * @return GameTypeExtended
-	 */
-	public static function fetchById($pdo, $game_id) {
-		$statement = $pdo->prepare("SELECT * FROM game_type_extended WHERE game_type_id = :id");
-		if (!$statement->execute(['id' => $game_id])) {
-			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString);
-			return null;
-		}
-		return $statement->fetchObject(GameTypeExtended::class);
-	}
-
 	var $average_score;
 	var $rating_count;
 	var $subscribed_users;
