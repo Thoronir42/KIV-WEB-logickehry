@@ -45,18 +45,6 @@ class ReservationRenderer {
 
 	/**
 	 * 
-	 * @param IRenderableWeekEntity $re
-	 */
-	public function renderEntity($re) {
-		$return = sprintf("<div class=\"week-entity %s%s\" style=\"left:%.2f%%; width:%.2f%%;\">", $re->getType(), $re->hasGameAssigned() ? ' game' . $re->getGameTypeID() : "", $this->getStartPct($re), $this->getWidthPct($re)
-		);
-		$return .= sprintf("%s<br><small>%s</small>", $re->getTitle(), $re->getSubtitle());
-		$return .= "</div>";
-		return $return;
-	}
-
-	/**
-	 * 
 	 * @param IRenderableWeekEntity $res
 	 * @return double
 	 */

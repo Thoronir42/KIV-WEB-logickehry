@@ -112,6 +112,16 @@ $(document).ready(function () {
 		toggleSlide(true, 'evt');
 	}
 	
+	$(".bottom-button").click(function(){
+		var $entity = $(this).parents('.week-entity');
+		$entity.siblings('.week-entity').each(function(){
+			$(this).css('z-index', $(this).css('z-index') * 1 + 1);
+			$(this).find('.bottom-button').show();
+		});
+		$entity.css('z-index', 0);
+		$entity.find('.bottom-button').hide();
+	});
+	
 	prepareDateTimePickers();
 	
 	prepareUpcommingReservations();

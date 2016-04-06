@@ -28,7 +28,7 @@
 			</div>
 		</div>
 		<div class="panel-body">
-			{% include "mini/rezervace_graficky.twig" with {'reservationDays': reservationWeek.days} %}
+			{% include "components/weekGraphical.twig" with {'reservationDays': reservationWeek.days, 'showBottomButtons':true} %}
 		</div>
 	</div>
 

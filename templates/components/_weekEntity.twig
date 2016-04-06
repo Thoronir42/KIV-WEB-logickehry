@@ -1,0 +1,20 @@
+{# components/_weekEntity.twig #}
+{# to be only used within weekGraphical.twig #}
+
+{# @param entity - IRenderableWeekEntity #}
+{# @param resRend - ReservationRenderer #}
+{# @param bottomButton - boolean #}
+{# @param zIndex - int #}
+
+{% set additionalClass = "%s%s"|format(entity.getType(), ( entity.hasGameAssigned() ? ' game' ~ entity.getGameTypeID() : "" )) %}
+{% set entityStyle = "left:%.2f%%; width:%.2f%%; "|format(resRend.getStartPct(entity), resRend.getWidthPct(entity)) %}
+
+<div class="week-entity {{ additionalClass }}" style="{{ entityStyle }} z-index: {{ zIndex }}">
+	<span>{{ entity.getTitle() }}</span>
+	{% if entity.hasSubtitle() %}<br><small>{{ entity.getSubtitle() }}</small>{%endif%}
+	{% if bottomButton %}
+		<small class="btn-link bottom-button">
+			<span class="glyphicon glyphicon-eye-close"></span>
+		</small>
+	{% endif %}
+</div>
