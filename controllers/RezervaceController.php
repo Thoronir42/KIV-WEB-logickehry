@@ -205,11 +205,31 @@ class RezervaceController extends Controller {
 	 * @return mixed[]
 	 */
 	private function validateReservation($reservation, $game_type_id) {
-		$dateTime = [
-			'date' => DatetimeManager::reformat($reservation->reservation_date, DatetimeManager::DB_DATE_ONLY),
-			'time_from' => DatetimeManager::reformat($reservation->time_from, DatetimeManager::DB_TIME_ONLY),
-			'time_to' => DatetimeManager::reformat($reservation->time_to, DatetimeManager::DB_TIME_ONLY),
+		$dateTimeRaw = [
+			'date' => strtotime($reservation->reservation_date),
+			'time_from' => strtotime($reservation->time_from),
+			'time_to' => strtotime($reservation->time_to),
 		];
+		
+		$dateTime = [
+			'date' => DatetimeManager::format($dateTimeRaw['date'], DatetimeManager::DB_DATE_ONLY),
+			'time_from' => DatetimeManager::format($dateTimeRaw['time_from'], DatetimeManager::DB_TIME_ONLY),
+			'time_to' => DatetimeManager::format($dateTimeRaw['time_to'], DatetimeManager::DB_TIME_ONLY),
+		];
+		
+		if($dateTimeRaw['time_from'] > $dateTimeRaw['time_to']){
+			return ['result' => false, 'message' => "Čas konce rezervace musí následovat čas začátku rezervace."];
+		}
+		
+		$hour = date("H", $dateTimeRaw['time_from']);
+		if($hour * 1 < Tables\Reservation::EARLY_RESERVATION){
+			return ['result' => false, 'message' => "Nelze vytvářet rezervace před začátkem rezervací($hour)"];
+		}
+		$hour = date("H", $dateTimeRaw['time_to']);
+		if($hour * 1 > Tables\Reservation::LATE_RESERVATION){
+			return ['result' => false, 'message' => "Nelze vytvářet rezervace po konci rezervací($hour)"];
+		}
+		
 		$eventExists = Tables\Event::existsDuring($this->pdo, $dateTime['date'], $dateTime['time_from'], $dateTime['time_to']);
 		if ($eventExists) {
 			return ['result' => false, 'message' => sprtintf('Ve vámi zvolený čas je již naplánovaná událost a nelze tedy uložit rezervaci.')];

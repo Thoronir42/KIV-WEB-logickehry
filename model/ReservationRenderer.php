@@ -88,5 +88,23 @@ class ReservationRenderer {
 	public function getWeekEndDay() {
 		return Reservation::WEEK_END_DAY;
 	}
+	
+	public function getDayStart() {
+		return sprintf("%02d", $this->dayStart);
+	}
+
+	public function getDayEnd() {
+		return sprintf("%02d", $this->dayEnd);
+	}
+	
+	public function getEnabledHours(){
+		$return = [];
+		
+		for($i = $this->dayStart; $i < $this->dayEnd; $i++){
+			$return[] = $i;
+		}
+		
+		return implode(',', $return);
+	}
 
 }

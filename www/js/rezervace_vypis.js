@@ -112,6 +112,20 @@ $(document).ready(function () {
 		toggleSlide(true, 'evt');
 	}
 	
+	prepareDateTimePickers();
+	
+	prepareUpcommingReservations();
+	
+
+});
+
+function prepareDateTimePickers(){
+	var hours = $("#form-hours .enabled-hours").text().split(',');
+	
+	var hourMin = $("#form-hours .hour-min").text() + ":00";
+	var hourMax = $("#form-hours .hour-max").text() + ":00";
+	
+	//alert(hours + "\n" + hourMin + ' ' +hourMax)
 	
 	$('.clh-date-picker').each(function(){
 		$(this).datetimepicker({
@@ -122,18 +136,22 @@ $(document).ready(function () {
 		dp.showTodayButton(true);
 	});
 	
+	
 	$('.clh-time-picker').each(function(){
 		$(this).datetimepicker({
 			locale: 'cs',
 			format: 'HH:mm'
 		});
-		//var dp = $(this).data('DateTimePicker');
+		var dp = $(this).data('DateTimePicker');
+		dp.enabledHours(hours);
 	});
 	
-	prepareUpcommingReservations();
+	$("input[type=time]").attr('min', hourMin);
+	$("input[type=time]").attr('max', hourMax);
 	
-
-});
+	
+	$("#form-hours").remove();
+}
 
 function prepareUpcommingReservations(){
 	$(".badge-link").each(function(){

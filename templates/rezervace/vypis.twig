@@ -49,7 +49,6 @@
 						</div>
 					{% endif %}
 				</span>
-
 			</div>
 			<div class="panel-body" id="reservationBody">
 				{% include 'components/formAddReservation.twig' %}
@@ -73,6 +72,8 @@
 		{% include 'mini/reservation_days.twig' with { 'reservationDays': reservationWeek.days } %}
 	</div>
 
+	{% include 'components/jsTimeValidator.twig' with {'resRend':resRend} %}
+		
 {% endblock %}
 
 {% block pageStyle %}

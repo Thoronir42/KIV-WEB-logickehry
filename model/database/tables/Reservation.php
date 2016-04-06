@@ -15,7 +15,7 @@ use libs\DatetimeManager;
 class Reservation extends DB_Entity {
 
 	const EARLY_RESERVATION = 7;
-	const LATE_RESERVATION = 19;
+	const LATE_RESERVATION = 20;
 	const WEEK_START_DAY = 1;
 	const WEEK_END_DAY = 7;
 	const RES_TYPE_OPEN = 1;

@@ -1,0 +1,7 @@
+{# components/jsTimeValidator.twig #}
+{# param resRend - ReservationRenderer #}
+<div id="form-hours">
+	<span class="enabled-hours">{{ resRend.getEnabledHours() }}</span>
+	<span class="hour-min">{{ resRend.getDayStart() }}</span>
+	<span class="hour-max">{{ resRend.getDayEnd() }}</span>
+</div>
