@@ -2,7 +2,7 @@
 
 namespace controllers;
 
-use model\Users,
+use model\services\Users,
  libs\ReservationManager;
 
 use \model\database\tables as Tables,
@@ -99,7 +99,7 @@ class UzivatelController extends Controller {
 	}
 
 	public function doOdhlasitSe() {
-		Users::logout();
+		$this->users->logout();
 		$this->message->info("Vaše odhlášení z aplikace proběhlo úspěšně.");
 		$this->message->warning("Pro přihlášení pod jiným účtem se nejdříve odhlašte z orion loginu", ['label' => "Odhlásit se", 'url' => self::PORTAL_LOGOUT_URL]);
 		$this->redirectPars();
@@ -119,7 +119,7 @@ class UzivatelController extends Controller {
 		$orion_login = $_SESSION["orion_login"];
 		unset($_SESSION['orion_login']);
 
-		$user = Users::login($this->pdo, $orion_login);
+		$user = $this->users->login($orion_login);
 		if (!$user) {
 			$this->message->danger("Nepodařilo se pro vás vytvořit uživatelský účet");
 			$this->redirectPars();

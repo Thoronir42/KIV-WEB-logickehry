@@ -9,10 +9,11 @@ use libs\URLgen,
 use libs\NavbarBuilder;
 
 use model\database\views\UserExtended;
-use model\Users;
 
 use libs\ReservationManager;
+
 use model\services\DB_Service;
+use model\services\Users;
 
 /**
  * Description of Controler
@@ -45,6 +46,9 @@ abstract class Controller {
 	/** @var string */
 	var $layout;
 
+	/** @var Users */
+	var $users;
+
 	/** @var UserExtended */
 	var $user;
 	
@@ -63,7 +67,9 @@ abstract class Controller {
 		$this->message = $this->mb->getInsertor();
 		$this->reservationManager = new ReservationManager($this->pdo);
 
-		$this->user = Users::getCurrentUser($this->pdo);
+		$this->users = new Users($this->pdo);
+		
+		$this->user = $this->users->getCurrentUser();
 		$this->layout = "layout.twig";
 		$this->template = [
 			'css' => ['bootstrap.css'],
@@ -75,7 +81,8 @@ abstract class Controller {
 			'urlgen' => $this->urlGen,
 		];
 	}
-	
+
+
 	private function createNavbar(){
 		$navbar = [];
 		$navbar['app-name'] = \config\Config::APP_NAME;
