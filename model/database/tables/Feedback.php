@@ -20,7 +20,7 @@ class Feedback extends DB_Entity {
 	 * @return Feedback
 	 */
 	public static function fromPOST() {
-		$feedback = parent::fromPOST(self::class);
+		$feedback = parent::createFromPost(self::class);
 		switch ($feedback->feedback_type) {
 			case self::TYPE_BUG: case self::TYPE_SUGGESTION:
 				break;

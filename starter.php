@@ -4,6 +4,9 @@ include __DIR__ . '/libs/Loader.php';
 
 use libs\SessionManager;
 use libs\MessageBuffer;
+use Tracy\Debugger;
+
+Debugger::enable(Debugger::DEVELOPMENT);
 
 SessionManager::run($demo = false);
 

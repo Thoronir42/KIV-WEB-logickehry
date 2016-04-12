@@ -2,8 +2,7 @@
 
 namespace controllers;
 
-use model\services\Users,
- libs\ReservationManager;
+use model\services\Users;
 
 use \model\database\tables as Tables,
 	\model\database\views as Views;
@@ -55,7 +54,7 @@ class UzivatelController extends Controller {
 		$this->template['rUser'] = $user;
 
 		$rw = $this->reservationManager->prepareReservationWeek(0, $user->user_id);
-		$this->template["reservationDays"] = $rw['reservationDays'];
+		$this->template["reservationDays"] = $rw['days'];
 		$this->template['resRend'] = new \model\ReservationRenderer(Tables\Reservation::EARLY_RESERVATION, Tables\Reservation::LATE_RESERVATION);
 		
 		$this->template['subscriptions'] = $this->buildSubscriptions($user->user_id);

@@ -62,7 +62,7 @@ class GameRating extends DB_Entity {
 	}
 
 	public static function fromPOST() {
-		return parent::fromPOST(self::class);
+		return parent::createFromPost(self::class);
 	}
 
 	var $game_rating_id;

@@ -129,7 +129,7 @@ class Loader {
 		return false;
 	}
 
-	private function tryInclude($path) {
+	private static function tryInclude($path) {
 		if (file_exists($path . ".php")) {
 			include $path . ".php";
 			return true;

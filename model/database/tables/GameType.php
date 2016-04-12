@@ -97,7 +97,7 @@ class GameType extends DB_Entity {
 	 * @return GameType
 	 */
 	public static function fromPOST() {
-		$gt = parent::fromPOST(self::class);
+		$gt = parent::createFromPost(self::class);
 		if (empty($gt->max_players)) {
 			$gt->max_players = $gt->min_players;
 		}
@@ -111,7 +111,10 @@ class GameType extends DB_Entity {
 	var $min_players;
 	var $max_players = false;
 
-	protected function checkRequiredProperties() {
+	public function readyForInsert() {
+		if(parent::readyForInsert()){
+			return true;
+		}
 		return parent::checkRequiredProperties(self::class);
 	}
 

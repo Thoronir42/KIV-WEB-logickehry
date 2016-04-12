@@ -3,7 +3,7 @@
 namespace controllers;
 
 use libs\ImageManager,
-	libs\Mail\MailManager;
+	libs\Mail\MailSender;
 use \model\database\tables as Tables,
 	\model\database\views as Views;
 
@@ -271,7 +271,7 @@ class SpravaController extends Controller {
 
 		$this->template['pageTitle'] = 'Hromadný mail';
 
-		$this->template['default_subject'] = MailManager::getDefaultSubject();
+		$this->template['default_subject'] = MailSender::getDefaultSubject();
 		$this->template['send_url'] = ['controller' => 'sprava', 'action' => 'poslatMail'];
 		$games = array_merge([$this->mockAllUserGameEntry()], Views\GameTypeExtended::fetchAll($this->pdo));
 		$this->template['games'] = $games;
@@ -293,7 +293,7 @@ class SpravaController extends Controller {
 
 		$users = ($gid == self::ALL_USERS_GT_ID) ? Views\UserExtended::fetchAll($this->pdo) : Views\Subscription::fetchUsersByGame($this->pdo, $gid);
 		
-		$result = MailManager::send($users, $body, $subject);
+		$result = MailSender::send($users, $body, $subject);
 		if ($result['result']) {
 			$this->message->success($result['message']);
 		} else {

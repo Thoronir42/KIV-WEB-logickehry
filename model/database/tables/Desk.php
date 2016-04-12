@@ -97,7 +97,7 @@ class Desk extends DB_Entity {
 	}
 	
 	public static function fromPOST($class = null) {
-		return parent::fromPOST(self::class);
+		return parent::createFromPost(self::class);
 	}
 
 		var $desk_id;

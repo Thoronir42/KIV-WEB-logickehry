@@ -122,7 +122,7 @@ class Reservation extends DB_Entity {
 	 * @return Reservation
 	 */
 	public static function fromPOST() {
-		$reservation = parent::fromPOST(self::class);
+		$reservation = parent::createFromPost(self::class);
 		if ($reservation->desk_id == Desk::NO_DESK) {
 			$reservation->desk_id = null;
 		}
@@ -139,10 +139,9 @@ class Reservation extends DB_Entity {
 	var $desk_id = false;
 
 	public function readyForInsert() {
-		return parent::readyForInsert();
-	}
-
-	public function checkRequiredProperties() {
+		if(parent::readyForInsert()){
+			return true;
+		}
 		return parent::checkRequiredProperties(self::class);
 	}
 

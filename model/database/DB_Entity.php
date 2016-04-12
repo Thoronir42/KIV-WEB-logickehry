@@ -2,6 +2,8 @@
 
 namespace model\database;
 
+use model\services\DB_Service;
+
 /**
  * Description of DbEntityModel
  *
@@ -14,32 +16,14 @@ abstract class DB_Entity {
 	 * @param String $class required DB_Entity class to be instantiated
 	 * @return DB_Entity
 	 */
-	public static function fromPOST($class = null) {
-		if ($class == null) {
-			return null;
-		}
-		$rc = new \ReflectionClass($class);
-
-		$properties = $rc->getProperties();
-		$instance = $rc->newInstanceArgs();
-		$missing = [];
-		foreach ($properties as $prp) {
-			$prpName = $prp->name;
-			if ($prpName == 'misc' || $prpName == 'message_buffer') {
-				continue;
-			}
-			$val = \filter_input(INPUT_POST, $prpName);
-			if (!empty($val) && $val !== "0") {
-				$instance->$prpName = $val;
-			} else if ($instance->$prpName !== false) {
-				$missing[$prpName] = true;
-			}
-		}
-		if (!empty($missing)) {
-			$instance->missing = $missing;
-		}
-		return $instance;
+	public static function fromPOST(){
+		return null;
 	}
+	
+	protected static function createFromPost($class){
+		return DB_Service::fromPOST($class);
+	}
+	
 
 	public static function getExportColumns() {
 		return [];
@@ -91,10 +75,10 @@ abstract class DB_Entity {
 		if (empty($this->missing)) {
 			return true;
 		}
-		return $this->checkRequiredProperties();
+		return $this->checkRequiredProperties(null);
 	}
 
-	protected function checkRequiredProperties($class = null) {
+	protected function checkRequiredProperties($class) {
 		if ($class == null) {
 			return false;
 		}

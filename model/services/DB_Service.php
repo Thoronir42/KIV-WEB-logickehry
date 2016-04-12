@@ -12,6 +12,33 @@ use \libs\MessageBuffer;
  */
 class DB_Service {
 	
+	public static function fromPOST($class){
+		if ($class == null) {
+			return null;
+		}
+		$rc = new \ReflectionClass($class);
+
+		$properties = $rc->getProperties();
+		$instance = $rc->newInstanceArgs();
+		$missing = [];
+		foreach ($properties as $prp) {
+			$prpName = $prp->name;
+			if ($prpName == 'misc' || $prpName == 'message_buffer') {
+				continue;
+			}
+			$val = \filter_input(INPUT_POST, $prpName);
+			if (!empty($val) && $val !== "0") {
+				$instance->$prpName = $val;
+			} else if ($instance->$prpName !== false) {
+				$missing[$prpName] = true;
+			}
+		}
+		if (!empty($missing)) {
+			$instance->missing = $missing;
+		}
+		return $instance;
+	}
+	
 	/**
 	 * @var MessageBuffer
 	 */

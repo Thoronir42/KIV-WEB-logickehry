@@ -104,7 +104,7 @@ class User extends DB_Entity {
 	}
 
 	public static function fromPOST() {
-		$instance = parent::fromPOST(self::class);
+		$instance = parent::createFromPost(self::class);
 		$instance->orion_login = filter_input(INPUT_SESSION, "orion_login");
 		return $instance;
 	}

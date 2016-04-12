@@ -143,7 +143,7 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 	 * @return Event
 	 */
 	public static function fromPOST() {
-		$event = parent::fromPOST(self::class);
+		$event = parent::createFromPost(self::class);
 		if ($event->game_type_id == self::NO_GAME_TYPE_ID) {
 			$event->game_type_id = NULL;
 		}
@@ -168,7 +168,10 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 	var $game_type_id = false;
 	var $author_user_id = false;
 
-	public function checkRequiredProperties() {
+	public function readyForInsert() {
+		if(parent::readyForInsert()){
+			return true;
+		}
 		return parent::checkRequiredProperties(self::class);
 	}
 
