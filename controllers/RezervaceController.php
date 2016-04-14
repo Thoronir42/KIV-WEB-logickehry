@@ -166,7 +166,7 @@ class RezervaceController extends Controller {
 		} else {
 			$this->message->success('Rezervace byla úspěšně uložena.');
 			if ($reservation->isOpen()) {
-				$this->reservationCreatedSendMail($reservation->game_box_id);
+				$this->reservationCreatedSendMail($reservation->reservation_id);
 			}
 		}
 		$this->redirectPars('rezervace');
