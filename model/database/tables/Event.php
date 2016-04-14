@@ -207,6 +207,11 @@ class Event extends DB_Entity implements IRenderableWeekEntity {
 	public function getTitle() {
 		return $this->event_title;
 	}
+	
+	public function getTitleSubtitle() {
+		return $this->getTitle() . (!$this->hasSubtitle() ? '' : ' ' . $this->getSubtitle());
+	}
+	
 
 	public function getType() {
 		return self::TYPE;

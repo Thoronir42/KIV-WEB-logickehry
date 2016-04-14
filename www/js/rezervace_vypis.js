@@ -112,7 +112,17 @@ $(document).ready(function () {
 		toggleSlide(true, 'evt');
 	}
 	
-	$(".bottom-button").click(function(){
+	prepareHideToBottom();
+	
+	prepareDateTimePickers();
+	
+	prepareUpcommingReservations();
+	
+
+});
+
+function prepareHideToBottom(){
+	$(".btn-hide").click(function(){
 		var $entity = $(this).parents('.week-entity');
 		$entity.siblings('.week-entity').each(function(){
 			$(this).css('z-index', $(this).css('z-index') * 1 + 1);
@@ -121,13 +131,7 @@ $(document).ready(function () {
 		$entity.css('z-index', 0);
 		$entity.find('.bottom-button').hide();
 	});
-	
-	prepareDateTimePickers();
-	
-	prepareUpcommingReservations();
-	
-
-});
+}
 
 function prepareDateTimePickers(){
 	var hours = $("#form-hours .enabled-hours").text().split(',');

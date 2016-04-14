@@ -3,17 +3,25 @@
 
 {# @param entity - IRenderableWeekEntity #}
 {# @param resRend - ReservationRenderer #}
-{# @param bottomButton - boolean #}
+{# @param buttons - array; keys: bottom, detail #}
 {# @param zIndex - int #}
 
 {% set additionalClass = "%s%s"|format(entity.getType(), ( entity.hasGameAssigned() ? ' game' ~ entity.getGameTypeID() : "" )) %}
 {% set entityStyle = "left:%.2f%%; width:%.2f%%; "|format(resRend.getStartPct(entity), resRend.getWidthPct(entity)) %}
 
 <div class="week-entity {{ additionalClass }}" style="{{ entityStyle }} z-index: {{ zIndex }}">
-	<span>{{ entity.getTitle() }}</span>
-	{% if entity.hasSubtitle() %}<br><small>{{ entity.getSubtitle() }}</small>{%endif%}
-	{% if bottomButton %}
-		<small class="btn-link bottom-button">
+	{% if buttons.link %}
+		<a class="btn-link" href="{{ urlgen.weDetail(entity) }}" title="{{ entity.getTitleSubtitle() }}">
+		{% endif %}
+		<span>{{ entity.getTitle()|slice(0,1) }}</span>
+		{% if entity.hasSubtitle() %}<small>{{ entity.getSubtitle()|slice(0,1) }}</small>{%endif%}
+		{% if buttons.link %}
+		</a>
+	{% endif %}
+
+
+	{% if buttons.bottom %}
+		<small class="btn-link btn-bottom btn-bottom-right btn-hide">
 			<span class="glyphicon glyphicon-eye-close"></span>
 		</small>
 	{% endif %}

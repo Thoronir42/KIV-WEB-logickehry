@@ -13,7 +13,10 @@
 	<div class="list-group-item reservationRow">
 		<div class="row resRow">
 			{% set rd = reservationDays[i] %}
-			{% set bottomButton = (showBottomButtons is defined and rd['weekEntities']|length > 1)%}
+			{% set buttons = {
+					'bottom':(showBottomButtons is defined and rd['weekEntities']|length > 1),
+					'link': (showBottomButtons is defined)
+			} %}
 			<div class="col-sm-1 dateCol">
 				<span class="btn btn-default{% if not user.isLoggedIn %} disabled{% endif %}" data-year="{{ rd['year'] }}">
 					{{ resRend.getDay(i, 'abbr') }}
@@ -23,7 +26,7 @@
 			</div>
 			<div class="col-sm-11 resCol">
 				{% for we in rd['weekEntities'] %}
-					{% include 'components/_weekEntity.twig' with {'resRend':resRend, 'entity':we, 'bottomButton':bottomButton, 'zIndex':loop.index}%}
+					{% include 'components/_weekEntity.twig' with {'resRend':resRend, 'entity':we, 'buttons':buttons, 'zIndex':loop.index}%}
 				{% else %}
 					{{ resRend.getDay(i, 'on_day') }} se nic neplánuje
 				{% endfor %}

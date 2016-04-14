@@ -16,6 +16,7 @@ interface IRenderableWeekEntity {
 	public function getTitle();
 	public function hasSubtitle();
 	public function getSubtitle();
+	public function getTitleSubtitle();
 	
 	public function getDate();
 	public function getTimeFrom();

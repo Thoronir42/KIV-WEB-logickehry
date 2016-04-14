@@ -173,6 +173,11 @@ class ReservationExtended extends Reservation implements IRenderableWeekEntity {
 	public function getTitle() {
 		return $this->game_name;
 	}
+	
+	public function getTitleSubtitle() {
+		return $this->getTitle() . (!$this->hasSubtitle() ? '' : ' ' . $this->getSubtitle());
+	}
+	
 
 	public function getType() {
 		return self::TYPE;

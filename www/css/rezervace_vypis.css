@@ -52,10 +52,19 @@
 	border:2px solid transparent;
 }
 
-.bottom-button{
+.week-entity a.btn-link{
+	color: black;
+}
+
+.btn-bottom{
 	position: absolute;
 	bottom: 4px;
+}
+.btn-bottom-right{
 	right: 4px;
+}
+.btn-bottom-left{
+	left: 4px;
 }
 
 .reservation{

@@ -57,7 +57,7 @@ class ReservationRenderer {
 		
 		$rTime = 60 * ($h * 60 + $m);
 		 */
-		return $rLength * 100 / $this->dayLength;
+		return max(3, $rLength * 100 / $this->dayLength);
 	}
 
 	public function time($time) {
