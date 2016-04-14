@@ -100,7 +100,7 @@ class Desk extends DB_Entity {
 		return parent::createFromPost(self::class);
 	}
 
-		var $desk_id;
+	var $desk_id;
 	var $capacity;
 	
 	public function getId() {

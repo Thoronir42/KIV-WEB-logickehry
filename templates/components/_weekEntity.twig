@@ -9,9 +9,9 @@
 {% set additionalClass = "%s%s"|format(entity.getType(), ( entity.hasGameAssigned() ? ' game' ~ entity.getGameTypeID() : "" )) %}
 {% set entityStyle = "left:%.2f%%; width:%.2f%%; "|format(resRend.getStartPct(entity), resRend.getWidthPct(entity)) %}
 
-<div class="week-entity {{ additionalClass }}" style="{{ entityStyle }} z-index: {{ zIndex }}">
+<div class="week-entity {{ additionalClass }}" style="{{ entityStyle }} z-index: {{ zIndex }}" title="{{ entity.getTitleSubtitle() }}">
 	{% if buttons.link %}
-		<a class="btn-link" href="{{ urlgen.weDetail(entity) }}" title="{{ entity.getTitleSubtitle() }}">
+		<a class="btn-link" href="{{ urlgen.weDetail(entity) }}">
 		{% endif %}
 		<span>{{ entity.getTitle()|slice(0,1) }}</span>
 		{% if entity.hasSubtitle() %}<small>{{ entity.getSubtitle()|slice(0,1) }}</small>{%endif%}

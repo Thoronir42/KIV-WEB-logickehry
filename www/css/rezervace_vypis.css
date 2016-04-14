@@ -66,6 +66,9 @@
 .btn-bottom-left{
 	left: 4px;
 }
+.btn-hide{
+	cursor: pointer;
+}
 
 .reservation{
 	background:skyblue;
