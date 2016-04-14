@@ -39,7 +39,7 @@ class Loader {
 			/* 'cache' => __DIR__.'/cache/', */
 			'debug' => true,
 		));
-		$twig->addExtension(new \Twig_Extension_Debug());
+		$twig->addExtension(new Yep\TracyTwigExtensions\BarDumpExtension());
 		return $twig;
 	}
 

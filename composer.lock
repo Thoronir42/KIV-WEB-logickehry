@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0cde03dc120e66634e420ee54bc4af6a",
-    "content-hash": "2e3c53d0df2a5c9192cf0f8acfccb578",
+    "hash": "bc0b2da3d6606bb8cc7d5b9d607fc16a",
+    "content-hash": "750939a8dc33ea72763e1f643e5cf32c",
     "packages": [
         {
             "name": "phpmailer/phpmailer",
@@ -183,6 +183,56 @@
                 "templating"
             ],
             "time": "2016-01-25 21:22:18"
+        },
+        {
+            "name": "yep/tracy-twig-extensions",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/YepFoundation/tracy-twig-extensions.git",
+                "reference": "b646e03fac796222b975dad1548c78dc15471766"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/YepFoundation/tracy-twig-extensions/zipball/b646e03fac796222b975dad1548c78dc15471766",
+                "reference": "b646e03fac796222b975dad1548c78dc15471766",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "tracy/tracy": "2.3.*",
+                "twig/twig": "~1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*",
+                "yep/reflection": "1.0.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Martin Zeman (Zemistr)",
+                    "homepage": "http://zemistr.eu"
+                }
+            ],
+            "description": "Twig extensions for Tracy Debugger",
+            "homepage": "https://github.com/YepFoundation/tracy-twig-extensions",
+            "keywords": [
+                "debug",
+                "tracy",
+                "twig"
+            ],
+            "time": "2016-01-12 20:32:50"
         }
     ],
     "packages-dev": [],
