@@ -2,8 +2,11 @@
 
 namespace libs;
 
-use libs\ImageManager,
-	config\Config;
+use libs\ImageManager;
+
+use model\database\IRenderableWeekEntity;
+use model\database\views\ReservationExtended,
+	model\database\tables\Event;
 
 class URLgen {
 
@@ -40,29 +43,6 @@ class URLgen {
 		if (empty($params)) {
 			return $return;
 		}
-		$first = true;
-		foreach ($params as $parKey => $parVal) {
-			$return.=($first ? "?" : "&") . "$parKey=$parVal";
-			$first = false;
-		}
-		return $return;
-	}
-
-	private function niceUrl($params) {
-		$return = $this->urlPrefix;
-		if (empty($params)) {
-			return $return;
-		}
-		if (isset($params['controller'])) {
-			$return .= $params['controller'] . self::ADDR_SEP;
-			unset($params['controller']);
-		}
-		if (isset($params['action'])) {
-			$return .= $params['action'] . self::ADDR_SEP;
-			unset($params['action']);
-		}
-
-
 		$first = true;
 		foreach ($params as $parKey => $parVal) {
 			$return.=($first ? "?" : "&") . "$parKey=$parVal";
@@ -117,19 +97,26 @@ class URLgen {
 		return $this->url($args);
 	}
 	
-	public function weDetail($type, $reservation_id) {
+	/**
+	 * 
+	 * @param IRenderableWeekEntity $entity
+	 * @return type
+	 */
+	public function weDetail($entity) {
+		$type = $entity->getType();
+		$entity_id = $entity->getID();
 		switch ($type) {
 			default: 
 				return null;
-			case \model\database\views\ReservationExtended::TYPE:
+			case ReservationExtended::TYPE:
 				$args = [ 'controller' => 'rezervace',
 					'action' => 'detail',
-					'id' => $reservation_id];
+					'id' => $entity_id];
 				break;
-			case \model\database\tables\Event::TYPE:
+			case Event::TYPE:
 				$args = [ 'controller' => 'udalost',
 					'action' => 'zobrazit',
-					'id' => $reservation_id];
+					'id' => $entity_id];
 				break;
 		}
 		return $this->url($args);
