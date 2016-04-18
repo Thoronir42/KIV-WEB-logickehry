@@ -50,6 +50,7 @@
 	border-radius: 4px;
 	display:inline-block;
 	border:2px solid transparent;
+	overflow: hidden;
 }
 
 .week-entity a.btn-link{
@@ -59,6 +60,10 @@
 .btn-bottom{
 	position: absolute;
 	bottom: 4px;
+	opacity: 0.6;
+}
+.btn-bottom:hover{
+	opacity: 1;
 }
 .btn-bottom-right{
 	right: 4px;

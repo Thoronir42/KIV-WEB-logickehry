@@ -13,8 +13,8 @@
 	{% if buttons.link %}
 		<a class="btn-link" href="{{ urlgen.weDetail(entity) }}">
 		{% endif %}
-		<span>{{ entity.getTitle()|slice(0,1) }}</span>
-		{% if entity.hasSubtitle() %}<small>{{ entity.getSubtitle()|slice(0,1) }}</small>{%endif%}
+		<span>{{ entity.getTitle() }}</span>
+		{% if entity.hasSubtitle() %}<small>{{ entity.getSubtitle() }}</small>{%endif%}
 		{% if buttons.link %}
 		</a>
 	{% endif %}

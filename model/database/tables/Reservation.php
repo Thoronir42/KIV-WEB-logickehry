@@ -49,7 +49,7 @@ class Reservation extends DB_Entity {
 			DB_Service::logError($statement->errorInfo(), __CLASS__."::".__FUNCTION__, $statement->queryString, $pars);
 			return false;
 		}
-		return true;
+		return $pdo->lastInsertId();
 	}
 
 	/**

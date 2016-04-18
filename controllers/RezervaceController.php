@@ -161,12 +161,13 @@ class RezervaceController extends Controller {
 			$this->redirectPars('rezervace', 'vypis');
 		}
 		$reservation->game_box_id = $v['box']->game_box_id;
-		if (!Tables\Reservation::insert($this->pdo, $reservation)) {
+		$newReservationId = Tables\Reservation::insert($this->pdo, $reservation);
+		if (!$newReservationId) {
 			$this->message->warning('Při ukládání rezervace nastaly neočekávané potíže.');
 		} else {
 			$this->message->success('Rezervace byla úspěšně uložena.');
 			if ($reservation->isOpen()) {
-				$this->reservationCreatedSendMail($reservation->reservation_id);
+				$this->reservationCreatedSendMail($newReservationId);
 			}
 		}
 		$this->redirectPars('rezervace');
